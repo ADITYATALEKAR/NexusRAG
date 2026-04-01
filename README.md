@@ -1,10 +1,5 @@
 # NexusRAG
 
-[![CI](https://github.com/ADITYATALEKAR/NexusRAG/actions/workflows/ci.yml/badge.svg)](https://github.com/ADITYATALEKAR/NexusRAG/actions/workflows/ci.yml)
-[![License](https://img.shields.io/github/license/ADITYATALEKAR/NexusRAG)](./LICENSE)
-[![Python](https://img.shields.io/badge/python-3.11%2B-3776AB)](./pyproject.toml)
-[![Next.js](https://img.shields.io/badge/frontend-Next.js%2014-111111)](./frontend/package.json)
-
 NexusRAG is a state-of-the-art retrieval operating system for enterprise RAG.
 
 It combines a layered Python backend, a modern Next.js frontend, strict safety rails, provider failover, hybrid retrieval, evidence-first answer generation, evaluation tooling, observability, CLI and SDK surfaces, and deployment-ready infrastructure in one cohesive platform.
