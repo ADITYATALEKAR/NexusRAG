@@ -8,6 +8,12 @@ import type {
   ProviderHealthSummary,
   TraceSpan
 } from '@/lib/types'
+import {
+  EXTERNAL_BACKEND_ENABLED,
+  PUBLIC_SUPABASE_STORAGE_BUCKET,
+  SUPABASE_AUTH_ENABLED
+} from '@/lib/public-config'
+import { getSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 const API_BASE = '/api'
 
@@ -24,6 +30,16 @@ export class APIError extends Error {
 function buildUrl(path: string) {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`
   return `${API_BASE}${normalizedPath}`
+}
+
+function sanitizeStorageName(fileName: string) {
+  return (
+    fileName
+      .toLowerCase()
+      .replace(/[^a-z0-9._-]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '') || 'document'
+  )
 }
 
 class APIClient {
@@ -80,7 +96,71 @@ class APIClient {
     }))
   }
 
+  private async uploadDocumentToSupabase(file: File, onProgress?: (value: number) => void) {
+    const supabase = getSupabaseBrowserClient()
+    const {
+      data: { user }
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      throw new APIError(401, 'Sign in is required to upload documents.')
+    }
+
+    const documentId = crypto.randomUUID()
+    const storagePath = `${user.id}/${documentId}/${sanitizeStorageName(file.name)}`
+
+    onProgress?.(10)
+    const upload = await supabase.storage
+      .from(PUBLIC_SUPABASE_STORAGE_BUCKET)
+      .upload(storagePath, file, {
+        contentType: file.type || 'application/octet-stream',
+        upsert: false
+      })
+
+    if (upload.error) {
+      throw new APIError(500, upload.error.message)
+    }
+
+    onProgress?.(75)
+    const insert = await supabase.from('document_uploads').insert({
+      id: documentId,
+      owner_id: user.id,
+      file_name: file.name,
+      storage_path: storagePath,
+      bucket_name: PUBLIC_SUPABASE_STORAGE_BUCKET,
+      file_size: file.size,
+      mime_type: file.type || null,
+      status: 'uploaded',
+      source: 'supabase_storage'
+    })
+
+    if (insert.error) {
+      await supabase.storage.from(PUBLIC_SUPABASE_STORAGE_BUCKET).remove([storagePath])
+      throw new APIError(500, insert.error.message)
+    }
+
+    onProgress?.(100)
+    return {
+      request_id: documentId,
+      document_id: documentId,
+      status: 'queued',
+      parser_used: 'supabase-storage',
+      parser_confidence: 1,
+      chunks_indexed: 0,
+      warnings: [
+        'Stored in Supabase Storage. Attach the external Python RAG backend later to process and index this document.'
+      ],
+      errors: [],
+      processing_time_ms: 0,
+      indexing_job_id: undefined
+    } satisfies IngestResponse
+  }
+
   async uploadDocument(file: File, onProgress?: (value: number) => void) {
+    if (SUPABASE_AUTH_ENABLED && !EXTERNAL_BACKEND_ENABLED) {
+      return this.uploadDocumentToSupabase(file, onProgress)
+    }
+
     return new Promise<IngestResponse>((resolve, reject) => {
       const formData = new FormData()
       formData.append('file', file)

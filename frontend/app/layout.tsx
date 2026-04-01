@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { Providers } from '@/app/providers'
 import { ErrorBoundary } from '@/components/shared/error-boundary'
+import { SUPABASE_AUTH_ENABLED } from '@/lib/public-config'
 import '@/styles/globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(authOptions)
+  const session = SUPABASE_AUTH_ENABLED ? null : await getServerSession(authOptions)
 
   return (
     <html lang="en" suppressHydrationWarning>

@@ -8,7 +8,14 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
-import { DEFAULT_PUBLIC_BACKEND_URL, PUBLIC_APP_ENABLED } from '@/lib/public-config'
+import {
+  DEFAULT_PUBLIC_BACKEND_URL,
+  DEPLOYMENT_TARGET,
+  EXTERNAL_BACKEND_ENABLED,
+  PUBLIC_APP_ENABLED,
+  SUPABASE_AUTH_ENABLED
+} from '@/lib/public-config'
+import { getSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Shell } from '@/components/layout/shell'
@@ -26,6 +33,7 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme()
   const [saveError, setSaveError] = useState<string | null>(null)
   const [saved, setSaved] = useState(false)
+  const [supabaseEmail, setSupabaseEmail] = useState<string | null>(null)
   const { register, handleSubmit, reset, formState: { errors, isSubmitting, isSubmitSuccessful } } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -40,6 +48,19 @@ export default function SettingsPage() {
       apiKey: ''
     })
   }, [reset, session?.apiUrl])
+
+  useEffect(() => {
+    if (!SUPABASE_AUTH_ENABLED) {
+      return
+    }
+
+    const syncSupabaseUser = async () => {
+      const result = await getSupabaseBrowserClient().auth.getUser()
+      setSupabaseEmail(result.data.user?.email || null)
+    }
+
+    void syncSupabaseUser()
+  }, [])
 
   const onSubmit = handleSubmit(async (values: FormValues) => {
     setSaveError(null)
@@ -65,10 +86,30 @@ export default function SettingsPage() {
     <Shell className="space-y-6">
       <div>
         <h1 className="section-title">Settings</h1>
-        <p className="section-copy">Tune API connectivity, auth, and workspace presentation.</p>
+        <p className="section-copy">Tune deployment connectivity, auth, and workspace presentation.</p>
       </div>
       <div className="grid gap-6 xl:grid-cols-[minmax(0,520px)_minmax(0,1fr)]">
-        {PUBLIC_APP_ENABLED ? (
+        {SUPABASE_AUTH_ENABLED ? (
+          <div className="surface space-y-5 p-6">
+            <div>
+              <h2 className="text-lg font-semibold text-text-primary">Deployment</h2>
+              <p className="mt-1 text-sm text-text-secondary">
+                This workspace is running in {DEPLOYMENT_TARGET} mode with Supabase Auth on Vercel.
+              </p>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-text-primary">Signed-in account</label>
+              <Input value={supabaseEmail || 'Loading...'} readOnly />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-text-primary">External RAG backend</label>
+              <Input value={EXTERNAL_BACKEND_ENABLED ? 'Configured' : 'Not attached yet'} readOnly />
+            </div>
+            <div className="rounded-2xl border border-border-subtle bg-bg-secondary px-4 py-4 text-sm text-text-secondary">
+              Supabase handles auth and staged document storage. Querying, evaluation, and provider health light up after you deploy the separate Python backend and set BACKEND_API_URL in Vercel.
+            </div>
+          </div>
+        ) : PUBLIC_APP_ENABLED ? (
           <div className="surface space-y-5 p-6">
             <div>
               <h2 className="text-lg font-semibold text-text-primary">Connection</h2>

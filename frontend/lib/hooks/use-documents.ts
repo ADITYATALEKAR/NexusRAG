@@ -14,6 +14,22 @@ function toSizeLabel(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
+function normalizeDocumentStatus(status?: string, hasErrors?: boolean): DocumentItem['status'] {
+  if (hasErrors) {
+    return 'failed'
+  }
+
+  if (status === 'queued' || status === 'processing' || status === 'completed' || status === 'failed') {
+    return status
+  }
+
+  if (status === 'uploaded') {
+    return 'queued'
+  }
+
+  return 'completed'
+}
+
 export function useDocuments() {
   const documents = useAppStore((state) => state.documents)
   const addDocuments = useAppStore((state) => state.addDocuments)
@@ -52,7 +68,7 @@ export function useDocuments() {
         const next: DocumentItem = {
           id: response.document_id || localId,
           name: file.name,
-          status: response.errors?.length ? 'failed' : 'completed',
+          status: normalizeDocumentStatus(response.status, Boolean(response.errors?.length)),
           sizeLabel: toSizeLabel(file.size),
           uploadedAt: new Date().toISOString(),
           parserUsed: response.parser_used,

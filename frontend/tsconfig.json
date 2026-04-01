@@ -1,7 +1,11 @@
-﻿{
+{
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
@@ -14,13 +18,31 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "@/*": ["./*"],
-      "framer-motion": ["./node_modules/framer-motion/dist/index.d.ts"],
-      "react-hook-form": ["./node_modules/react-hook-form/dist/index.d.ts"]
+      "@/*": [
+        "./*"
+      ],
+      "framer-motion": [
+        "./node_modules/framer-motion/dist/index.d.ts"
+      ],
+      "react-hook-form": [
+        "./node_modules/react-hook-form/dist/index.d.ts"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next"
+  ]
 }

@@ -1,14 +1,15 @@
 'use client'
 
+import { signOut } from 'next-auth/react'
 import { Database, FileText, FlaskConical, Home, LogOut, Search, Settings, X } from 'lucide-react'
 import Link from 'next/link'
-import { signOut } from 'next-auth/react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 import { Logo } from '@/components/shared/logo'
 import { Button } from '@/components/ui/button'
-import { PUBLIC_APP_ENABLED } from '@/lib/public-config'
+import { PUBLIC_APP_ENABLED, SUPABASE_AUTH_ENABLED } from '@/lib/public-config'
+import { getSupabaseBrowserClient } from '@/lib/supabase/browser'
 import { useAppStore } from '@/lib/stores/app-store'
 import { cn } from '@/lib/utils'
 
@@ -27,6 +28,7 @@ const adminItems = [
 
 export function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const mobileSidebarOpen = useAppStore((state) => state.mobileSidebarOpen)
   const clearWorkspace = useAppStore((state) => state.clearWorkspace)
   const setMobileSidebarOpen = useAppStore((state) => state.setMobileSidebarOpen)
@@ -75,7 +77,21 @@ export function Sidebar() {
         </nav>
 
         <div className="border-t border-border-subtle p-4">
-          {PUBLIC_APP_ENABLED ? (
+          {SUPABASE_AUTH_ENABLED ? (
+            <button
+              type="button"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-text-secondary transition-colors hover:bg-bg-tertiary hover:text-text-primary"
+              onClick={async () => {
+                clearWorkspace()
+                await getSupabaseBrowserClient().auth.signOut()
+                router.push('/login')
+                router.refresh()
+              }}
+            >
+              <LogOut className="h-4 w-4" />
+              Sign out
+            </button>
+          ) : PUBLIC_APP_ENABLED ? (
             <div className="rounded-lg bg-bg-tertiary px-3 py-3 text-sm text-text-secondary">
               Public workspace access is enabled. Backend credentials stay on the server.
             </div>

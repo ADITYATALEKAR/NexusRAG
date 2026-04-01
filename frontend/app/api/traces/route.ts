@@ -1,6 +1,6 @@
-import { proxyJSON } from '@/lib/server-api'
+import { safeProxyJSON } from '@/lib/server-api'
 
 export async function GET(request: Request) {
   const url = new URL(request.url)
-  return proxyJSON(`/traces${url.search}`, request)
+  return safeProxyJSON(`/traces${url.search}`, [], request)
 }
