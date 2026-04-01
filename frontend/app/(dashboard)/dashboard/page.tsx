@@ -19,7 +19,7 @@ export default function DashboardPage() {
         <div className="sticky top-0 z-20 border-b border-border-subtle bg-bg-primary/90 backdrop-blur">
           <Shell className="max-w-4xl py-5">
             <QueryInput onSubmit={submitQuery} isLoading={isLoading} />
-            {error ? <p className="mt-3 text-sm text-error">{error.message} Check backend health or API key settings, then try again.</p> : null}
+            {error ? <p className="mt-3 text-sm text-error">{error.message} Check backend health or deployment connection settings, then try again.</p> : null}
           </Shell>
         </div>
         <Shell className="grid max-w-6xl gap-6 py-6 xl:grid-cols-[minmax(0,1fr)_340px]">

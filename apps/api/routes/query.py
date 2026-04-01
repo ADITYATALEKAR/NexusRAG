@@ -10,6 +10,7 @@ from fastapi import APIRouter, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from apps.api.routes.answer import _get_or_build_answer_runtime
+from apps.api.runtime_storage import load_storage_runtime
 from src.layer0_core.ids.base import QueryId
 from src.layer1_contracts.schemas.answer import Answer
 from src.layer1_contracts.schemas.query import Query
@@ -162,8 +163,8 @@ async def _build_query_runtime(request: Request) -> QueryRuntime:
         trigger_on_error=bool(routing_fallback_raw.get("trigger_on_error", True)),
     )
 
-    data_dir = config_dir.parent / "data"
-    connection = sqlite3.connect(str(data_dir / "metadata.db"), check_same_thread=False)
+    storage = load_storage_runtime(project_root=config_dir.parent)
+    connection = sqlite3.connect(str(storage.metadata_db_path), check_same_thread=False)
     connection.row_factory = sqlite3.Row
     table_schemas = {
         key: [str(column) for column in value]

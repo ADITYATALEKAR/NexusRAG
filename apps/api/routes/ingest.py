@@ -11,6 +11,7 @@ import uuid
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile, status
 from pydantic import BaseModel, ConfigDict, Field
 
+from apps.api.runtime_storage import load_storage_runtime
 from src.layer1_contracts.schemas.chunking import ChunkingConfig, ChunkingStrategy
 from src.layer1_contracts.schemas.indexing import IndexStatus
 from src.layer2_domain.chunking.service import ChunkingService
@@ -136,9 +137,9 @@ def _get_or_build_ingest_runtime(request: Request) -> IngestRuntime:
         parser_registry.register(name, parser, priority)
 
     project_root = config_dir.parent
-    data_dir = project_root / "data"
+    storage = load_storage_runtime(project_root=project_root)
     ingestion_service = IngestionService()
-    metadata_store = SQLiteMetadataStore(db_path=str(data_dir / "metadata.db"))
+    metadata_store = SQLiteMetadataStore(db_path=str(storage.metadata_db_path))
     runtime = IngestRuntime(
         ingestion_service=ingestion_service,
         ingestion_flow=IngestionFlow(
@@ -152,17 +153,18 @@ def _get_or_build_ingest_runtime(request: Request) -> IngestRuntime:
             indexing_service=IndexingService(
                 embedder=MockEmbedder(dimensions=32),
                 vector_store=QdrantAdapter(
-                    url=str(data_dir / "qdrant"),
-                    collection="retrieval_chunks",
+                    url=storage.qdrant_url,
+                    api_key=storage.qdrant_api_key,
+                    collection=storage.qdrant_collection,
                     dimensions=32,
                 ),
-                lexical_store=SQLiteFTSAdapter(db_path=str(data_dir / "lexical.db")),
+                lexical_store=SQLiteFTSAdapter(db_path=str(storage.lexical_db_path)),
                 metadata_store=metadata_store,
             ),
             freshness_tracker=FreshnessTracker(metadata_store),
         ),
         chunking_config=_build_chunking_config(chunking_raw),
-        upload_dir=data_dir / "uploads",
+        upload_dir=storage.upload_dir,
     )
     request.app.state.ingest_runtime = runtime
     return runtime

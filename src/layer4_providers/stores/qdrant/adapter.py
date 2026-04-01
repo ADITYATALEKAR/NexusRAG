@@ -20,10 +20,11 @@ class QdrantAdapter(VectorStoreInterface):
         url: str = "http://localhost:6333",
         collection: str = "chunks",
         dimensions: int = 384,
+        api_key: str | None = None,
     ) -> None:
         self.collection = collection
         self.dimensions = dimensions
-        self.client = self._build_client(url)
+        self.client = self._build_client(url, api_key=api_key)
         self._ensure_collection()
 
     async def insert(
@@ -119,7 +120,7 @@ class QdrantAdapter(VectorStoreInterface):
         info = self.client.get_collection(self.collection)
         return int(info.points_count or 0)
 
-    def _build_client(self, url: str) -> QdrantClient:
+    def _build_client(self, url: str, api_key: str | None = None) -> QdrantClient:
         """Build a Qdrant client, supporting in-memory and local persistent modes."""
         if url in {"memory://", ":memory:"}:
             return QdrantClient(location=":memory:")
@@ -131,7 +132,7 @@ class QdrantAdapter(VectorStoreInterface):
             path = Path(url)
             path.mkdir(parents=True, exist_ok=True)
             return self._get_or_create_local_client(path)
-        return QdrantClient(url=url)
+        return QdrantClient(url=url, api_key=api_key)
 
     @classmethod
     def _get_or_create_local_client(cls, path: Path) -> QdrantClient:

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { PUBLIC_APP_ENABLED } from '@/lib/public-config'
 import { Logo } from '@/components/shared/logo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -30,22 +31,39 @@ export default function SignupPage() {
       <div className="surface w-full max-w-md p-8">
         <Logo />
         <div className="mt-8">
-          <h1 className="text-2xl font-semibold text-text-primary">Create workspace</h1>
-          <p className="mt-2 text-sm text-text-secondary">Start with API key auth today. OAuth can be layered in later without changing the rest of the interface.</p>
+          <h1 className="text-2xl font-semibold text-text-primary">
+            {PUBLIC_APP_ENABLED ? 'Public workspace access' : 'Create workspace'}
+          </h1>
+          <p className="mt-2 text-sm text-text-secondary">
+            {PUBLIC_APP_ENABLED
+              ? 'This deployment is configured for public access. Visitors can enter the workspace without supplying backend credentials.'
+              : 'Start with operator access today. Public access can be layered in later through deployment-managed service credentials.'}
+          </p>
         </div>
-        <form className="mt-8 space-y-5" onSubmit={onSubmit}>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">Workspace name</label>
-            <Input {...register('workspace')} placeholder="Acme Research" />
-            {errors.workspace ? <p className="text-sm text-error">{errors.workspace.message}</p> : null}
+        {PUBLIC_APP_ENABLED ? (
+          <div className="mt-8 space-y-5">
+            <div className="rounded-2xl border border-border-subtle bg-bg-secondary px-4 py-4 text-sm text-text-secondary">
+              For Northflank or similar hosting, keep the backend API key in deployment secrets and let the web app proxy requests server-side.
+            </div>
+            <Button asChild className="w-full">
+              <Link href="/dashboard">Open the public workspace</Link>
+            </Button>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">Work email</label>
-            <Input {...register('email')} placeholder="you@company.com" />
-            {errors.email ? <p className="text-sm text-error">{errors.email.message}</p> : null}
-          </div>
-          <Button type="submit" className="w-full" disabled={isSubmitting}>Continue to setup</Button>
-        </form>
+        ) : (
+          <form className="mt-8 space-y-5" onSubmit={onSubmit}>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-text-primary">Workspace name</label>
+              <Input {...register('workspace')} placeholder="Acme Research" />
+              {errors.workspace ? <p className="text-sm text-error">{errors.workspace.message}</p> : null}
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-text-primary">Work email</label>
+              <Input {...register('email')} placeholder="you@company.com" />
+              {errors.email ? <p className="text-sm text-error">{errors.email.message}</p> : null}
+            </div>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>Continue to setup</Button>
+          </form>
+        )}
         <p className="mt-6 text-sm text-text-secondary">
           Already have a workspace? <Link href="/login" className="font-medium text-accent-700">Sign in</Link>
         </p>

@@ -1,9 +1,14 @@
+import 'server-only'
+
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
 import { AUTH_SECRET, DEFAULT_BACKEND_URL } from '@/lib/auth'
 
 type ProxyRequest = Request | NextRequest
+
+const SERVICE_API_KEY =
+  process.env.BACKEND_SERVICE_API_KEY || process.env.NEXUSRAG_SERVICE_API_KEY
 
 function buildBackendUrl(path: string, apiUrl: string) {
   return `${apiUrl.replace(/\/$/, '')}${path.startsWith('/') ? path : `/${path}`}`
@@ -16,7 +21,7 @@ async function getBackendContext(request?: ProxyRequest, headers?: HeadersInit) 
 
   if (!request) {
     return {
-      apiKey: headerApiKey,
+      apiKey: headerApiKey || SERVICE_API_KEY,
       apiUrl: headerApiUrl || DEFAULT_BACKEND_URL
     }
   }
@@ -27,7 +32,10 @@ async function getBackendContext(request?: ProxyRequest, headers?: HeadersInit) 
   }).catch(() => null)
 
   return {
-    apiKey: headerApiKey || (typeof token?.apiKey === 'string' ? token.apiKey : undefined),
+    apiKey:
+      headerApiKey ||
+      (typeof token?.apiKey === 'string' ? token.apiKey : undefined) ||
+      SERVICE_API_KEY,
     apiUrl: headerApiUrl || (typeof token?.apiUrl === 'string' ? token.apiUrl : DEFAULT_BACKEND_URL)
   }
 }

@@ -8,6 +8,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, ConfigDict, Field
 
+from apps.api.runtime_storage import load_storage_runtime
 from src.layer0_core.ids.base import QueryId
 from src.layer1_contracts.schemas.query import Query, QueryConfig, QueryFilters
 from src.layer1_contracts.schemas.retrieval import RetrievalCandidate, RetrievalDiagnostics
@@ -160,23 +161,24 @@ def _build_retrieval_stack(config_dir: Path | None = None) -> tuple[RetrievalSer
     compression_raw = loader.load_yaml("advanced/compression.yaml")
 
     project_root = resolved_config_dir.parent
-    data_dir = project_root / "data"
-    vector_dir = data_dir / "qdrant"
-    graph_dir = data_dir / "graph.pkl"
-    quantizer_state_path = data_dir / "vector_compression.npz"
+    storage = load_storage_runtime(project_root=project_root)
 
     feature_flags = FeatureFlagManager()
     feature_flags.load_from_mapping(feature_flag_raw)
-    compression_quantizer = _build_compression_quantizer(compression_raw, quantizer_state_path)
+    compression_quantizer = _build_compression_quantizer(
+        compression_raw,
+        storage.vector_compression_state_path,
+    )
 
     embedder = MockEmbedder(dimensions=32)
-    metadata_store = SQLiteMetadataStore(db_path=str(data_dir / "metadata.db"))
+    metadata_store = SQLiteMetadataStore(db_path=str(storage.metadata_db_path))
     vector_store = QdrantAdapter(
-        url=str(vector_dir),
-        collection="retrieval_chunks",
+        url=storage.qdrant_url,
+        api_key=storage.qdrant_api_key,
+        collection=storage.qdrant_collection,
         dimensions=embedder.dimensions,
     )
-    lexical_store = SQLiteFTSAdapter(db_path=str(data_dir / "lexical.db"))
+    lexical_store = SQLiteFTSAdapter(db_path=str(storage.lexical_db_path))
     reranker = build_reranker(provider=reranking_raw.get("provider", "mock"))
     diagnostics_store = RetrievalDiagnosticsStore()
 
@@ -218,7 +220,7 @@ def _build_retrieval_stack(config_dir: Path | None = None) -> tuple[RetrievalSer
         standard_retrieval=orchestrator,
         entity_extractor=EntityExtractor(),
         graph_boost=float(graph_raw.get("boost_factor", 0.15)),
-        graph_store=NetworkXGraphStore(path=str(graph_dir)),
+        graph_store=NetworkXGraphStore(path=str(storage.graph_path)),
     )
     graph_service.build_graph(metadata_store.list_documents_sync(), metadata_store.list_chunks_sync())
     retrieval_service = RetrievalService(orchestrator=graph_service, default_config=default_config)

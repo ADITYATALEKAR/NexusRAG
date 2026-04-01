@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import { PUBLIC_APP_ENABLED } from '@/lib/public-config'
 import { Button } from '@/components/ui/button'
 
 export function CTA() {
@@ -12,7 +13,9 @@ export function CTA() {
           <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">Start with the live dashboard, upload a few files, and see grounded answers with inline evidence in under five minutes.</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button size="lg" asChild>
-              <Link href="/signup">Create workspace</Link>
+              <Link href={PUBLIC_APP_ENABLED ? '/dashboard' : '/signup'}>
+                {PUBLIC_APP_ENABLED ? 'Open public workspace' : 'Create workspace'}
+              </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
               <Link href="/dashboard">Try demo dashboard</Link>

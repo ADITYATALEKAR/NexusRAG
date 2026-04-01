@@ -11,9 +11,50 @@ services:
       - .env.production
     environment:
       RAG__ENV: production
+      NEXUSRAG_DATA_DIR: /app/data
+    volumes:
+      - app_data:/app/data
+    depends_on:
+      - redis
     deploy:
       resources:
         limits:
           memory: 2G
         reservations:
           memory: 1G
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_NEXUSRAG_PUBLIC_APP: ${NEXT_PUBLIC_NEXUSRAG_PUBLIC_APP:-true}
+        NEXT_PUBLIC_NEXUSRAG_APP_NAME: ${NEXT_PUBLIC_NEXUSRAG_APP_NAME:-NexusRAG}
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.production
+    environment:
+      BACKEND_API_URL: http://api:8000
+      NEXTAUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_NEXUSRAG_PUBLIC_APP: ${NEXT_PUBLIC_NEXUSRAG_PUBLIC_APP:-true}
+      NEXT_PUBLIC_NEXUSRAG_APP_NAME: ${NEXT_PUBLIC_NEXUSRAG_APP_NAME:-NexusRAG}
+    depends_on:
+      - api
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+volumes:
+  app_data:
+  redis_data:

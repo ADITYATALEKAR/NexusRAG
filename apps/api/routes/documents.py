@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from collections import Counter
-from pathlib import Path
 
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, ConfigDict, Field
 
+from apps.api.runtime_storage import load_storage_runtime
 from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
 from src.layer4_providers.stores.qdrant.adapter import QdrantAdapter
 from src.layer4_providers.stores.sqlite_fts.adapter import SQLiteFTSAdapter
@@ -42,8 +42,8 @@ class DocumentDeleteResponse(BaseModel):
 @router.get("", response_model=list[DocumentSummary])
 async def list_documents() -> list[DocumentSummary]:
     """Return all indexed documents known to the metadata store."""
-    data_dir = _get_data_dir()
-    metadata_store = SQLiteMetadataStore(db_path=str(data_dir / "metadata.db"))
+    storage = load_storage_runtime()
+    metadata_store = SQLiteMetadataStore(db_path=str(storage.metadata_db_path))
     documents = metadata_store.list_documents_sync()
     chunk_counts = Counter(chunk.document_id for chunk in metadata_store.list_chunks_sync())
 
@@ -67,18 +67,19 @@ async def list_documents() -> list[DocumentSummary]:
 @router.delete("/{document_id}", response_model=DocumentDeleteResponse)
 async def delete_document(document_id: str, request: Request) -> DocumentDeleteResponse:
     """Delete one indexed document from metadata, lexical, and vector stores."""
-    data_dir = _get_data_dir()
-    metadata_store = SQLiteMetadataStore(db_path=str(data_dir / "metadata.db"))
+    storage = load_storage_runtime()
+    metadata_store = SQLiteMetadataStore(db_path=str(storage.metadata_db_path))
     chunks = [chunk for chunk in metadata_store.list_chunks_sync() if chunk.document_id == document_id]
     chunk_ids = [chunk.id for chunk in chunks]
 
     removed_chunks = metadata_store.delete_document_sync(document_id)
 
     if chunk_ids:
-        lexical_store = SQLiteFTSAdapter(db_path=str(data_dir / "lexical.db"))
+        lexical_store = SQLiteFTSAdapter(db_path=str(storage.lexical_db_path))
         vector_store = QdrantAdapter(
-            url=str(data_dir / "qdrant"),
-            collection="retrieval_chunks",
+            url=storage.qdrant_url,
+            api_key=storage.qdrant_api_key,
+            collection=storage.qdrant_collection,
             dimensions=32,
         )
         for chunk_id in chunk_ids:
@@ -87,12 +88,6 @@ async def delete_document(document_id: str, request: Request) -> DocumentDeleteR
 
     _invalidate_cached_runtimes(request)
     return DocumentDeleteResponse(id=document_id, removed_chunks=removed_chunks)
-
-
-def _get_data_dir() -> Path:
-    """Return the shared data directory used by ingest and retrieval."""
-    return Path(__file__).resolve().parents[3] / "data"
-
 
 def _to_size_label(size_bytes: int) -> str:
     """Format a human-readable size label for the frontend."""

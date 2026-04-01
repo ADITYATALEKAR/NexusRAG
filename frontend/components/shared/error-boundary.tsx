@@ -33,7 +33,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
           </div>
           <h1 className="text-2xl font-semibold text-text-primary">Something went off course</h1>
           <p className="mt-3 text-sm leading-6 text-text-secondary">
-            The interface hit an unexpected state. Refresh to recover, and if this keeps happening check the backend health and API key settings.
+            The interface hit an unexpected state. Refresh to recover, and if this keeps happening check backend health and deployment connection settings.
           </p>
           <div className="mt-6 flex justify-center gap-3">
             <Button onClick={() => window.location.reload()}>Refresh</Button>

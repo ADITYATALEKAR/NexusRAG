@@ -2,12 +2,13 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 
 import { authOptions } from '@/lib/auth'
+import { PUBLIC_APP_ENABLED } from '@/lib/public-config'
 import { Header } from '@/components/layout/header'
 import { Sidebar } from '@/components/layout/sidebar'
 
 export default async function DashboardGroupLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions)
-  if (!session) {
+  if (!session && !PUBLIC_APP_ENABLED) {
     redirect('/login')
   }
 
