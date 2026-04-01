@@ -6,13 +6,13 @@ from datetime import datetime
 
 from src.layer1_contracts.schemas.retrieval import RetrievalCandidate
 from src.layer1_contracts.schemas.retrieval_config import FilterConfig
-from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
+from src.layer1_contracts.interfaces.metadata_store import MetadataStoreInterface
 
 
 class MetadataFilter:
     """Filter retrieval candidates by stored metadata."""
 
-    def __init__(self, metadata_store: SQLiteMetadataStore | None = None) -> None:
+    def __init__(self, metadata_store: MetadataStoreInterface | None = None) -> None:
         self.metadata_store = metadata_store
 
     def apply(

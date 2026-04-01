@@ -8,6 +8,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, ConfigDict, Field
 
+from apps.api.runtime_services import build_runtime_stores
 from apps.api.runtime_storage import load_storage_runtime
 from src.layer0_core.ids.base import QueryId
 from src.layer1_contracts.schemas.query import Query, QueryConfig, QueryFilters
@@ -36,9 +37,6 @@ from src.layer3_flows.retrieval_flow.flow import RetrievalFlow
 from src.layer4_providers.embeddings.mock.adapter import MockEmbedder
 from src.layer4_providers.rerankers.registry import build_reranker
 from src.layer4_providers.stores.graph.networkx_adapter import NetworkXGraphStore
-from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
-from src.layer4_providers.stores.qdrant.adapter import QdrantAdapter
-from src.layer4_providers.stores.sqlite_fts.adapter import SQLiteFTSAdapter
 from src.layer8_runtime.config.loader import ConfigLoader
 from src.layer8_runtime.feature_flags.manager import FeatureFlagManager
 
@@ -170,15 +168,9 @@ def _build_retrieval_stack(config_dir: Path | None = None) -> tuple[RetrievalSer
         storage.vector_compression_state_path,
     )
 
-    embedder = MockEmbedder(dimensions=32)
-    metadata_store = SQLiteMetadataStore(db_path=str(storage.metadata_db_path))
-    vector_store = QdrantAdapter(
-        url=storage.qdrant_url,
-        api_key=storage.qdrant_api_key,
-        collection=storage.qdrant_collection,
-        dimensions=embedder.dimensions,
-    )
-    lexical_store = SQLiteFTSAdapter(db_path=str(storage.lexical_db_path))
+    embed_dimensions = 384 if storage.database_url else 32
+    embedder = MockEmbedder(dimensions=embed_dimensions)
+    stores = build_runtime_stores(storage, embed_dimensions=embedder.dimensions)
     reranker = build_reranker(provider=reranking_raw.get("provider", "mock"))
     diagnostics_store = RetrievalDiagnosticsStore()
 
@@ -200,19 +192,22 @@ def _build_retrieval_stack(config_dir: Path | None = None) -> tuple[RetrievalSer
     orchestrator = HybridOrchestrator(
         dense_retriever=DenseRetriever(
             embedder=embedder,
-            vector_store=vector_store,
-            metadata_store=metadata_store,
+            vector_store=stores.vector_store,
+            metadata_store=stores.metadata_store,
             feature_flags=feature_flags,
             compression_quantizer=compression_quantizer,
         ),
-        lexical_retriever=LexicalRetriever(lexical_store=lexical_store, metadata_store=metadata_store),
+        lexical_retriever=LexicalRetriever(
+            lexical_store=stores.lexical_store,
+            metadata_store=stores.metadata_store,
+        ),
         reranking_service=RerankingService(reranker=reranker),
-        metadata_filter=MetadataFilter(metadata_store=metadata_store),
+        metadata_filter=MetadataFilter(metadata_store=stores.metadata_store),
         freshness_booster=FreshnessBooster(decay_days=int(retrieval_raw.get("freshness_decay_days", 30))),
         deduplicator=CandidateDeduplicator(),
         diagnostics_store=diagnostics_store,
-        metadata_store=metadata_store,
-        trust_filter=TrustFilter(metadata_store=metadata_store),
+        metadata_store=stores.metadata_store,
+        trust_filter=TrustFilter(metadata_store=stores.metadata_store),
     )
     graph_service = GraphRetrievalService(
         graph_builder=DocumentGraphBuilder(EntityExtractor()),
@@ -222,7 +217,12 @@ def _build_retrieval_stack(config_dir: Path | None = None) -> tuple[RetrievalSer
         graph_boost=float(graph_raw.get("boost_factor", 0.15)),
         graph_store=NetworkXGraphStore(path=str(storage.graph_path)),
     )
-    graph_service.build_graph(metadata_store.list_documents_sync(), metadata_store.list_chunks_sync())
+    list_documents_sync = getattr(stores.metadata_store, "list_documents_sync", None)
+    list_chunks_sync = getattr(stores.metadata_store, "list_chunks_sync", None)
+    graph_service.build_graph(
+        list_documents_sync() if callable(list_documents_sync) else [],
+        list_chunks_sync() if callable(list_chunks_sync) else [],
+    )
     retrieval_service = RetrievalService(orchestrator=graph_service, default_config=default_config)
     retrieval_flow = RetrievalFlow(retrieval_service=retrieval_service)
     return retrieval_service, retrieval_flow

@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 import math
 
 from src.layer1_contracts.schemas.retrieval import RetrievalCandidate
-from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
+from src.layer1_contracts.interfaces.metadata_store import MetadataStoreInterface
 
 
 class FreshnessBooster:
@@ -19,7 +19,7 @@ class FreshnessBooster:
     def apply(
         self,
         candidates: list[RetrievalCandidate],
-        metadata_store: SQLiteMetadataStore,
+        metadata_store: MetadataStoreInterface,
     ) -> list[RetrievalCandidate]:
         """Boost candidate scores based on recency and return a re-ranked list."""
         now = datetime.now(timezone.utc)

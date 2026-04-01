@@ -10,6 +10,7 @@ import numpy as np
 
 from src.layer1_contracts.interfaces.embedder import EmbedderInterface
 from src.layer1_contracts.interfaces.lexical_store import LexicalStoreInterface
+from src.layer1_contracts.interfaces.metadata_store import MetadataStoreInterface
 from src.layer1_contracts.interfaces.vector_store import VectorStoreInterface
 from src.layer1_contracts.schemas.chunk import Chunk
 from src.layer1_contracts.schemas.document import Document
@@ -18,13 +19,6 @@ from src.layer1_contracts.schemas.indexing import IndexState, IndexStatus, Index
 from src.layer2_domain.compression.benchmark import CompressionBenchmark
 from src.layer2_domain.contextual_indexing.enricher import ChunkContextEnricher
 from src.layer2_domain.indexing.job_manager import IndexJobManager
-
-
-class MetadataStoreProtocol(Protocol):
-    """Protocol for metadata stores used by indexing."""
-
-    async def save_chunk(self, chunk: Chunk) -> None: ...
-    async def save_index_state(self, state: IndexState) -> None: ...
 
 
 class FeatureFlagRuntime(Protocol):
@@ -42,7 +36,7 @@ class IndexingService:
         embedder: EmbedderInterface,
         vector_store: VectorStoreInterface,
         lexical_store: LexicalStoreInterface,
-        metadata_store: MetadataStoreProtocol,
+        metadata_store: MetadataStoreInterface,
         batch_size: int = 32,
         job_manager: IndexJobManager | None = None,
         feature_flags: FeatureFlagRuntime | None = None,
@@ -145,23 +139,6 @@ class IndexingService:
             except Exception as error:  # noqa: BLE001
                 errors.append(f"Vector indexing failed: {error}")
 
-        if job.status != IndexStatus.FAILED:
-            try:
-                self.job_manager.transition(job.id, IndexStatus.LEXICAL_INDEXING)
-                lexical_start = datetime.now(timezone.utc)
-                for chunk in chunks:
-                    await self.lexical_store.index(
-                        chunk.id,
-                        chunk.content,
-                        {
-                            "document_id": chunk.document_id,
-                            "section_title": chunk.metadata.section_title or "",
-                        },
-                    )
-                lexical_time_ms = int((datetime.now(timezone.utc) - lexical_start).total_seconds() * 1000)
-            except Exception as error:  # noqa: BLE001
-                errors.append(f"Lexical indexing failed: {error}")
-
         try:
             for chunk in chunks:
                 await self.metadata_store.save_chunk(chunk)
@@ -179,6 +156,23 @@ class IndexingService:
             errors.append(f"Metadata persistence failed: {error}")
             if job.status != IndexStatus.FAILED:
                 self.job_manager.fail_job(job.id, str(error))
+
+        if job.status != IndexStatus.FAILED:
+            try:
+                self.job_manager.transition(job.id, IndexStatus.LEXICAL_INDEXING)
+                lexical_start = datetime.now(timezone.utc)
+                for chunk in chunks:
+                    await self.lexical_store.index(
+                        chunk.id,
+                        chunk.content,
+                        {
+                            "document_id": chunk.document_id,
+                            "section_title": chunk.metadata.section_title or "",
+                        },
+                    )
+                lexical_time_ms = int((datetime.now(timezone.utc) - lexical_start).total_seconds() * 1000)
+            except Exception as error:  # noqa: BLE001
+                errors.append(f"Lexical indexing failed: {error}")
 
         total_time_ms = int((datetime.now(timezone.utc) - start).total_seconds() * 1000)
         if errors:

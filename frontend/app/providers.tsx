@@ -1,15 +1,10 @@
 'use client'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import type { Session } from 'next-auth'
-import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import { PropsWithChildren, useState } from 'react'
 
-export function Providers({
-  children,
-  session
-}: PropsWithChildren<{ session: Session | null }>) {
+export function Providers({ children }: PropsWithChildren) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -21,10 +16,8 @@ export function Providers({
   )
 
   return (
-    <SessionProvider session={session}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      </ThemeProvider>
-    </SessionProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </ThemeProvider>
   )
 }

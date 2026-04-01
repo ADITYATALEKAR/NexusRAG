@@ -6,8 +6,10 @@ from src.layer1_contracts.interfaces.chunker import ChunkerInterface
 from src.layer1_contracts.interfaces.embedder import EmbedderInterface
 from src.layer1_contracts.interfaces.lexical_store import LexicalStoreInterface
 from src.layer1_contracts.interfaces.llm import LLMProviderInterface
+from src.layer1_contracts.interfaces.metadata_store import MetadataStoreInterface
 from src.layer1_contracts.interfaces.parser import ParsedDocument, ParserInterface
 from src.layer1_contracts.interfaces.reranker import RerankerInterface
+from src.layer1_contracts.interfaces.sql_executor import SQLExecutorInterface
 from src.layer1_contracts.interfaces.vector_store import VectorStoreInterface
 
 __all__ = [
@@ -20,5 +22,7 @@ __all__ = [
     "ParsedDocument",
     "ParserInterface",
     "RerankerInterface",
+    "MetadataStoreInterface",
+    "SQLExecutorInterface",
     "VectorStoreInterface",
 ]

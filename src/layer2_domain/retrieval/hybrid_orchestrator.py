@@ -18,6 +18,7 @@ from src.layer1_contracts.schemas.retrieval_config import (
     RetrievalConfig,
     RetrievalMode,
 )
+from src.layer1_contracts.interfaces.metadata_store import MetadataStoreInterface
 from src.layer2_domain.reranking.service import RerankingService
 from src.layer2_domain.retrieval.dense_retriever import DenseRetriever
 from src.layer2_domain.retrieval.diagnostics import RetrievalDiagnosticsStore
@@ -29,9 +30,6 @@ from src.layer2_domain.retrieval.fusion.base import FusionStrategy
 from src.layer2_domain.retrieval.fusion.rrf import ReciprocalRankFusion
 from src.layer2_domain.retrieval.fusion.weighted import WeightedScoreFusion
 from src.layer2_domain.retrieval.lexical_retriever import LexicalRetriever
-from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
-
-
 class HybridOrchestrator:
     """Orchestrate dense retrieval, lexical retrieval, fusion, filtering, and reranking."""
 
@@ -49,7 +47,7 @@ class HybridOrchestrator:
         freshness_booster: FreshnessBooster,
         deduplicator: CandidateDeduplicator,
         diagnostics_store: RetrievalDiagnosticsStore | None = None,
-        metadata_store: SQLiteMetadataStore | None = None,
+        metadata_store: MetadataStoreInterface | None = None,
         trust_filter: TrustFilter | None = None,
     ) -> None:
         self.dense_retriever = dense_retriever

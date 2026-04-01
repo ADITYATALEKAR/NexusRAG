@@ -31,6 +31,7 @@ class SecurityRuntimeConfig:
     rate_limit_enabled: bool = False
     cors_origins: list[str] = field(default_factory=lambda: ["*"])
     cors_allow_credentials: bool = False
+    public_demo_mode: bool = False
 
 
 @dataclass(frozen=True)
@@ -132,10 +133,18 @@ def load_runtime_config(config_dir: Path) -> DeploymentRuntimeConfig:
     cors_origins = _split_env_list(os.getenv("RAG__SECURITY__CORS_ORIGINS")) or list(
         security_raw.get("cors_origins", ["*"])
     )
+    public_demo_mode = _get_bool_env(
+        "NEXUSRAG_PUBLIC_DEMO_MODE",
+        _get_bool_env("RAG__SECURITY__PUBLIC_DEMO_MODE", False),
+    )
     security = SecurityRuntimeConfig(
-        api_key_required=_get_bool_env(
-            "RAG__SECURITY__API_KEY_REQUIRED",
-            bool(security_raw.get("api_key_required", False)),
+        api_key_required=(
+            False
+            if public_demo_mode
+            else _get_bool_env(
+                "RAG__SECURITY__API_KEY_REQUIRED",
+                bool(security_raw.get("api_key_required", False)),
+            )
         ),
         api_keys=api_keys,
         rate_limit_enabled=_get_bool_env(
@@ -147,6 +156,7 @@ def load_runtime_config(config_dir: Path) -> DeploymentRuntimeConfig:
             "RAG__SECURITY__CORS_ALLOW_CREDENTIALS",
             bool(security_raw.get("cors_allow_credentials", False)),
         ),
+        public_demo_mode=public_demo_mode,
     )
     if security.api_key_required and not security.api_keys:
         raise ConfigurationError(

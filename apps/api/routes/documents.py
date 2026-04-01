@@ -7,10 +7,8 @@ from collections import Counter
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, ConfigDict, Field
 
+from apps.api.runtime_services import build_runtime_stores
 from apps.api.runtime_storage import load_storage_runtime
-from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
-from src.layer4_providers.stores.qdrant.adapter import QdrantAdapter
-from src.layer4_providers.stores.sqlite_fts.adapter import SQLiteFTSAdapter
 
 router = APIRouter(prefix="/documents")
 
@@ -43,9 +41,9 @@ class DocumentDeleteResponse(BaseModel):
 async def list_documents() -> list[DocumentSummary]:
     """Return all indexed documents known to the metadata store."""
     storage = load_storage_runtime()
-    metadata_store = SQLiteMetadataStore(db_path=str(storage.metadata_db_path))
-    documents = metadata_store.list_documents_sync()
-    chunk_counts = Counter(chunk.document_id for chunk in metadata_store.list_chunks_sync())
+    stores = build_runtime_stores(storage, embed_dimensions=384)
+    documents = await stores.metadata_store.list_documents()
+    chunk_counts = Counter(chunk.document_id for chunk in await stores.metadata_store.list_chunks())
 
     results: list[DocumentSummary] = []
     for document in documents:
@@ -68,23 +66,16 @@ async def list_documents() -> list[DocumentSummary]:
 async def delete_document(document_id: str, request: Request) -> DocumentDeleteResponse:
     """Delete one indexed document from metadata, lexical, and vector stores."""
     storage = load_storage_runtime()
-    metadata_store = SQLiteMetadataStore(db_path=str(storage.metadata_db_path))
-    chunks = [chunk for chunk in metadata_store.list_chunks_sync() if chunk.document_id == document_id]
+    stores = build_runtime_stores(storage, embed_dimensions=384)
+    chunks = [chunk for chunk in await stores.metadata_store.list_chunks() if chunk.document_id == document_id]
     chunk_ids = [chunk.id for chunk in chunks]
 
-    removed_chunks = metadata_store.delete_document_sync(document_id)
+    removed_chunks = await stores.metadata_store.delete_document(document_id)
 
     if chunk_ids:
-        lexical_store = SQLiteFTSAdapter(db_path=str(storage.lexical_db_path))
-        vector_store = QdrantAdapter(
-            url=storage.qdrant_url,
-            api_key=storage.qdrant_api_key,
-            collection=storage.qdrant_collection,
-            dimensions=32,
-        )
         for chunk_id in chunk_ids:
-            await lexical_store.delete(chunk_id)
-        await vector_store.delete(chunk_ids)
+            await stores.lexical_store.delete(chunk_id)
+        await stores.vector_store.delete(chunk_ids)
 
     _invalidate_cached_runtimes(request)
     return DocumentDeleteResponse(id=document_id, removed_chunks=removed_chunks)

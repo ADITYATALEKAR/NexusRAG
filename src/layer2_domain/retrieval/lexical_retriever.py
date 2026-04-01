@@ -6,9 +6,9 @@ import math
 import time
 
 from src.layer1_contracts.interfaces.lexical_store import LexicalStoreInterface
+from src.layer1_contracts.interfaces.metadata_store import MetadataStoreInterface
 from src.layer1_contracts.schemas.retrieval import RetrievalCandidate, RetrievalScores, RetrievalSource
 from src.layer1_contracts.schemas.retrieval_config import FilterConfig
-from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
 
 
 class LexicalRetriever:
@@ -17,7 +17,7 @@ class LexicalRetriever:
     def __init__(
         self,
         lexical_store: LexicalStoreInterface,
-        metadata_store: SQLiteMetadataStore,
+        metadata_store: MetadataStoreInterface,
     ) -> None:
         self.lexical_store = lexical_store
         self.metadata_store = metadata_store

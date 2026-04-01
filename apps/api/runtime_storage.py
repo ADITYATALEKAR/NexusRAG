@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import os
 from pathlib import Path
+import tempfile
 
 
 @dataclass(frozen=True)
@@ -17,6 +18,7 @@ class StorageRuntimeConfig:
     lexical_db_path: Path
     graph_path: Path
     vector_compression_state_path: Path
+    database_url: str | None
     qdrant_url: str
     qdrant_api_key: str | None
     qdrant_collection: str
@@ -28,7 +30,17 @@ def load_storage_runtime(project_root: Path | None = None) -> StorageRuntimeConf
     default_data_dir = resolved_root / "data"
 
     data_dir = Path(os.getenv("NEXUSRAG_DATA_DIR") or os.getenv("DATA_DIR") or default_data_dir)
-    upload_dir = Path(os.getenv("NEXUSRAG_UPLOAD_DIR") or (data_dir / "uploads"))
+    database_url = (
+        os.getenv("DATABASE_URL")
+        or os.getenv("NEON_DATABASE_URL")
+        or os.getenv("NEXUSRAG_DATABASE_URL")
+    )
+    default_upload_dir = (
+        Path(tempfile.gettempdir()) / "nexusrag-uploads"
+        if database_url
+        else data_dir / "uploads"
+    )
+    upload_dir = Path(os.getenv("NEXUSRAG_UPLOAD_DIR") or default_upload_dir)
     metadata_db_path = Path(os.getenv("NEXUSRAG_METADATA_DB_PATH") or (data_dir / "metadata.db"))
     lexical_db_path = Path(os.getenv("NEXUSRAG_LEXICAL_DB_PATH") or (data_dir / "lexical.db"))
     graph_path = Path(os.getenv("NEXUSRAG_GRAPH_PATH") or (data_dir / "graph.pkl"))
@@ -43,7 +55,14 @@ def load_storage_runtime(project_root: Path | None = None) -> StorageRuntimeConf
     qdrant_api_key = os.getenv("QDRANT_API_KEY") or os.getenv("NEXUSRAG_QDRANT_API_KEY")
     qdrant_collection = os.getenv("NEXUSRAG_QDRANT_COLLECTION", "retrieval_chunks")
 
-    for path in [data_dir, upload_dir, metadata_db_path.parent, lexical_db_path.parent, graph_path.parent]:
+    for path in [
+        data_dir,
+        upload_dir,
+        metadata_db_path.parent,
+        lexical_db_path.parent,
+        graph_path.parent,
+        vector_compression_state_path.parent,
+    ]:
         path.mkdir(parents=True, exist_ok=True)
 
     return StorageRuntimeConfig(
@@ -53,6 +72,7 @@ def load_storage_runtime(project_root: Path | None = None) -> StorageRuntimeConf
         lexical_db_path=lexical_db_path,
         graph_path=graph_path,
         vector_compression_state_path=vector_compression_state_path,
+        database_url=database_url,
         qdrant_url=qdrant_url,
         qdrant_api_key=qdrant_api_key,
         qdrant_collection=qdrant_collection,

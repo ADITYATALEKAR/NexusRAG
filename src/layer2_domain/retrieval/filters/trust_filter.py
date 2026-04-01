@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 from src.layer1_contracts.schemas.retrieval import RetrievalCandidate
-from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
+from src.layer1_contracts.interfaces.metadata_store import MetadataStoreInterface
 
 
 class TrustFilter:
     """Filter candidates by document trust score."""
 
-    def __init__(self, metadata_store: SQLiteMetadataStore | None = None) -> None:
+    def __init__(self, metadata_store: MetadataStoreInterface | None = None) -> None:
         self.metadata_store = metadata_store
 
     def apply(

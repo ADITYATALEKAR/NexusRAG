@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-import sqlite3
 
 from fastapi import APIRouter, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from apps.api.routes.answer import _get_or_build_answer_runtime
+from apps.api.runtime_services import build_runtime_stores
 from apps.api.runtime_storage import load_storage_runtime
 from src.layer0_core.ids.base import QueryId
 from src.layer1_contracts.schemas.answer import Answer
@@ -164,8 +164,8 @@ async def _build_query_runtime(request: Request) -> QueryRuntime:
     )
 
     storage = load_storage_runtime(project_root=config_dir.parent)
-    connection = sqlite3.connect(str(storage.metadata_db_path), check_same_thread=False)
-    connection.row_factory = sqlite3.Row
+    stores = build_runtime_stores(storage, embed_dimensions=384)
+    sql_executor = stores.sql_executor
     table_schemas = {
         key: [str(column) for column in value]
         for key, value in structured_raw.get("table_schemas", {}).items()
@@ -183,7 +183,7 @@ async def _build_query_runtime(request: Request) -> QueryRuntime:
             allowed_tables=[str(table) for table in structured_raw.get("allowed_tables", list(table_schemas.keys()))],
             table_schemas=table_schemas,
         ),
-        db_connection=connection,
+        db_connection=sql_executor,
         result_formatter=StructuredResultFormatter(),
         template_engine=template_engine,
     )

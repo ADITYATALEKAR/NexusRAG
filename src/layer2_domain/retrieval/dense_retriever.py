@@ -9,12 +9,10 @@ from typing import Protocol
 import numpy as np
 
 from src.layer1_contracts.interfaces.embedder import EmbedderInterface
+from src.layer1_contracts.interfaces.metadata_store import MetadataStoreInterface
 from src.layer1_contracts.interfaces.vector_store import VectorStoreInterface
 from src.layer1_contracts.schemas.retrieval import RetrievalCandidate, RetrievalScores, RetrievalSource
 from src.layer1_contracts.schemas.retrieval_config import FilterConfig
-from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
-
-
 class FeatureFlagReader(Protocol):
     """Minimal feature-flag protocol for lower-layer retrieval components."""
 
@@ -28,7 +26,7 @@ class DenseRetriever:
         self,
         embedder: EmbedderInterface,
         vector_store: VectorStoreInterface,
-        metadata_store: SQLiteMetadataStore,
+        metadata_store: MetadataStoreInterface,
         feature_flags: FeatureFlagReader | None = None,
         compression_quantizer: object | None = None,
     ) -> None:

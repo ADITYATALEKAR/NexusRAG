@@ -4,8 +4,7 @@ import { Sparkles } from 'lucide-react'
 
 import {
   DEPLOYMENT_TARGET,
-  EXTERNAL_BACKEND_ENABLED,
-  SUPABASE_AUTH_ENABLED
+  EXTERNAL_BACKEND_ENABLED
 } from '@/lib/public-config'
 import { AnswerDisplay } from '@/components/query/answer-display'
 import { EvidencePanel } from '@/components/query/evidence-panel'
@@ -17,7 +16,7 @@ import { useQuery } from '@/lib/hooks/use-query'
 
 export default function DashboardPage() {
   const { answer, history, isLoading, submitQuery, selectHistoryItem, error } = useQuery()
-  const queryDisabled = SUPABASE_AUTH_ENABLED && !EXTERNAL_BACKEND_ENABLED
+  const queryDisabled = !EXTERNAL_BACKEND_ENABLED
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col xl:flex-row">
@@ -27,7 +26,7 @@ export default function DashboardPage() {
             <QueryInput onSubmit={submitQuery} isLoading={isLoading} disabled={queryDisabled} />
             {queryDisabled ? (
               <p className="mt-3 text-sm text-text-secondary">
-                This {DEPLOYMENT_TARGET} deployment stages documents in Supabase, but answering requires the separate Python RAG backend. Set <code>BACKEND_API_URL</code> in Vercel once that service exists.
+                This {DEPLOYMENT_TARGET} deployment needs a reachable backend API to answer queries. Set <code>NEXT_PUBLIC_API_BASE_URL</code> for the hosted demo, or configure an operator backend in Settings.
               </p>
             ) : null}
             {error ? <p className="mt-3 text-sm text-error">{error.message} Check backend health or deployment connection settings, then try again.</p> : null}

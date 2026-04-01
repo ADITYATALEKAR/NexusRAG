@@ -6,10 +6,37 @@ from datetime import datetime, timezone
 import sqlite3
 from typing import Any
 
+from src.layer1_contracts.interfaces.sql_executor import SQLExecutorInterface
 from src.layer1_contracts.schemas.structured import StructuredQuery, StructuredResult
 from src.layer2_domain.structured_retrieval.result_formatter import StructuredResultFormatter
 from src.layer2_domain.structured_retrieval.sql_generator import SafeSQLGenerator
 from src.layer2_domain.structured_retrieval.template_engine import QueryTemplateEngine
+
+
+class SQLiteConnectionExecutor(SQLExecutorInterface):
+    """Backward-compatible readonly SQL executor for raw sqlite connections."""
+
+    def __init__(self, connection: sqlite3.Connection) -> None:
+        self._connection = connection
+
+    def execute(self, sql: str, parameters: list[Any] | tuple[Any, ...]) -> Any:
+        return self._connection.execute(sql, parameters)
+
+    def ensure_supporting_views(self) -> None:
+        self._connection.execute(
+            """
+            CREATE VIEW IF NOT EXISTS documents_view AS
+            SELECT
+                document_id,
+                document_title,
+                document_type,
+                tags,
+                trust_score,
+                created_at,
+                chunk_count
+            FROM documents
+            """
+        )
 
 
 class StructuredRetrievalService:
@@ -18,15 +45,19 @@ class StructuredRetrievalService:
     def __init__(
         self,
         sql_generator: SafeSQLGenerator,
-        db_connection: Any,
+        db_connection: SQLExecutorInterface | sqlite3.Connection,
         result_formatter: StructuredResultFormatter,
         template_engine: QueryTemplateEngine | None = None,
     ) -> None:
         self.sql_generator = sql_generator
-        self.db = db_connection
+        self.db = (
+            SQLiteConnectionExecutor(db_connection)
+            if isinstance(db_connection, sqlite3.Connection)
+            else db_connection
+        )
         self.formatter = result_formatter
         self.template_engine = template_engine
-        self._ensure_supporting_views()
+        self.db.ensure_supporting_views()
 
     def build_query(self, query_id: str, natural_query: str) -> StructuredQuery:
         """Infer a bounded structured query from text."""
@@ -51,7 +82,7 @@ class StructuredRetrievalService:
         try:
             cursor = self.db.execute(generated.sql, generated.parameters)
             columns = [description[0] for description in cursor.description] if cursor.description else []
-            rows = [dict(row) if isinstance(row, sqlite3.Row) else dict(zip(columns, row)) for row in cursor.fetchall()]
+            rows = [dict(row) if isinstance(row, dict) else dict(zip(columns, row)) for row in cursor.fetchall()]
         except Exception as error:  # noqa: BLE001
             return StructuredResult(
                 query_id=structured_query.id,
@@ -72,35 +103,3 @@ class StructuredRetrievalService:
             execution_time_ms=elapsed,
             formatted_answer=formatted,
         )
-
-    def _ensure_supporting_views(self) -> None:
-        """Expose a document-level view on top of chunk metadata when available."""
-        try:
-            existing_objects = {
-                row[0]
-                for row in self.db.execute(
-                    "SELECT name FROM sqlite_master WHERE type IN ('table', 'view')"
-                ).fetchall()
-            }
-            if "documents" in existing_objects:
-                return
-            if "chunk_metadata" not in existing_objects:
-                return
-            self.db.execute(
-                """
-                CREATE VIEW IF NOT EXISTS documents AS
-                SELECT
-                    document_id,
-                    MAX(document_title) AS document_title,
-                    MAX(document_type) AS document_type,
-                    MAX(tags) AS tags,
-                    MAX(trust_score) AS trust_score,
-                    MAX(created_at) AS created_at,
-                    COUNT(*) AS chunk_count
-                FROM chunk_metadata
-                GROUP BY document_id
-                """
-            )
-            self.db.commit()
-        except Exception:  # noqa: BLE001
-            pass

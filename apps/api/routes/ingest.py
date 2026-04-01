@@ -11,6 +11,7 @@ import uuid
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile, status
 from pydantic import BaseModel, ConfigDict, Field
 
+from apps.api.runtime_services import build_runtime_stores
 from apps.api.runtime_storage import load_storage_runtime
 from src.layer1_contracts.schemas.chunking import ChunkingConfig, ChunkingStrategy
 from src.layer1_contracts.schemas.indexing import IndexStatus
@@ -26,9 +27,6 @@ from src.layer3_flows.indexing_flow.flow import IndexingFlow
 from src.layer3_flows.ingestion_flow.flow import IngestionFlow
 from src.layer4_providers.embeddings.mock.adapter import MockEmbedder
 from src.layer4_providers.parsers.registry import build_default_parsers
-from src.layer4_providers.stores.metadata.sqlite_adapter import SQLiteMetadataStore
-from src.layer4_providers.stores.qdrant.adapter import QdrantAdapter
-from src.layer4_providers.stores.sqlite_fts.adapter import SQLiteFTSAdapter
 from src.layer8_runtime.config.loader import ConfigLoader
 
 router = APIRouter()
@@ -139,7 +137,9 @@ def _get_or_build_ingest_runtime(request: Request) -> IngestRuntime:
     project_root = config_dir.parent
     storage = load_storage_runtime(project_root=project_root)
     ingestion_service = IngestionService()
-    metadata_store = SQLiteMetadataStore(db_path=str(storage.metadata_db_path))
+    embed_dimensions = 384 if storage.database_url else 32
+    embedder = MockEmbedder(dimensions=embed_dimensions)
+    stores = build_runtime_stores(storage, embed_dimensions=embedder.dimensions)
     runtime = IngestRuntime(
         ingestion_service=ingestion_service,
         ingestion_flow=IngestionFlow(
@@ -151,17 +151,12 @@ def _get_or_build_ingest_runtime(request: Request) -> IngestRuntime:
         indexing_flow=IndexingFlow(
             chunking_service=ChunkingService(default_config=_build_chunking_config(chunking_raw)),
             indexing_service=IndexingService(
-                embedder=MockEmbedder(dimensions=32),
-                vector_store=QdrantAdapter(
-                    url=storage.qdrant_url,
-                    api_key=storage.qdrant_api_key,
-                    collection=storage.qdrant_collection,
-                    dimensions=32,
-                ),
-                lexical_store=SQLiteFTSAdapter(db_path=str(storage.lexical_db_path)),
-                metadata_store=metadata_store,
+                embedder=embedder,
+                vector_store=stores.vector_store,
+                lexical_store=stores.lexical_store,
+                metadata_store=stores.metadata_store,
             ),
-            freshness_tracker=FreshnessTracker(metadata_store),
+            freshness_tracker=FreshnessTracker(stores.metadata_store),
         ),
         chunking_config=_build_chunking_config(chunking_raw),
         upload_dir=storage.upload_dir,

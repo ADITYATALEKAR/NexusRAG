@@ -9,12 +9,15 @@ interface AppState {
   mobileSidebarOpen: boolean
   queryHistory: QueryHistoryItem[]
   documents: DocumentItem[]
+  operatorApiUrl: string | null
+  operatorApiKey: string | null
   setMobileSidebarOpen: (value: boolean) => void
   upsertHistory: (item: QueryHistoryItem) => void
   addDocuments: (items: DocumentItem[]) => void
   updateDocument: (id: string, patch: Partial<DocumentItem>) => void
   removeDocument: (id: string) => void
   replaceDocuments: (items: DocumentItem[]) => void
+  setOperatorConnection: (apiUrl: string | null, apiKey: string | null) => void
   clearWorkspace: () => void
 }
 
@@ -24,6 +27,8 @@ export const useAppStore = create<AppState>()(
       mobileSidebarOpen: false,
       queryHistory: [],
       documents: [],
+      operatorApiUrl: null,
+      operatorApiKey: null,
       setMobileSidebarOpen: (value) => set({ mobileSidebarOpen: value }),
       upsertHistory: (item) =>
         set((state) => ({
@@ -39,17 +44,26 @@ export const useAppStore = create<AppState>()(
         })),
       removeDocument: (id) => set((state) => ({ documents: state.documents.filter((document) => document.id !== id) })),
       replaceDocuments: (items) => set({ documents: items }),
+      setOperatorConnection: (apiUrl, apiKey) =>
+        set({
+          operatorApiUrl: apiUrl,
+          operatorApiKey: apiKey
+        }),
       clearWorkspace: () =>
         set({
           mobileSidebarOpen: false,
           queryHistory: [],
-          documents: []
+          documents: [],
+          operatorApiUrl: null,
+          operatorApiKey: null
         })
     }),
     {
       name: 'nexusrag-frontend-store',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
+        operatorApiUrl: state.operatorApiUrl,
+        operatorApiKey: state.operatorApiKey,
         queryHistory: state.queryHistory,
         documents: state.documents
       })
