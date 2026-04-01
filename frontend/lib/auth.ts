@@ -2,7 +2,7 @@ import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { z } from 'zod'
 
-export const AUTH_SECRET = process.env.NEXTAUTH_SECRET || 'vectorcore-dev-secret-change-me'
+export const AUTH_SECRET = process.env.NEXTAUTH_SECRET || 'nexusrag-dev-secret-change-me'
 export const DEFAULT_BACKEND_URL =
   process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
@@ -70,8 +70,8 @@ export const authOptions: NextAuthOptions = {
         }
 
         return {
-          id: 'vectorcore-operator',
-          name: 'VectorCore Operator',
+          id: 'nexusrag-operator',
+          name: 'NexusRAG Operator',
           apiUrl,
           apiKey
         }
@@ -89,7 +89,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       session.apiUrl = typeof token.apiUrl === 'string' ? token.apiUrl : DEFAULT_BACKEND_URL
       if (session.user) {
-        session.user.name = session.user.name || 'VectorCore Operator'
+        session.user.name = session.user.name || 'NexusRAG Operator'
       }
       return session
     }

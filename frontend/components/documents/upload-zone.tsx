@@ -49,7 +49,7 @@ export function UploadZone({ onUpload }: { onUpload: (files: File[]) => Promise<
           Drop files here or click to browse
         </h3>
         <p className="mt-2 max-w-md text-sm leading-6 text-text-secondary">
-          VectorCore accepts PDF, DOCX, Markdown, and plain text. Uploads are processed quietly
+          NexusRAG accepts PDF, DOCX, Markdown, and plain text. Uploads are processed quietly
           in the background with visible progress.
         </p>
       </div>

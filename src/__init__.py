@@ -1,1 +1,1 @@
-"""Source package root for VectorCore."""
+"""Source package root for NexusRAG."""

@@ -1,0 +1,9 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security policy
+    url: https://github.com/ADITYATALEKAR/NexusRAG/blob/main/SECURITY.md
+    about: Please report suspected vulnerabilities using the security process instead of public issues.
+  - name: Architecture overview
+    url: https://github.com/ADITYATALEKAR/NexusRAG/blob/main/docs/architecture/system-overview.md
+    about: Start here if you want more context before opening a design-oriented issue.
+

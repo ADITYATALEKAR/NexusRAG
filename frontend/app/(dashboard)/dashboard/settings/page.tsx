@@ -71,7 +71,7 @@ export default function SettingsPage() {
         <form className="surface space-y-5 p-6" onSubmit={onSubmit}>
           <div>
             <h2 className="text-lg font-semibold text-text-primary">Connection</h2>
-            <p className="mt-1 text-sm text-text-secondary">Point the frontend to your VectorCore backend and refresh the session-bound API key when you want to rotate credentials.</p>
+            <p className="mt-1 text-sm text-text-secondary">Point the frontend to your NexusRAG backend and refresh the session-bound API key when you want to rotate credentials.</p>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-text-primary">API URL</label>

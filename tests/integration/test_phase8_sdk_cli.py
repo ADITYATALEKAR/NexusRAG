@@ -27,7 +27,7 @@ def _build_sdk_app() -> FastAPI:
         return {
             "answer_id": "ans-1",
             "query_id": "qry-1",
-            "text": "VectorCore answer",
+            "text": "NexusRAG answer",
             "status": "success",
             "citations": [],
             "trace": None,
@@ -87,16 +87,16 @@ def _build_sdk_app() -> FastAPI:
 def test_sync_sdk_client_works_with_expected_endpoints(tmp_path: Path) -> None:
     """The synchronous SDK client should support query, ingest, health, and eval."""
     sample_file = tmp_path / "sample.txt"
-    sample_file.write_text("VectorCore sample", encoding="utf-8")
+    sample_file.write_text("NexusRAG sample", encoding="utf-8")
 
     with TestClient(_build_sdk_app()) as test_client:
         client = RAGClient(base_url="http://testserver")
         client._client.close()
         client._client = test_client
 
-        query_result = client.query("What is VectorCore?")
+        query_result = client.query("What is NexusRAG?")
         assert isinstance(query_result, QueryResult)
-        assert query_result.answer == "VectorCore answer"
+        assert query_result.answer == "NexusRAG answer"
 
         ingest_result = client.ingest(str(sample_file))
         assert isinstance(ingest_result, IngestResult)
@@ -114,15 +114,15 @@ def test_sync_sdk_client_works_with_expected_endpoints(tmp_path: Path) -> None:
 async def test_async_sdk_client_works_with_expected_endpoints(tmp_path: Path) -> None:
     """The asynchronous SDK client should support query and health."""
     sample_file = tmp_path / "sample.txt"
-    sample_file.write_text("VectorCore sample", encoding="utf-8")
+    sample_file.write_text("NexusRAG sample", encoding="utf-8")
 
     transport = httpx.ASGITransport(app=_build_sdk_app())
     client = AsyncRAGClient(base_url="http://testserver")
     await client._client.aclose()
     client._client = httpx.AsyncClient(transport=transport, base_url="http://testserver")
 
-    query_result = await client.query("What is VectorCore?")
-    assert query_result.answer == "VectorCore answer"
+    query_result = await client.query("What is NexusRAG?")
+    assert query_result.answer == "NexusRAG answer"
 
     ingest_result = await client.ingest(str(sample_file))
     assert ingest_result.chunks_indexed == 3
@@ -139,7 +139,7 @@ def test_cli_command_functions_can_query_ingest_and_evaluate(
 ) -> None:
     """The CLI command functions should use the SDK and complete successfully."""
     sample_file = tmp_path / "sample.txt"
-    sample_file.write_text("VectorCore sample", encoding="utf-8")
+    sample_file.write_text("NexusRAG sample", encoding="utf-8")
 
     class DummyClient:
         def __init__(self, *args, **kwargs) -> None:  # noqa: D401, ARG002
@@ -152,7 +152,7 @@ def test_cli_command_functions_can_query_ingest_and_evaluate(
             return None
 
         def query(self, text: str, top_k: int = 5, include_evidence: bool = True) -> QueryResult:  # noqa: ARG002
-            return QueryResult(answer_id="ans-1", query_id="qry-1", text="VectorCore answer", status="success")
+            return QueryResult(answer_id="ans-1", query_id="qry-1", text="NexusRAG answer", status="success")
 
         def ingest(self, file_path: str, metadata: dict | None = None) -> IngestResult:  # noqa: ARG002
             return IngestResult(
@@ -188,12 +188,12 @@ def test_cli_command_functions_can_query_ingest_and_evaluate(
             return {"status": "healthy"}
 
     monkeypatch.setattr("sdk.client.RAGClient", DummyClient)
-    query_command("What is VectorCore?")
+    query_command("What is NexusRAG?")
     ingest_command(str(sample_file))
     evaluate_command("dataset-1")
 
     captured = capsys.readouterr().out
-    assert "VectorCore answer" in captured
+    assert "NexusRAG answer" in captured
     assert "OK" in captured
     assert "Evaluation" in captured
 
@@ -204,7 +204,7 @@ def test_cli_entrypoint_help_and_commands_work(
 ) -> None:
     """The real Typer entrypoint should expose working query, ingest, and evaluate commands."""
     sample_file = tmp_path / "sample.txt"
-    sample_file.write_text("VectorCore sample", encoding="utf-8")
+    sample_file.write_text("NexusRAG sample", encoding="utf-8")
 
     class DummyClient:
         def __init__(self, *args, **kwargs) -> None:  # noqa: D401, ARG002
@@ -217,7 +217,7 @@ def test_cli_entrypoint_help_and_commands_work(
             return None
 
         def query(self, text: str, top_k: int = 5, include_evidence: bool = False) -> QueryResult:  # noqa: ARG002
-            return QueryResult(answer_id="ans-1", query_id="qry-1", text="VectorCore answer", status="success")
+            return QueryResult(answer_id="ans-1", query_id="qry-1", text="NexusRAG answer", status="success")
 
         def ingest(self, file_path: str, metadata: dict | None = None) -> IngestResult:  # noqa: ARG002
             return IngestResult(
@@ -261,9 +261,9 @@ def test_cli_entrypoint_help_and_commands_work(
     assert "ingest" in help_result.output
     assert "evaluate" in help_result.output
 
-    query_result = runner.invoke(cli_app, ["query", "What is VectorCore?"])
+    query_result = runner.invoke(cli_app, ["query", "What is NexusRAG?"])
     assert query_result.exit_code == 0
-    assert "VectorCore answer" in query_result.output
+    assert "NexusRAG answer" in query_result.output
 
     ingest_result = runner.invoke(cli_app, ["ingest", str(sample_file)])
     assert ingest_result.exit_code == 0

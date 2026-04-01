@@ -47,7 +47,7 @@ export const useAppStore = create<AppState>()(
         })
     }),
     {
-      name: 'vectorcore-frontend-store',
+      name: 'nexusrag-frontend-store',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         queryHistory: state.queryHistory,

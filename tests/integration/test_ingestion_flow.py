@@ -92,7 +92,7 @@ async def test_markdown_ingestion_via_fallback(tmp_path: Path) -> None:
     flow = build_flow(registry)
 
     file_path = tmp_path / "guide.md"
-    file_path.write_text("# Guide\n\nVectorCore normalizes markdown safely.\n", encoding="utf-8")
+    file_path.write_text("# Guide\n\nNexusRAG normalizes markdown safely.\n", encoding="utf-8")
 
     request = IngestionService().create_request(str(file_path))
     result = await flow.execute(request)
@@ -116,7 +116,7 @@ async def test_section_preservation() -> None:
     normalized = await normalization_service.normalize(parse_result, document_id="doc-1")
 
     assert normalized.sections
-    assert any(section.title == "VectorCore Overview" for section in normalized.sections)
+    assert any(section.title == "NexusRAG Overview" for section in normalized.sections)
     assert all(section.page_numbers == [1] for section in normalized.sections)
 
 

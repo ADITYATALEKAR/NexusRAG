@@ -17,7 +17,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error('VectorCore frontend error', error, info)
+    console.error('NexusRAG frontend error', error, info)
   }
 
   render() {

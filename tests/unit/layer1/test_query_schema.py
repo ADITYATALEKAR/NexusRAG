@@ -8,7 +8,7 @@ from src.layer1_contracts.schemas.query import Query, QueryConfig
 
 def test_query_schema_accepts_valid_payload() -> None:
     """A valid query payload should parse."""
-    query = Query(id="query-1", text="What is VectorCore?")
+    query = Query(id="query-1", text="What is NexusRAG?")
 
     assert query.config.top_k == 10
 

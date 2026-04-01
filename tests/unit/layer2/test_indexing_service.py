@@ -28,7 +28,7 @@ class StubLLMService:
 
         class Response:
             content = (
-                '{"summary": "VectorCore indexing architecture.", "key_topics": ["indexing", "vectors"]}'
+                '{"summary": "NexusRAG indexing architecture.", "key_topics": ["indexing", "vectors"]}'
             )
 
         return Response()
@@ -56,7 +56,7 @@ def build_chunks() -> list[Chunk]:
         Chunk(
             id="chunk-001",
             document_id="doc-1",
-            content="VectorCore keeps retrieval chunks aligned with source offsets.",
+            content="NexusRAG keeps retrieval chunks aligned with source offsets.",
             location=ChunkLocation(start_char=0, end_char=61, start_page=1, end_page=1),
             sequence_number=0,
             metadata=ChunkMetadata(section_title="Overview", section_hierarchy=["Overview"], page_numbers=[1]),
@@ -106,7 +106,7 @@ async def test_indexing_service_indexes_chunks_into_all_stores(tmp_path) -> None
     assert job.started_at is not None
     assert job.completed_at is not None
     assert await vector_store.count() == 2
-    assert any(match[0] == "chunk-001" for match in await lexical_store.search("VectorCore", top_k=5))
+    assert any(match[0] == "chunk-001" for match in await lexical_store.search("NexusRAG", top_k=5))
     assert (await metadata_store.get_chunk("chunk-001"))["section_title"] == "Overview"
     index_state = await metadata_store.get_index_state("doc-1")
     assert index_state is not None
@@ -147,7 +147,7 @@ async def test_indexing_service_uses_contextual_and_compressed_runtime_paths(tmp
     )
     document = Document(
         id="document-01",
-        content="VectorCore keeps retrieval chunks aligned with source offsets.",
+        content="NexusRAG keeps retrieval chunks aligned with source offsets.",
         document_type=DocumentType.MD,
     )
 
@@ -155,7 +155,7 @@ async def test_indexing_service_uses_contextual_and_compressed_runtime_paths(tmp
     stored_point = (await vector_store.fetch(["chunk-001"]))[0]
 
     assert result.status.value == "completed"
-    assert embedder.calls[0][0].startswith("Document: VectorCore indexing architecture.")
+    assert embedder.calls[0][0].startswith("Document: NexusRAG indexing architecture.")
     assert feature_flags.is_enabled("vector_compression") is True
     assert (tmp_path / "vector_compression.npz").exists()
     assert stored_point[2]["contextual"] is True

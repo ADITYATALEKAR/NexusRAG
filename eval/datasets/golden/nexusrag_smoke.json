@@ -1,11 +1,11 @@
 {
-  "id": "vectorcore_smoke",
-  "name": "VectorCore Smoke Dataset",
+  "id": "nexusrag_smoke",
+  "name": "NexusRAG Smoke Dataset",
   "version": "1.0.0",
   "items": [
     {
       "id": "smoke-001",
-      "query": "What combines dense vectors and BM25 in VectorCore?",
+      "query": "What combines dense vectors and BM25 in NexusRAG?",
       "expected_chunks": ["chunk-answer-1"],
       "expected_answer": "Hybrid retrieval combines dense vectors and lexical BM25 search with fusion.",
       "expected_citations": ["chunk-answer-1"],

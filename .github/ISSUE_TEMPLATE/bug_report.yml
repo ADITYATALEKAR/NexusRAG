@@ -1,0 +1,86 @@
+name: Bug report
+description: Report a reproducible defect in NexusRAG.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve NexusRAG.
+
+        Please include enough detail for us to reproduce the issue quickly and safely.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: Short description of the bug.
+      placeholder: Query results disappear after reload
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - API
+        - Frontend
+        - Retrieval
+        - Generation
+        - Ingestion / indexing
+        - CLI / SDK
+        - Deployment
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Share the exact sequence that reproduces the problem.
+      placeholder: |
+        1. Start the API with ...
+        2. Open the dashboard ...
+        3. Submit query ...
+        4. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: The answer panel should retain the last successful response.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: The answer panel resets and shows a blank state.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, browser, Python version, Node version, deployment target, or anything else relevant.
+      placeholder: Windows 11, Python 3.11, Node 20, Chrome 135, local Docker setup
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or screenshots
+      description: Please redact secrets before posting logs.
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched for existing issues before opening this one.
+          required: true
+        - label: I removed or masked secrets from logs and screenshots.
+          required: true
+

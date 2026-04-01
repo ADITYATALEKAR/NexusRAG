@@ -1,7 +1,7 @@
 [project]
-name = "rag-system"
+name = "nexusrag"
 version = "0.1.0"
-description = "Enterprise RAG Backend - Retrieval Operating System"
+description = "NexusRAG - State-of-the-art retrieval operating system for enterprise RAG"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.109.0",

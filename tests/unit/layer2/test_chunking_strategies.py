@@ -10,7 +10,7 @@ from src.layer2_domain.chunking.service import ChunkingService
 
 def build_normalized_inputs() -> tuple[NormalizedDocument, list[ChunkPrecursor]]:
     """Build a repeatable normalized document and precursor set for chunking tests."""
-    section_a = "VectorCore keeps traceability intact. " * 6
+    section_a = "NexusRAG keeps traceability intact. " * 6
     section_b = "Chunking should preserve page numbers and section hierarchy. " * 5
     content = f"{section_a}\n\n{section_b}"
     split_point = len(section_a)

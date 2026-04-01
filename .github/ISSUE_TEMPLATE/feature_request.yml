@@ -1,0 +1,62 @@
+name: Feature request
+description: Propose an improvement or new capability for NexusRAG.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing an idea for NexusRAG.
+
+        The more context you provide, the easier it is to turn this into a high-quality implementation plan.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: What would you like to add or improve?
+      placeholder: Add a comparison view for retrieval diagnostics
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What pain point or gap does this address?
+      placeholder: Teams cannot easily compare retrieval traces across config changes.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the solution you have in mind.
+      placeholder: Add a dashboard mode that overlays two retrieval runs and highlights score shifts.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional, but useful if you already evaluated other options.
+  - type: dropdown
+    id: impact
+    attributes:
+      label: Expected impact
+      options:
+        - Nice to have
+        - Meaningful improvement
+        - High leverage
+        - Critical
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched for existing requests before opening this one.
+          required: true
+        - label: I understand this may be refined before implementation.
+          required: true
+

@@ -21,7 +21,7 @@ from src.layer4_providers.stores.sqlite_fts.adapter import SQLiteFTSAdapter
 
 def build_normalized_doc() -> tuple[NormalizedDocument, list[ChunkPrecursor]]:
     """Build a normalized document and chunk precursors for indexing integration tests."""
-    section_a = "VectorCore turns normalized documents into retrieval-ready chunks. " * 4
+    section_a = "NexusRAG turns normalized documents into retrieval-ready chunks. " * 4
     section_b = "Freshness tracking prevents unnecessary reindex work. " * 4
     content = f"{section_a}\n\n{section_b}"
     split_point = len(section_a)
@@ -122,7 +122,7 @@ async def test_indexing_flow_end_to_end(tmp_path) -> None:
     assert job.status.value == "completed"
     assert result.chunks_indexed > 0
     assert await flow.indexing_service.vector_store.count() > 0
-    assert await flow.indexing_service.lexical_store.search("VectorCore", top_k=5)
+    assert await flow.indexing_service.lexical_store.search("NexusRAG", top_k=5)
     assert await flow.freshness_tracker.needs_reindex("doc-1", "checksum-1") is False
 
 

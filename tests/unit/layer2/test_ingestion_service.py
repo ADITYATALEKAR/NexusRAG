@@ -27,13 +27,13 @@ def test_file_guard_rejects_oversized() -> None:
 def test_checksum_deterministic(tmp_path: Path) -> None:
     """Checksums should be deterministic for the same content."""
     file_path = tmp_path / "sample.txt"
-    file_path.write_text("vectorcore", encoding="utf-8")
+    file_path.write_text("nexusrag", encoding="utf-8")
 
     first = compute_checksum(str(file_path))
     second = compute_checksum(str(file_path))
 
     assert first == second
-    assert first == compute_content_hash(b"vectorcore")
+    assert first == compute_content_hash(b"nexusrag")
 
 
 def test_ingestion_service_creates_request_from_existing_file(tmp_path: Path) -> None:

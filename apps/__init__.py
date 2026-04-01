@@ -1,1 +1,1 @@
-"""Application package root for VectorCore."""
+"""Application package root for NexusRAG."""

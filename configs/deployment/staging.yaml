@@ -8,7 +8,7 @@ security:
   api_key_required: true
   rate_limit_enabled: true
   cors_origins:
-    - https://staging.vectorcore.example.com
+    - https://staging.nexusrag.example.com
   cors_allow_credentials: true
 
 rate_limits:

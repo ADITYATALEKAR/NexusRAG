@@ -15,7 +15,7 @@ def test_structured_logger_includes_request_and_trace_context(capsys) -> None:
     request_id_var.set("req-123")
     trace_id_var.set("trace-456")
 
-    StructuredLogger(service_name="vectorcore").info(
+    StructuredLogger(service_name="nexusrag").info(
         "phase7_log",
         component="api",
         operation="test",
@@ -25,7 +25,7 @@ def test_structured_logger_includes_request_and_trace_context(capsys) -> None:
 
     assert payload["request_id"] == "req-123"
     assert payload["trace_id"] == "trace-456"
-    assert payload["service"] == "vectorcore"
+    assert payload["service"] == "nexusrag"
 
 
 def test_metrics_collector_tracks_and_summarizes_values() -> None:

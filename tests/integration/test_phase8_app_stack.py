@@ -11,10 +11,10 @@ from apps.api.main import app
 
 def test_main_app_health_and_ingest_stack_work(tmp_path: Path) -> None:
     """The real app should start, ingest a document, and retrieve it."""
-    sample_file = tmp_path / "vectorcore-phase8.txt"
-    unique_term = "VectorCorePhase8UniqueAlpha"
+    sample_file = tmp_path / "nexusrag-phase8.txt"
+    unique_term = "NexusRAGPhase8UniqueAlpha"
     sample_file.write_text(
-        f"{unique_term}\n\nVectorCore Phase 8 ingestion integration test document.",
+        f"{unique_term}\n\nNexusRAG Phase 8 ingestion integration test document.",
         encoding="utf-8",
     )
 

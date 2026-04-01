@@ -18,7 +18,7 @@ type FormValues = z.infer<typeof schema>
 export default function AdminEvaluationPage() {
   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { datasetId: 'vectorcore_smoke' }
+    defaultValues: { datasetId: 'nexusrag_smoke' }
   })
 
   const mutation = useMutation({ mutationFn: (datasetId: string) => api.evaluate(datasetId) })

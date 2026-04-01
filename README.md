@@ -1,12 +1,17 @@
-# VectorCore
+# NexusRAG
 
-VectorCore is a state-of-the-art retrieval operating system for enterprise RAG.
+[![CI](https://github.com/ADITYATALEKAR/NexusRAG/actions/workflows/ci.yml/badge.svg)](https://github.com/ADITYATALEKAR/NexusRAG/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/ADITYATALEKAR/NexusRAG)](./LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11%2B-3776AB)](./pyproject.toml)
+[![Next.js](https://img.shields.io/badge/frontend-Next.js%2014-111111)](./frontend/package.json)
+
+NexusRAG is a state-of-the-art retrieval operating system for enterprise RAG.
 
 It combines a layered Python backend, a modern Next.js frontend, strict safety rails, provider failover, hybrid retrieval, evidence-first answer generation, evaluation tooling, observability, CLI and SDK surfaces, and deployment-ready infrastructure in one cohesive platform.
 
-## Why VectorCore
+## Why NexusRAG
 
-Most RAG systems stop at "retrieve a few chunks and call an LLM." VectorCore is built as a full operating system for retrieval-heavy applications:
+Most RAG systems stop at "retrieve a few chunks and call an LLM." NexusRAG is built as a full operating system for retrieval-heavy applications:
 
 - typed contracts across every major subsystem
 - fail-fast configuration and wiring validation
@@ -30,7 +35,7 @@ Most RAG systems stop at "retrieve a few chunks and call an LLM." VectorCore is 
 
 ## Architecture
 
-VectorCore enforces a strict layered model:
+NexusRAG enforces a strict layered model:
 
 1. `Layer 8: Runtime` - bootstrap, lifecycle, feature flags, startup
 2. `Layer 7: Interfaces` - API, CLI, SDK, telemetry interfaces
@@ -176,7 +181,7 @@ Most recent local validation pass completed with:
 
 ## Security Posture
 
-VectorCore is designed to avoid accidental unsafe behavior:
+NexusRAG is designed to avoid accidental unsafe behavior:
 
 - secret masking in provider and application error paths
 - explicit `.gitignore` coverage for local env files, databases, uploads, build outputs, caches, and cloud-local state
@@ -214,4 +219,4 @@ Start here:
 
 ## Vision
 
-VectorCore is not just a demo RAG stack. It is intended to be a robust retrieval platform that can evolve into a high-trust, enterprise-ready system for search, reasoning, grounding, evaluation, and deployment across multiple environments.
+NexusRAG is not just a demo RAG stack. It is intended to be a robust retrieval platform that can evolve into a high-trust, enterprise-ready system for search, reasoning, grounding, evaluation, and deployment across multiple environments.

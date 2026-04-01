@@ -33,7 +33,7 @@ class StubDatasetManager:
             id=dataset_id,
             name="stub",
             version="1.0",
-            items=[EvalDatasetItem(id="item-1", query="What is VectorCore?")],
+            items=[EvalDatasetItem(id="item-1", query="What is NexusRAG?")],
         )
 
 
@@ -119,9 +119,9 @@ def test_eval_routes_and_telemetry_endpoints_work_together() -> None:
         return {"status": "ok"}
 
     with TestClient(app) as client:
-        eval_response = client.post("/eval/evaluate", params={"dataset_id": "vectorcore_smoke"})
+        eval_response = client.post("/eval/evaluate", params={"dataset_id": "nexusrag_smoke"})
         assert eval_response.status_code == 200
-        assert eval_response.json()["dataset_id"] == "vectorcore_smoke"
+        assert eval_response.json()["dataset_id"] == "nexusrag_smoke"
 
         ping_response = client.get("/ping")
         assert ping_response.status_code == 200

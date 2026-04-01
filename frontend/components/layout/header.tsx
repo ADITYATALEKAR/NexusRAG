@@ -29,7 +29,7 @@ export function Header() {
           <Menu className="h-4 w-4" />
         </Button>
         <div>
-          <p className="text-xs uppercase tracking-[0.22em] text-text-tertiary">VectorCore</p>
+          <p className="text-xs uppercase tracking-[0.22em] text-text-tertiary">NexusRAG</p>
           <h1 className="text-sm font-semibold text-text-primary md:text-base">{titles[pathname] || 'Dashboard'}</h1>
         </div>
       </div>

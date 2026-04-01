@@ -1,6 +1,6 @@
-# VectorCore Overview
+# NexusRAG Overview
 
-VectorCore is a retrieval operating system for enterprise RAG.
+NexusRAG is a retrieval operating system for enterprise RAG.
 
 ## Intake
 

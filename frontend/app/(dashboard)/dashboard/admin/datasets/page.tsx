@@ -1,7 +1,7 @@
 import { Shell } from '@/components/layout/shell'
 
 const datasets = [
-  { name: 'vectorcore_smoke', rows: 12, updated: 'Today' },
+  { name: 'nexusrag_smoke', rows: 12, updated: 'Today' },
   { name: 'enterprise_finance_eval', rows: 84, updated: 'Yesterday' },
   { name: 'retrieval_regression_core', rows: 36, updated: '2 days ago' }
 ]
