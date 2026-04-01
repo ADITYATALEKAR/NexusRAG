@@ -1,0 +1,15 @@
+# VectorCore Overview
+
+VectorCore is a retrieval operating system for enterprise RAG.
+
+## Intake
+
+- Validate incoming files
+- Parse content safely
+- Normalize structured records
+
+## Parsing
+
+1. Extract text
+2. Detect structure
+3. Prepare chunk precursors

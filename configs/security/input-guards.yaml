@@ -1,0 +1,5 @@
+max_query_length: 10000
+max_document_size_bytes: 52428800
+strip_html: true
+strip_control_chars: true
+normalize_unicode: true

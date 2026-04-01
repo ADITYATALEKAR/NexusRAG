@@ -1,0 +1,4 @@
+fallback:
+  confidence_threshold: 0.55
+  low_result_quality_threshold: 0.3
+  fallback_route: standard

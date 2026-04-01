@@ -1,0 +1,13 @@
+routes:
+  keyword_heavy:
+    lexical_weight: 0.7
+    dense_weight: 0.3
+  semantic_heavy:
+    lexical_weight: 0.3
+    dense_weight: 0.7
+  structured:
+    default_table: documents
+  comparative:
+    max_sub_queries: 3
+  two_hop:
+    max_hops: 2

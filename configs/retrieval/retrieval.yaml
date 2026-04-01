@@ -1,0 +1,8 @@
+retrieval:
+  default_mode: hybrid
+  dense_top_k: 50
+  lexical_top_k: 50
+  fusion_top_k: 25
+  final_top_k: 10
+  freshness_decay_days: 30
+  min_score_threshold: null

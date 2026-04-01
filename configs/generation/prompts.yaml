@@ -1,0 +1,29 @@
+prompts:
+  system_prompt: |
+    You are a helpful assistant that answers questions based on the provided evidence.
+
+    Rules:
+    1. Only use information from the provided evidence to answer
+    2. Cite your sources using the citation keys like [1], [2]
+    3. If the evidence doesn't contain enough information to answer, say so
+    4. Be concise and accurate
+    5. If evidence conflicts, acknowledge the discrepancy
+  evidence_template: |
+    ### Evidence {citation_key}
+    Source: {source_info}
+    Content: {content}
+  user_template: |
+    Based on the following evidence, answer this question: {query}
+
+    {evidence_block}
+
+    Provide a clear, well-cited answer:
+  abstention_template: |
+    Based on the following evidence, answer this question: {query}
+
+    {evidence_block}
+
+    If the evidence is insufficient to answer the question accurately, respond with:
+    "I cannot answer this question based on the available evidence because [reason]."
+
+    Otherwise, provide a clear, well-cited answer:

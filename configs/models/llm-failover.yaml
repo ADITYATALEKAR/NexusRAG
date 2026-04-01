@@ -1,0 +1,43 @@
+failover:
+  enabled: true
+  max_providers: 5
+
+  provider_chain:
+    - provider_id: "openai-primary"
+      vendor: "openai"
+      model: "gpt-4o"
+      priority: 1
+      enabled: true
+    - provider_id: "anthropic-backup"
+      vendor: "anthropic"
+      model: "claude-sonnet-4-20250514"
+      priority: 2
+      enabled: true
+    - provider_id: "google-backup"
+      vendor: "google"
+      model: "gemini-1.5-pro"
+      priority: 3
+      enabled: true
+    - provider_id: "groq-fast"
+      vendor: "groq"
+      model: "llama-3.1-70b-versatile"
+      priority: 4
+      enabled: true
+    - provider_id: "ollama-local"
+      vendor: "ollama"
+      model: "llama3.1"
+      priority: 5
+      enabled: false
+
+  retry:
+    max_retries: 3
+    base_delay_seconds: 1.0
+    max_delay_seconds: 30.0
+    backoff_multiplier: 2.0
+    jitter: true
+
+  cooldown:
+    enabled: true
+    default_duration_seconds: 60
+    max_duration_seconds: 300
+    consecutive_failures_threshold: 3

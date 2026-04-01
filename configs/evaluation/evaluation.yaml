@@ -1,0 +1,5 @@
+evaluation:
+  default_ks: [1, 3, 5, 10]
+  regression_tolerance: 0.05
+  latency_tolerance: 0.20
+  use_ragas_by_default: false

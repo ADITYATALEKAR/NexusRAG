@@ -1,0 +1,4 @@
+tracing:
+  enabled: true
+  service_name: "rag-system"
+  exporter: "in_memory"

@@ -1,0 +1,14 @@
+default:
+  requests_per_minute: 60
+  requests_per_hour: 1000
+
+tiers:
+  free:
+    requests_per_minute: 10
+    requests_per_hour: 100
+  pro:
+    requests_per_minute: 100
+    requests_per_hour: 5000
+  enterprise:
+    requests_per_minute: 1000
+    requests_per_hour: 50000

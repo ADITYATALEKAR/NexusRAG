@@ -1,0 +1,67 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+dist/
+build/
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Runtime data
+data/
+logs/
+*.log
+*.db
+*.sqlite
+*.sqlite3
+
+# Node / Next frontend
+frontend/node_modules/
+frontend/.next/
+frontend/.turbo/
+frontend/coverage/
+frontend/tsconfig.tsbuildinfo
+
+# Package manager noise
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Deployment / cloud local state
+.vercel/
+.render/
+.aws/
+.azure/
+.terraform/
+terraform.tfstate*
+
+# Misc generated caches
+tmp/
+temp/

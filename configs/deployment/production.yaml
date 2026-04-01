@@ -1,0 +1,21 @@
+server:
+  host: 0.0.0.0
+  port: 8000
+  workers: 4
+  timeout_keep_alive: 30
+
+security:
+  api_key_required: true
+  rate_limit_enabled: true
+  cors_origins:
+    - https://app.example.com
+  cors_allow_credentials: true
+
+rate_limits:
+  requests_per_minute: 60
+  requests_per_hour: 1000
+  burst_size: 10
+
+logging:
+  level: info
+  format: json

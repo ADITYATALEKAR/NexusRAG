@@ -1,0 +1,8 @@
+chunking:
+  default_strategy: semantic
+  target_size: 512
+  min_size: 64
+  max_size: 1024
+  overlap: 64
+  preserve_sentences: true
+  preserve_paragraphs: true

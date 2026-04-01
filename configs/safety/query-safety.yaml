@@ -1,0 +1,7 @@
+query_safety:
+  max_query_length: 10000
+  blocked_topics: []
+
+  injection_detection:
+    enabled: true
+    action_on_detect: deny

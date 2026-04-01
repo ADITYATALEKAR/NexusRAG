@@ -1,0 +1,3 @@
+max_hops: 2
+max_nodes: 50
+boost_factor: 0.15

@@ -1,0 +1,7 @@
+generation:
+  default_model: "gpt-4o"
+  temperature: 0.1
+  max_output_tokens: 1024
+  require_citations: true
+  allow_abstention: true
+  grounding_threshold: 0.5

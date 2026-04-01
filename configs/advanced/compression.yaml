@@ -1,0 +1,6 @@
+default_method: scalar
+scalar:
+  enabled: true
+product_quantization:
+  num_subvectors: 8
+  num_centroids: 256

@@ -1,0 +1,7 @@
+indexing:
+  batch_size: 32
+  freshness:
+    track_checksums: true
+    mark_stale_on_checksum_change: true
+  job_manager:
+    enabled: true

@@ -1,0 +1,60 @@
+components:
+  - id: "config_loader"
+    component_type: "config_loader"
+    layer: "layer8_runtime"
+    required: true
+  - id: "component_registry"
+    component_type: "registry"
+    layer: "layer5_wiring"
+    required: true
+  - id: "dependency_registry"
+    component_type: "registry"
+    layer: "layer5_wiring"
+    required: true
+  - id: "contract_registry"
+    component_type: "registry"
+    layer: "layer5_wiring"
+    required: true
+  - id: "provider_registry"
+    component_type: "registry"
+    layer: "layer5_wiring"
+    required: true
+  - id: "health_monitor"
+    component_type: "monitor"
+    layer: "layer5_wiring"
+    required: true
+  - id: "input_sanitizer"
+    component_type: "security"
+    layer: "layer6_security"
+    required: true
+  - id: "input_validator"
+    component_type: "security"
+    layer: "layer6_security"
+    required: true
+  - id: "injection_detector"
+    component_type: "security"
+    layer: "layer6_security"
+    required: true
+  - id: "secret_masker"
+    component_type: "security"
+    layer: "layer6_security"
+    required: true
+  - id: "audit_event_store"
+    component_type: "audit"
+    layer: "layer6_security"
+    required: true
+  - id: "failover_service"
+    component_type: "service"
+    layer: "layer2_domain"
+    required: true
+
+dependencies:
+  - from_component: "health_monitor"
+    to_component: "component_registry"
+    link_type: "required"
+  - from_component: "input_validator"
+    to_component: "input_sanitizer"
+    link_type: "optional"
+  - from_component: "injection_detector"
+    to_component: "input_validator"
+    link_type: "monitoring"

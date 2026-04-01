@@ -1,0 +1,4 @@
+reranking:
+  enabled: true
+  provider: mock
+  top_k: 25

@@ -1,0 +1,8 @@
+contextual_indexing:
+  status: benchmark_gated
+  benchmark_threshold: 5.0
+graph_retrieval:
+  status: experiment
+  rollout_percentage: 10.0
+vector_compression:
+  status: disabled

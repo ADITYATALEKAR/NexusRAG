@@ -1,0 +1,4 @@
+metrics:
+  enabled: true
+  export_interval_seconds: 60
+  histogram_buckets: [10, 50, 100, 250, 500, 1000, 2500, 5000]

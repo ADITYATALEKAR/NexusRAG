@@ -1,0 +1,5 @@
+fusion:
+  method: rrf
+  rrf_k: 60
+  dense_weight: 0.5
+  lexical_weight: 0.5

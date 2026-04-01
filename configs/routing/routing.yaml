@@ -1,0 +1,11 @@
+routing:
+  confidence_threshold: 0.6
+  enable_structured: true
+  enable_decomposition: true
+  max_decomposition_hops: 2
+
+  fallback:
+    enabled: true
+    fallback_route: standard
+    trigger_on_low_confidence: true
+    trigger_on_error: true

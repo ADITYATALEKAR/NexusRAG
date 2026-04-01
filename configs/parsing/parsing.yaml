@@ -1,0 +1,17 @@
+parsing:
+  default_parser: pymupdf
+  fallback_parser: fallback_text
+
+  quality_thresholds:
+    min_confidence: 0.3
+    trigger_fallback_below: 0.3
+
+  parsers:
+    pymupdf:
+      enabled: true
+      priority: 10
+      supported: [.pdf]
+    fallback_text:
+      enabled: true
+      priority: 1
+      supported: [.txt, .md, .html, .csv, .json]

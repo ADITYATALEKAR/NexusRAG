@@ -1,0 +1,18 @@
+storage:
+  vector:
+    provider: qdrant
+    url: "http://localhost:6333"
+    collection: chunks
+    dimensions: 384
+
+  lexical:
+    provider: sqlite_fts
+    db_path: "data/lexical.db"
+
+  metadata:
+    provider: sqlite
+    db_path: "data/metadata.db"
+
+  embedding:
+    provider: mock
+    dimensions: 384

@@ -1,0 +1,58 @@
+structured:
+  default_table: documents
+  allowed_tables:
+    - documents
+    - chunk_metadata
+    - index_state
+
+  table_aliases:
+    documents: documents
+    document: documents
+    chunks: chunk_metadata
+    chunk: chunk_metadata
+    index: index_state
+    indexes: index_state
+
+  table_schemas:
+    documents:
+      - document_id
+      - document_title
+      - document_type
+      - tags
+      - trust_score
+      - created_at
+      - chunk_count
+    chunk_metadata:
+      - chunk_id
+      - document_id
+      - content
+      - document_title
+      - document_type
+      - tags
+      - trust_score
+      - section_title
+      - section_hierarchy
+      - page_numbers
+      - token_count
+      - created_at
+      - embedding_model
+      - child_chunk_ids
+    index_state:
+      - document_id
+      - checksum
+      - indexed_at
+      - chunk_count
+      - embedding_model
+      - is_stale
+      - last_verified_at
+
+  templates:
+    aggregation:
+      - how many
+      - count
+      - total
+      - average
+    ranking:
+      - top
+      - highest
+      - lowest
