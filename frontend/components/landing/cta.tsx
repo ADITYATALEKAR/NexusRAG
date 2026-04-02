@@ -1,19 +1,21 @@
-import { ArrowRight, Mail, Phone, Server } from 'lucide-react'
+import { ArrowRight, Cloud, Github, Mail, Phone, Server } from 'lucide-react'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 import { PUBLIC_TRIAL_QUERY_LIMIT } from '@/lib/public-config'
-import { FOUNDER_CONTACT } from '@/lib/site-content'
+import { FOUNDER_CONTACT, GITHUB_REPO_URL } from '@/lib/site-content'
 
 const launchModes = [
   {
-    title: 'Hosted free evaluation',
-    description: `${PUBLIC_TRIAL_QUERY_LIMIT} questions on the managed NexusRAG API so candidates, customers, and evaluators can see the product live immediately.`,
+    icon: Cloud,
+    title: 'Hosted evaluation',
+    description: `${PUBLIC_TRIAL_QUERY_LIMIT} free queries on the managed API. Upload a document, ask a question, verify citations end to end — no setup, no account.`,
   },
   {
-    title: 'Bring your own API',
+    icon: Server,
+    title: 'Self-hosted deployment',
     description:
-      'Connect your own NexusRAG API endpoint and access key for unlimited usage, private data boundaries, and your own operational controls.',
+      'Clone the public repo, deploy your own NexusRAG API, and connect the same workspace. Full control over data, models, and infrastructure.',
   },
 ]
 
@@ -25,25 +27,32 @@ export function CTA() {
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_360px]">
             <div>
               <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-                Ready to launch
+                Get started
               </p>
               <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary md:text-4xl">
-                Start free, prove the workflow, then switch to your own API without changing the UI
+                Evaluate on our infrastructure, then deploy on yours
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
-                NexusRAG is built for a serious evaluation path. Reviewers can use the hosted public
-                experience immediately, while teams that want ongoing usage can bring their own API
-                endpoint and keep the same interface, evidence model, and operating rhythm.
+                Start with the hosted API to see the full retrieval pipeline — ingestion,
+                hybrid search, citation-backed generation — working end to end. When your
+                team is ready, deploy your own instance and keep the same interface, API
+                contracts, and evidence model.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button size="lg" asChild>
                   <Link href="/dashboard">
-                    Start free
+                    Try it free
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link href="/login">Use your own API</Link>
+                  <Link href="/login">Connect your API</Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer">
+                    <Github className="h-4 w-4" />
+                    View source
+                  </a>
                 </Button>
               </div>
               <div className="mt-8 grid gap-4 md:grid-cols-2">
@@ -53,7 +62,7 @@ export function CTA() {
                     className="rounded-2xl border border-border-subtle bg-bg-primary/80 p-4"
                   >
                     <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-accent-100 text-accent-700 dark:bg-accent-500/15 dark:text-accent-100">
-                      <Server className="h-4 w-4" />
+                      <mode.icon className="h-4 w-4" />
                     </div>
                     <h3 className="text-base font-semibold text-text-primary">{mode.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-text-secondary">
@@ -89,8 +98,8 @@ export function CTA() {
                 </a>
               </div>
               <p className="mt-6 text-sm leading-6 text-text-secondary">
-                If you want a walkthrough, deployment discussion, or a private API setup for your
-                team, reach out directly and we can take it from evaluation to production.
+                Need a walkthrough, deployment assistance, or a private instance for your
+                team? Reach out directly.
               </p>
             </div>
           </div>

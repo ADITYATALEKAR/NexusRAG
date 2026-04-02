@@ -3,11 +3,12 @@
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
-  Database,
+  CheckCircle2,
   FileSearch,
-  Network,
+  Quote,
+  Search,
   ShieldCheck,
-  Sparkles,
+  Layers,
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -16,34 +17,34 @@ import { PUBLIC_TRIAL_QUERY_LIMIT } from '@/lib/public-config'
 
 const howToUseSteps = [
   {
-    title: 'Upload your operating knowledge',
+    title: 'Upload documents',
     description:
-      'Bring in PDFs, DOCX, Markdown, and text. NexusRAG indexes them into a searchable evidence layer instead of a loose chat dump.',
+      'Ingest PDF, DOCX, TXT, Markdown, HTML, CSV, or JSON files up to 50 MB each. NexusRAG applies semantic chunking (512-token target, 64-token overlap) and indexes every chunk for hybrid retrieval.',
   },
   {
-    title: 'Ask focused, decision-grade questions',
+    title: 'Ask a question',
     description:
-      'Query policies, product docs, client material, or research and get retrieval-backed answers designed for follow-up, not guesswork.',
+      'Query your knowledge base in natural language. The system runs dense vector search and BM25 keyword matching in parallel, fuses the top 50 results from each, reranks to 25, and returns the best 10 passages to the generation model.',
   },
   {
-    title: 'Review sources before you act',
+    title: 'Verify with citations',
     description:
-      'Every answer is paired with source excerpts, document names, and relevance context so teams can audit what the system used.',
+      'Every answer includes inline source references with document names, chunk positions, and relevance scores. If the evidence is insufficient, the system abstains rather than guessing.',
   },
 ]
 
 const accessModes = [
   {
-    title: 'Free hosted evaluation',
-    description: `Use our live hosted API for up to ${PUBLIC_TRIAL_QUERY_LIMIT} questions and see the full workflow end to end.`,
+    title: 'Hosted evaluation',
+    description: `Try the full pipeline — upload, retrieve, and verify — with ${PUBLIC_TRIAL_QUERY_LIMIT} free queries on our managed API. No account required.`,
     ctaLabel: 'Start free',
     href: '/dashboard',
   },
   {
-    title: 'Bring your own API',
+    title: 'Self-hosted deployment',
     description:
-      'Point the same interface at your own NexusRAG API endpoint and key for unlimited usage on your own infrastructure.',
-    ctaLabel: 'Use your own API',
+      'Deploy your own NexusRAG API and connect the same workspace for unlimited queries, private data, and full operational control.',
+    ctaLabel: 'Connect your API',
     href: '/login',
   },
 ]
@@ -53,37 +54,36 @@ export function Hero() {
     <section className="relative overflow-hidden border-b border-border-subtle">
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.035]" />
       <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-accent-50/80 to-transparent dark:from-accent-500/10" />
-      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-24 lg:pb-28 lg:pt-32">
+      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-20 lg:pb-28 lg:pt-24">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          className="mx-auto inline-flex items-center gap-2 rounded-full border border-accent-100 bg-accent-50 px-3 py-1 text-sm font-medium text-accent-700 dark:border-accent-500/20 dark:bg-accent-500/10 dark:text-accent-100"
+          className="inline-flex items-center gap-2 rounded-full border border-accent-100 bg-accent-50 px-3 py-1 text-sm font-medium text-accent-700 dark:border-accent-500/20 dark:bg-accent-500/10 dark:text-accent-100"
         >
-          <Sparkles className="h-4 w-4" />
-          Cloudflare Pages + Render + Neon live
+          <CheckCircle2 className="h-4 w-4" />
+          Open-source &middot; GPT-4o + multi-provider failover &middot; Self-hostable
         </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className="mx-auto mt-8 max-w-5xl text-balance text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl lg:text-6xl"
+          className="mt-8 max-w-4xl text-balance text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl lg:text-6xl"
         >
-          Retrieval that shows its work,
+          Enterprise RAG with
           <span className="block text-accent-600 dark:text-accent-100">
-            not just another answer box
+            evidence built in
           </span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.12 }}
-          className="mt-6 max-w-3xl text-lg leading-8 text-text-secondary"
+          className="mt-6 max-w-2xl text-lg leading-8 text-text-secondary"
         >
-          NexusRAG turns documents into a production-grade knowledge workspace with hybrid
-          retrieval, citation-backed answers, and a deployment shape real teams can operate:
-          Cloudflare Pages on the edge, Render for the live API, and Neon pgvector for the
-          evidence layer.
+          NexusRAG is an API-first retrieval platform for teams that need grounded answers
+          from private documents. Hybrid search, inline citations, abstention when evidence
+          is thin, and a self-hostable stack — not another chat wrapper.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -93,44 +93,48 @@ export function Hero() {
         >
           <Button size="lg" asChild>
             <Link href="/dashboard">
-              Get started
+              Try it free
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
-            <Link href="/login">Use your own API</Link>
+            <Link href="/login">Connect your own API</Link>
           </Button>
         </motion.div>
-        <div className="mt-6 max-w-3xl text-sm leading-7 text-text-secondary">
-          Start with the hosted trial for {PUBLIC_TRIAL_QUERY_LIMIT} questions, then switch to
-          your own NexusRAG API endpoint for unlimited usage without changing the interface.
+        <div className="mt-5 text-sm text-text-tertiary">
+          {PUBLIC_TRIAL_QUERY_LIMIT} free queries on the hosted API &middot; No account required
         </div>
-        <div className="mt-12 flex flex-wrap gap-4 text-sm text-text-secondary">
+
+        <div className="mt-12 flex flex-wrap gap-3 text-sm text-text-secondary">
           <div className="inline-flex items-center gap-2 rounded-full bg-bg-elevated px-4 py-2 shadow-sm">
-            <ShieldCheck className="h-4 w-4 text-success" />
-            Citation-backed answers
+            <Quote className="h-4 w-4 text-accent-600 dark:text-accent-100" />
+            Citation-backed answers with abstention
           </div>
           <div className="inline-flex items-center gap-2 rounded-full bg-bg-elevated px-4 py-2 shadow-sm">
-            <Network className="h-4 w-4 text-info" />
-            Hybrid retrieval and auditable evidence
+            <Search className="h-4 w-4 text-accent-600 dark:text-accent-100" />
+            Hybrid retrieval: dense vectors + BM25
           </div>
           <div className="inline-flex items-center gap-2 rounded-full bg-bg-elevated px-4 py-2 shadow-sm">
-            <Database className="h-4 w-4 text-success" />
-            Neon pgvector deployment already live
+            <Layers className="h-4 w-4 text-accent-600 dark:text-accent-100" />
+            GPT-4o default &middot; Claude &middot; Gemini &middot; Llama failover
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full bg-bg-elevated px-4 py-2 shadow-sm">
+            <ShieldCheck className="h-4 w-4 text-accent-600 dark:text-accent-100" />
+            Self-hostable &middot; Full REST API
           </div>
         </div>
 
         <div
-          id="how-to-use"
+          id="how-it-works"
           className="mt-16 grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)]"
         >
           <div className="surface space-y-6 p-8">
             <div>
               <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-                How to use
+                How it works
               </p>
               <h2 className="mt-3 text-2xl font-semibold tracking-tight text-text-primary">
-                Three steps from raw files to defensible answers
+                From raw files to cited answers in three steps
               </h2>
             </div>
             <div className="space-y-4">

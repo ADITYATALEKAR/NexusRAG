@@ -1,83 +1,133 @@
 const architectureLayers = [
   {
-    title: 'Cloudflare Pages frontend',
+    title: 'Cloudflare Pages',
+    role: 'Frontend',
     description:
-      'Static Next.js delivery keeps the workspace fast, globally accessible, and free of backend secrets in the browser.',
+      'Static Next.js build served at the edge. Sub-second loads globally, zero backend secrets in the browser.',
   },
   {
-    title: 'Render-hosted NexusRAG API',
+    title: 'Render',
+    role: 'API server (FastAPI)',
     description:
-      'FastAPI handles ingestion, retrieval, answer generation, and usage control for the hosted public experience.',
+      'Handles document ingestion, hybrid retrieval, answer generation with multi-provider failover, and usage tracking.',
   },
   {
-    title: 'Neon pgvector evidence layer',
+    title: 'Neon Postgres + pgvector',
+    role: 'Data layer',
     description:
-      'Document metadata, vector search, and retrieval state live in managed Postgres so the data plane is durable and inspectable.',
+      'Document metadata, 384-dimensional vector embeddings, and retrieval state in managed Postgres. Durable, queryable, inspectable.',
   },
+]
+
+const technicalSpecs = [
+  { label: 'Chunking', value: '512 tokens, 64-token overlap' },
+  { label: 'Dense retrieval', value: 'Top 50, 384-dim vectors' },
+  { label: 'Lexical retrieval', value: 'BM25, top 50' },
+  { label: 'Fusion + rerank', value: 'Top 25, final top 10' },
+  { label: 'Generation', value: 'GPT-4o (temp 0.1, 1024 max)' },
+  { label: 'Failover chain', value: 'Claude \u2192 Gemini \u2192 Llama 3.1' },
 ]
 
 const comparisons = [
   {
-    category: 'Source transparency',
-    nexusrag: 'Inline citations, evidence panel, and source excerpts in the same workspace.',
-    generic: 'Answers often arrive as plain text with no clear audit trail back to source chunks.',
+    category: 'Source verification',
+    nexusrag:
+      'Inline citations with document names, chunk positions, and relevance scores on every answer. Abstains when evidence is insufficient.',
+    competitors: 'ChatPDF, Vectara',
+    generic:
+      'Answers arrive as plain text. Source attribution, when present, is limited to document-level references without passage-level tracing.',
   },
   {
-    category: 'Operational control',
-    nexusrag: 'Hosted evaluation mode plus a direct path to your own NexusRAG API deployment.',
-    generic: 'Many demos stop at a shared playground and offer no migration path to controlled usage.',
+    category: 'Retrieval method',
+    nexusrag:
+      'Hybrid pipeline: dense vector similarity + BM25 keyword matching with fusion and reranking. Handles semantic queries and exact-phrase lookups.',
+    competitors: 'PrivateGPT, ChatPDF',
+    generic:
+      'Single-method retrieval (usually vector-only) that struggles with exact names, numbers, and domain-specific terminology.',
   },
   {
-    category: 'Architecture',
-    nexusrag: 'Frontend, backend, and vector store are deployed on distinct real-world services.',
-    generic: 'Single-stack prototypes often hide where retrieval, storage, and inference actually happen.',
+    category: 'Deployment model',
+    nexusrag:
+      'Hosted evaluation with zero setup, plus a fully self-hostable open-source stack. Same interface, same API, your infrastructure.',
+    competitors: 'Danswer/Onyx, Ragie',
+    generic:
+      'Either cloud-only with no self-hosting path, or self-host-only with no managed evaluation option.',
   },
   {
-    category: 'Decision support',
-    nexusrag: 'Designed for grounded retrieval and evidence review before action.',
-    generic: 'Optimized for impression, not for documentation-heavy workflows that need defensible answers.',
+    category: 'Developer + end-user',
+    nexusrag:
+      'Full REST API for programmatic access and an end-user workspace in a single product. API-first for developers, workspace-ready for operators.',
+    competitors: 'Vectara, Ragie',
+    generic:
+      'Forces a choice: simple end-user chat app with no API, or developer-only API with no built-in interface.',
   },
 ]
 
 export function TrustSignals() {
   return (
-    <section className="py-24">
+    <section id="architecture" className="py-24">
       <div className="mx-auto max-w-6xl space-y-8 px-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-          <div className="surface space-y-5 p-8">
-            <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-              Architecture
-            </p>
-            <h2 className="text-3xl font-semibold tracking-tight text-text-primary">
-              Production architecture, not presentation-only polish
-            </h2>
-            <p className="text-sm leading-7 text-text-secondary">
-              The live deployment is already split the way serious teams expect: edge-hosted
-              frontend, dedicated backend API, and a managed vector-capable Postgres layer. That
-              means the product story, deployment story, and recruiter story all point to the same
-              system.
-            </p>
-            <div className="grid gap-4">
-              {architectureLayers.map((layer) => (
-                <div
-                  key={layer.title}
-                  className="rounded-2xl border border-border-subtle bg-bg-secondary px-4 py-4"
-                >
-                  <h3 className="text-base font-semibold text-text-primary">{layer.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-text-secondary">
-                    {layer.description}
-                  </p>
-                </div>
-              ))}
+          <div className="space-y-6">
+            <div className="surface space-y-5 p-8">
+              <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
+                Architecture
+              </p>
+              <h2 className="text-3xl font-semibold tracking-tight text-text-primary">
+                Three-tier production stack
+              </h2>
+              <p className="text-sm leading-7 text-text-secondary">
+                NexusRAG runs on the same architecture you would deploy in production:
+                edge-hosted frontend, dedicated API server, and managed vector-capable
+                Postgres. What you evaluate is what you ship.
+              </p>
+              <div className="grid gap-4">
+                {architectureLayers.map((layer) => (
+                  <div
+                    key={layer.title}
+                    className="rounded-2xl border border-border-subtle bg-bg-secondary px-4 py-4"
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <h3 className="text-base font-semibold text-text-primary">{layer.title}</h3>
+                      <span className="text-xs font-medium text-text-tertiary">{layer.role}</span>
+                    </div>
+                    <p className="mt-2 text-sm leading-6 text-text-secondary">
+                      {layer.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="surface p-8">
+              <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
+                Retrieval defaults
+              </p>
+              <h3 className="mt-3 text-xl font-semibold tracking-tight text-text-primary">
+                Pipeline configuration
+              </h3>
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                {technicalSpecs.map((spec) => (
+                  <div
+                    key={spec.label}
+                    className="rounded-xl border border-border-subtle bg-bg-secondary px-3 py-2.5"
+                  >
+                    <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-text-tertiary">
+                      {spec.label}
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-text-primary">{spec.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
           <div className="surface space-y-5 p-8">
             <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-              Why NexusRAG
+              NexusRAG vs. alternatives
             </p>
             <h2 className="text-3xl font-semibold tracking-tight text-text-primary">
-              Better suited to evidence-heavy work than generic file chat
+              How we compare to ChatPDF, Vectara, Danswer, and others
             </h2>
             <div className="space-y-4">
               {comparisons.map((row) => (
@@ -95,7 +145,7 @@ export function TrustSignals() {
                     </div>
                     <div className="rounded-xl bg-bg-primary px-4 py-3">
                       <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-text-tertiary">
-                        Generic alternative
+                        {row.competitors}
                       </p>
                       <p className="mt-2 text-sm leading-6 text-text-secondary">{row.generic}</p>
                     </div>
