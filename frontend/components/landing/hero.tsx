@@ -54,7 +54,7 @@ export function Hero() {
     <section className="relative overflow-hidden border-b border-border-subtle">
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.035]" />
       <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-accent-50/80 to-transparent dark:from-accent-500/10" />
-      <div className="relative mx-auto max-w-6xl px-6 pb-24 pt-20 lg:pb-28 lg:pt-24">
+      <div className="relative mx-auto max-w-[1440px] px-6 pb-24 pt-20 lg:pb-28 lg:pt-24">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}

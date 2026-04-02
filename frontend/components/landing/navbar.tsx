@@ -9,7 +9,7 @@ import { GITHUB_REPO_URL } from '@/lib/site-content'
 export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b border-border-subtle bg-bg-primary/80 backdrop-blur-lg">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-3">
         <Link href="/" className="flex items-center gap-2.5" aria-label="NexusRAG home">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-600 text-sm font-bold text-white dark:bg-accent-500">
             &lt;&gt;

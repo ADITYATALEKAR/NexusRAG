@@ -66,7 +66,7 @@ const comparisons = [
 export function TrustSignals() {
   return (
     <section id="architecture" className="py-24">
-      <div className="mx-auto max-w-6xl space-y-8 px-6">
+      <div className="mx-auto max-w-[1440px] space-y-8 px-6">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
           <div className="space-y-6">
             <div className="surface space-y-5 p-8">

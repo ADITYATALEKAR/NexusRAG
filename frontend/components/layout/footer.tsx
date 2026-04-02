@@ -5,7 +5,7 @@ import { GITHUB_REPO_URL, FOUNDER_CONTACT } from '@/lib/site-content'
 export function Footer() {
   return (
     <footer className="border-t border-border-subtle bg-bg-primary">
-      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(260px,320px)]">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-6 py-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(260px,320px)]">
         <div className="space-y-4">
           <Link href="/" className="flex items-center gap-2.5" aria-label="NexusRAG home">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-600 text-sm font-bold text-white dark:bg-accent-500">
