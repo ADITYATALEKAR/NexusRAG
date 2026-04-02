@@ -1,4 +1,11 @@
 # NexusRAG
+<img width="3198" height="1733" alt="Screenshot 2026-04-02 171222" src="https://github.com/user-attachments/assets/85a21853-be63-4235-b9b5-02dd5c8039a0" />
+
+<img width="3199" height="1575" alt="Screenshot 2026-04-02 171237" src="https://github.com/user-attachments/assets/66062ef4-2326-4bae-80cd-54c9d8c05ed4" />
+<img width="3199" height="1438" alt="Screenshot 2026-04-02 171253" src="https://github.com/user-attachments/assets/19368c94-4d30-4045-a32a-1f7a59faee76" />
+
+<img width="3197" height="1718" alt="Screenshot 2026-04-02 171310" src="https://github.com/user-attachments/assets/79bf94f9-017e-4e2d-a9bd-35d45eeb8c82" />
+
 
 NexusRAG is a state-of-the-art retrieval operating system for enterprise RAG.
 
