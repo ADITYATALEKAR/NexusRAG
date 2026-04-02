@@ -112,7 +112,7 @@ class ShutdownCoordinator:
 def load_runtime_config(config_dir: Path) -> DeploymentRuntimeConfig:
     """Resolve deployment runtime settings from YAML and environment variables."""
     loader = ConfigLoader(config_dir=config_dir)
-    app_file = loader.load_validated("app/app.yaml", AppFileConfig)
+    app_file = loader.load_validated("app/app.yaml", AppFileConfig, apply_env_overrides=False)
     default_runtime = app_file.flatten()
 
     environment = os.getenv("RAG__ENV", default_runtime.environment).strip().lower() or "development"

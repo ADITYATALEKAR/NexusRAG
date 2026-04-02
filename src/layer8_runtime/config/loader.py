@@ -23,7 +23,7 @@ class ConfigLoader:
     def __init__(self, config_dir: Path) -> None:
         self.config_dir = config_dir
 
-    def load_yaml(self, relative_path: str) -> dict[str, Any]:
+    def load_yaml(self, relative_path: str, *, apply_env_overrides: bool = True) -> dict[str, Any]:
         """Load YAML from disk and apply env overrides."""
         path = self.config_dir / relative_path
         if not path.exists():
@@ -56,7 +56,8 @@ class ConfigLoader:
                     metadata={"path": str(path)},
                 ),
             )
-        self._apply_env_overrides(loaded)
+        if apply_env_overrides:
+            self._apply_env_overrides(loaded)
         return loaded
 
     def load_validated(
@@ -64,9 +65,11 @@ class ConfigLoader:
         relative_path: str,
         schema: type[T],
         root_key: str | None = None,
+        *,
+        apply_env_overrides: bool = True,
     ) -> T:
         """Load config and validate it against a Pydantic model."""
-        data = self.load_yaml(relative_path)
+        data = self.load_yaml(relative_path, apply_env_overrides=apply_env_overrides)
         if root_key is not None:
             if root_key not in data:
                 raise ConfigurationError(
