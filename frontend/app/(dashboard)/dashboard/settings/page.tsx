@@ -9,6 +9,7 @@ import { z } from 'zod'
 import {
   DEFAULT_PUBLIC_BACKEND_URL,
   DEPLOYMENT_TARGET,
+  PUBLIC_TRIAL_QUERY_LIMIT,
   PUBLIC_APP_ENABLED
 } from '@/lib/public-config'
 import { useAppStore } from '@/lib/stores/app-store'
@@ -58,7 +59,10 @@ export default function SettingsPage() {
     <Shell className="space-y-6">
       <div>
         <h1 className="section-title">Settings</h1>
-        <p className="section-copy">Tune theme and optional operator connectivity for this temporary deployment.</p>
+        <p className="section-copy">
+          Control how this browser connects to NexusRAG, from the hosted evaluation mode to your
+          own private API deployment.
+        </p>
       </div>
 
       <section className="surface space-y-5 p-6">
@@ -82,25 +86,27 @@ export default function SettingsPage() {
 
       <section className="surface space-y-5 p-6">
         <div>
-          <h2 className="text-lg font-semibold text-text-primary">Operator backend</h2>
+          <h2 className="text-lg font-semibold text-text-primary">Bring your own API</h2>
           <p className="mt-1 text-sm text-text-secondary">
-            Public demo mode is {PUBLIC_APP_ENABLED ? 'enabled' : 'disabled'} for this build. Use the fields below only if you want to point the app at a protected backend with your own API key.
+            The hosted evaluation mode is {PUBLIC_APP_ENABLED ? 'enabled' : 'disabled'} for this
+            build. The public deployment includes {PUBLIC_TRIAL_QUERY_LIMIT} hosted questions. Use
+            the fields below if you want unlimited usage on your own NexusRAG API endpoint and key.
           </p>
         </div>
         <form className="space-y-5" onSubmit={onSubmit}>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">API URL</label>
-            <Input {...register('apiUrl')} placeholder="https://your-koyeb-service.koyeb.app" />
+            <label className="text-sm font-medium text-text-primary">NexusRAG API URL</label>
+            <Input {...register('apiUrl')} placeholder="https://your-nexusrag-api.example.com" />
             {errors.apiUrl ? <p className="text-sm text-error">{errors.apiUrl.message}</p> : null}
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-text-primary">API key</label>
-            <Input {...register('apiKey')} type="password" placeholder="rag_live_..." />
+            <label className="text-sm font-medium text-text-primary">Access key</label>
+            <Input {...register('apiKey')} type="password" placeholder="nexusrag_live_..." />
             {errors.apiKey ? <p className="text-sm text-error">{errors.apiKey.message}</p> : null}
           </div>
           <div className="flex flex-wrap gap-3">
             <Button type="submit" disabled={isSubmitting}>
-              Save operator connection
+              Save API connection
             </Button>
             <Button
               type="button"
@@ -111,11 +117,11 @@ export default function SettingsPage() {
                 setSaved(false)
               }}
             >
-              Reset to public demo
+              Reset to hosted evaluation
             </Button>
           </div>
         </form>
-        {saved ? <p className="text-sm text-success">Operator connection updated for this browser.</p> : null}
+        {saved ? <p className="text-sm text-success">API connection updated for this browser.</p> : null}
         {saveError ? <p className="text-sm text-error">{saveError}</p> : null}
       </section>
 

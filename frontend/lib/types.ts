@@ -14,6 +14,11 @@ export interface AnswerPayload {
   text: string
   status: 'success' | 'partial' | 'abstained' | 'failed' | 'filtered'
   citations: CitationItem[]
+  usage?: {
+    hosted_trial_limit?: number
+    hosted_trial_used?: number
+    hosted_trial_remaining?: number
+  }
   trace?: {
     latency_ms?: number
     provider_used?: string

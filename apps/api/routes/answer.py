@@ -3,11 +3,21 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import os
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException, Request, status
+from fastapi import APIRouter, HTTPException, Request, Response, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
+from apps.api.public_demo import (
+    PublicDemoUsageTracker,
+    TrialUsage,
+    build_quota_message,
+    public_query_limit,
+    resolve_session_id,
+    should_enforce_public_demo_limit,
+)
 from apps.api.routes.retrieval import _get_or_build_retrieval_service
 from src.layer0_core.ids.base import QueryId
 from src.layer1_contracts.schemas.answer import AnswerStatus, Citation
@@ -78,8 +88,22 @@ class AnswerRuntime:
 
 
 @router.post("", response_model=AnswerResponse)
-async def generate_answer(payload: AnswerRequest, request: Request) -> AnswerResponse:
+async def generate_answer(payload: AnswerRequest, request: Request, response: Response) -> AnswerResponse | JSONResponse:
     """Generate a grounded answer for a user query."""
+    trial_usage = _consume_public_demo_quota(request)
+    if trial_usage is not None and not trial_usage.allowed:
+        quota_headers = _build_trial_headers(trial_usage)
+        return JSONResponse(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            content={
+                "message": build_quota_message(trial_usage.limit),
+                "trial_limit": trial_usage.limit,
+                "trial_used": trial_usage.used,
+                "trial_remaining": trial_usage.remaining,
+            },
+            headers=quota_headers,
+        )
+
     runtime = await _get_or_build_answer_runtime(request)
     query = Query(
         id=QueryId.generate().value,
@@ -122,6 +146,9 @@ async def generate_answer(payload: AnswerRequest, request: Request) -> AnswerRes
         latency_ms=trace.latency_ms,
         success=answer.status != AnswerStatus.FAILED,
     )
+    if trial_usage is not None:
+        for header_name, header_value in _build_trial_headers(trial_usage).items():
+            response.headers[header_name] = header_value
     return AnswerResponse(
         answer_id=answer.id,
         query_id=answer.query_id,
@@ -253,3 +280,43 @@ async def _build_answer_runtime(request: Request) -> AnswerRuntime:
             grounding_threshold=float(generation_raw.get("grounding_threshold", 0.5)),
         ),
     )
+
+
+def _consume_public_demo_quota(request: Request) -> TrialUsage | None:
+    """Consume one hosted-trial query when public demo mode is active."""
+    if not should_enforce_public_demo_limit(request):
+        return None
+
+    tracker = _get_or_build_public_demo_tracker(request)
+    return tracker.consume(resolve_session_id(request))
+
+
+def _get_or_build_public_demo_tracker(request: Request) -> PublicDemoUsageTracker:
+    """Return the cached public demo tracker or create it from env."""
+    tracker = getattr(request.app.state, "public_demo_tracker", None)
+    if tracker is not None:
+        return tracker
+
+    storage_runtime = getattr(request.app.state, "storage_runtime", None)
+    database_url = getattr(storage_runtime, "database_url", None)
+    if database_url is None:
+        database_url = (
+            os.getenv("DATABASE_URL")
+            or os.getenv("NEON_DATABASE_URL")
+            or os.getenv("NEXUSRAG_DATABASE_URL")
+        )
+    tracker = PublicDemoUsageTracker(
+        database_url=database_url,
+        limit=public_query_limit(),
+    )
+    request.app.state.public_demo_tracker = tracker
+    return tracker
+
+
+def _build_trial_headers(usage: TrialUsage) -> dict[str, str]:
+    """Serialize trial usage into response headers."""
+    return {
+        "X-NexusRAG-Trial-Limit": str(usage.limit),
+        "X-NexusRAG-Trial-Used": str(usage.used),
+        "X-NexusRAG-Trial-Remaining": str(usage.remaining),
+    }

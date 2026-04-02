@@ -35,5 +35,8 @@ def configure_cors(
             "X-RateLimit-Limit",
             "X-RateLimit-Remaining",
             "X-RateLimit-Reset",
+            "X-NexusRAG-Trial-Limit",
+            "X-NexusRAG-Trial-Used",
+            "X-NexusRAG-Trial-Remaining",
         ],
     )

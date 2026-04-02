@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 
 import { Logo } from '@/components/shared/logo'
 import { Button } from '@/components/ui/button'
-import { PUBLIC_APP_ENABLED } from '@/lib/public-config'
+import { PUBLIC_APP_ENABLED, PUBLIC_TRIAL_QUERY_LIMIT } from '@/lib/public-config'
 import { useAppStore } from '@/lib/stores/app-store'
 import { cn } from '@/lib/utils'
 
@@ -28,8 +28,12 @@ export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const mobileSidebarOpen = useAppStore((state) => state.mobileSidebarOpen)
+  const operatorApiKey = useAppStore((state) => state.operatorApiKey)
+  const publicTrialUsage = useAppStore((state) => state.publicTrialUsage)
   const clearWorkspace = useAppStore((state) => state.clearWorkspace)
   const setMobileSidebarOpen = useAppStore((state) => state.setMobileSidebarOpen)
+  const usingOwnApi = Boolean(operatorApiKey)
+  const trialRemaining = Math.max(PUBLIC_TRIAL_QUERY_LIMIT - publicTrialUsage, 0)
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -77,7 +81,23 @@ export function Sidebar() {
         <div className="border-t border-border-subtle p-4">
           {PUBLIC_APP_ENABLED ? (
             <div className="rounded-lg bg-bg-tertiary px-3 py-3 text-sm text-text-secondary">
-              Public workspace access is enabled. This frontend talks directly to the hosted backend.
+              {usingOwnApi ? (
+                <>
+                  <p className="font-medium text-text-primary">Bring Your Own API</p>
+                  <p className="mt-1">
+                    This browser is connected to your own NexusRAG API and is not using the hosted
+                    trial limit.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="font-medium text-text-primary">Hosted evaluation</p>
+                  <p className="mt-1">
+                    {trialRemaining} of {PUBLIC_TRIAL_QUERY_LIMIT} shared API questions remaining in
+                    this browser.
+                  </p>
+                </>
+              )}
             </div>
           ) : (
             <button

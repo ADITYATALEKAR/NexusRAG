@@ -57,6 +57,7 @@ export function AnswerDisplay({
   }
 
   const segments = parseAnswerWithCitations(answer.text, answer.citations)
+  const hasCitations = answer.citations.length > 0
 
   return (
     <motion.div
@@ -66,8 +67,10 @@ export function AnswerDisplay({
       className="surface space-y-5 p-6"
     >
       <div className="flex flex-wrap items-center gap-2">
-        <Badge variant="accent">Citation-backed answer</Badge>
-        <Badge>{answer.citations.length} sources</Badge>
+        <Badge variant={hasCitations ? 'accent' : 'warning'}>
+          {hasCitations ? 'Evidence-backed answer' : 'Answer returned without source excerpts'}
+        </Badge>
+        <Badge>{hasCitations ? `${answer.citations.length} sources` : 'No sources attached'}</Badge>
         {answer.trace?.provider_used ? <Badge>{answer.trace.provider_used}</Badge> : null}
       </div>
 
@@ -87,6 +90,14 @@ export function AnswerDisplay({
           )
         )}
       </div>
+
+      {!hasCitations ? (
+        <div className="rounded-2xl border border-border-subtle bg-bg-secondary px-4 py-4 text-sm leading-6 text-text-secondary">
+          This response did not include source excerpts. Narrow the question, upload more relevant
+          documents, or use the evidence panel to review how cited passages will appear when
+          retrieval finds matching chunks.
+        </div>
+      ) : null}
 
       <div className="flex flex-wrap items-center gap-3 border-t border-border-subtle pt-4 text-xs text-text-tertiary">
         <span>{answer.status}</span>

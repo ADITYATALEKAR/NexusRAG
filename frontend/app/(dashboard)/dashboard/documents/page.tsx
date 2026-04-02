@@ -18,7 +18,8 @@ export default function DocumentsPage() {
       </div>
       {stagedMode ? (
         <div className="rounded-2xl border border-border-subtle bg-bg-secondary px-4 py-4 text-sm text-text-secondary">
-          This deployment needs a reachable backend API to process and index uploaded files. Set the public backend URL or configure an operator backend in Settings.
+          This workspace is currently in read-only mode until it can reach a NexusRAG API for
+          ingestion and indexing.
         </div>
       ) : null}
       <UploadZone onUpload={upload} />

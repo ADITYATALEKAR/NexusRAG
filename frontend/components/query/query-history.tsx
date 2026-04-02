@@ -8,7 +8,13 @@ import { formatRelativeTime } from '@/lib/utils'
 
 export function QueryHistory({ items, onSelect }: { items: QueryHistoryItem[]; onSelect: (item: QueryHistoryItem) => void }) {
   if (items.length === 0) {
-    return <EmptyState title="No recent queries" description="Your last few conversations will stay here for quick follow-up and comparison." icon={<Clock3 className="h-6 w-6 text-text-tertiary" />} />
+    return (
+      <EmptyState
+        title="No recent queries yet"
+        description="Your most recent answers stay in this browser so you can compare prompts, revisit wording, and reopen the evidence attached to earlier runs."
+        icon={<Clock3 className="h-6 w-6 text-text-tertiary" />}
+      />
+    )
   }
 
   return (
@@ -16,7 +22,9 @@ export function QueryHistory({ items, onSelect }: { items: QueryHistoryItem[]; o
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold text-text-primary">Recent queries</h3>
-          <p className="mt-1 text-xs text-text-tertiary">Optimistic, local history for quick iteration.</p>
+          <p className="mt-1 text-xs text-text-tertiary">
+            Reopen prior prompts to compare answers, sources, and follow-up questions.
+          </p>
         </div>
       </div>
       <div className="space-y-2">
@@ -31,7 +39,10 @@ export function QueryHistory({ items, onSelect }: { items: QueryHistoryItem[]; o
               <span className="text-[11px] uppercase tracking-[0.18em] text-text-tertiary">{item.status}</span>
             </div>
             <p className="mt-2 line-clamp-2 text-sm text-text-secondary">{item.answer || 'Waiting for answer...'}</p>
-            <p className="mt-2 text-xs text-text-tertiary">{formatRelativeTime(item.createdAt)}</p>
+            <div className="mt-2 flex items-center justify-between gap-3 text-xs text-text-tertiary">
+              <span>{formatRelativeTime(item.createdAt)}</span>
+              <span>{item.citations.length} sources</span>
+            </div>
           </button>
         ))}
       </div>

@@ -31,7 +31,11 @@ export function QueryInput({ onSubmit, isLoading, disabled = false }: { onSubmit
         ref={textareaRef}
         value={value}
         rows={1}
-        placeholder={disabled ? 'Connect the external RAG backend to enable querying...' : 'Ask a question about your documents...'}
+        placeholder={
+          disabled
+            ? 'Querying is unavailable until this workspace can reach a NexusRAG API...'
+            : 'Ask a grounded question about your uploaded knowledge...'
+        }
         className="min-h-[28px] max-h-[180px] flex-1 resize-none border-0 bg-transparent text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none disabled:cursor-not-allowed"
         disabled={disabled}
         onChange={(event) => setValue(event.target.value)}

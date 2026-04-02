@@ -9,6 +9,8 @@ interface AppState {
   mobileSidebarOpen: boolean
   queryHistory: QueryHistoryItem[]
   documents: DocumentItem[]
+  publicSessionId: string | null
+  publicTrialUsage: number
   operatorApiUrl: string | null
   operatorApiKey: string | null
   setMobileSidebarOpen: (value: boolean) => void
@@ -17,6 +19,8 @@ interface AppState {
   updateDocument: (id: string, patch: Partial<DocumentItem>) => void
   removeDocument: (id: string) => void
   replaceDocuments: (items: DocumentItem[]) => void
+  setPublicSessionId: (value: string) => void
+  syncPublicTrialUsage: (value: number) => void
   setOperatorConnection: (apiUrl: string | null, apiKey: string | null) => void
   clearWorkspace: () => void
 }
@@ -27,6 +31,8 @@ export const useAppStore = create<AppState>()(
       mobileSidebarOpen: false,
       queryHistory: [],
       documents: [],
+      publicSessionId: null,
+      publicTrialUsage: 0,
       operatorApiUrl: null,
       operatorApiKey: null,
       setMobileSidebarOpen: (value) => set({ mobileSidebarOpen: value }),
@@ -44,6 +50,8 @@ export const useAppStore = create<AppState>()(
         })),
       removeDocument: (id) => set((state) => ({ documents: state.documents.filter((document) => document.id !== id) })),
       replaceDocuments: (items) => set({ documents: items }),
+      setPublicSessionId: (value) => set({ publicSessionId: value }),
+      syncPublicTrialUsage: (value) => set({ publicTrialUsage: Math.max(0, value) }),
       setOperatorConnection: (apiUrl, apiKey) =>
         set({
           operatorApiUrl: apiUrl,
@@ -54,6 +62,7 @@ export const useAppStore = create<AppState>()(
           mobileSidebarOpen: false,
           queryHistory: [],
           documents: [],
+          publicTrialUsage: 0,
           operatorApiUrl: null,
           operatorApiKey: null
         })
@@ -62,6 +71,8 @@ export const useAppStore = create<AppState>()(
       name: 'nexusrag-frontend-store',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
+        publicSessionId: state.publicSessionId,
+        publicTrialUsage: state.publicTrialUsage,
         operatorApiUrl: state.operatorApiUrl,
         operatorApiKey: state.operatorApiKey,
         queryHistory: state.queryHistory,

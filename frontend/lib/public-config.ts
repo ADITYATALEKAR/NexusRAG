@@ -11,7 +11,7 @@ export const DEFAULT_PUBLIC_BACKEND_URL =
 
 export const DEPLOYMENT_TARGET =
   process.env.NEXT_PUBLIC_NEXUSRAG_DEPLOYMENT_TARGET ||
-  'cloudflare-pages-koyeb-neon'
+  'cloudflare-pages-render-neon'
 
 export const EXTERNAL_BACKEND_ENABLED =
   process.env.NEXT_PUBLIC_NEXUSRAG_EXTERNAL_BACKEND !== 'false'
@@ -21,3 +21,7 @@ export const REQUIRE_OPERATOR_LOGIN =
 
 export const PUBLIC_DEMO_MODE =
   PUBLIC_APP_ENABLED && !REQUIRE_OPERATOR_LOGIN
+
+export const PUBLIC_TRIAL_QUERY_LIMIT = Number(
+  process.env.NEXT_PUBLIC_NEXUSRAG_TRIAL_QUERY_LIMIT || '2'
+)
