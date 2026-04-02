@@ -65,9 +65,21 @@ class BootstrapSequence:
             AppFileConfig,
             apply_env_overrides=False,
         )
-        failover_file_config = config_loader.load_validated("models/llm-failover.yaml", FailoverFileConfig)
-        system_map = config_loader.load_validated("wiring/system-map.yaml", SystemMapConfig)
-        input_guards = config_loader.load_validated("security/input-guards.yaml", InputGuardsConfig)
+        failover_file_config = config_loader.load_validated(
+            "models/llm-failover.yaml",
+            FailoverFileConfig,
+            apply_env_overrides=False,
+        )
+        system_map = config_loader.load_validated(
+            "wiring/system-map.yaml",
+            SystemMapConfig,
+            apply_env_overrides=False,
+        )
+        input_guards = config_loader.load_validated(
+            "security/input-guards.yaml",
+            InputGuardsConfig,
+            apply_env_overrides=False,
+        )
         app_config = app_file_config.flatten()
 
         component_registry = ComponentRegistry()
