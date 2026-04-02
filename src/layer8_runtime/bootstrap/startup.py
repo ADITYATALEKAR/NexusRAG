@@ -60,7 +60,11 @@ class BootstrapSequence:
     async def run(self) -> StartupResult:
         """Execute the startup sequence."""
         config_loader = ConfigLoader(config_dir=self.config_dir)
-        app_file_config = config_loader.load_validated("app/app.yaml", AppFileConfig)
+        app_file_config = config_loader.load_validated(
+            "app/app.yaml",
+            AppFileConfig,
+            apply_env_overrides=False,
+        )
         failover_file_config = config_loader.load_validated("models/llm-failover.yaml", FailoverFileConfig)
         system_map = config_loader.load_validated("wiring/system-map.yaml", SystemMapConfig)
         input_guards = config_loader.load_validated("security/input-guards.yaml", InputGuardsConfig)
