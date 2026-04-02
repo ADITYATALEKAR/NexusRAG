@@ -3,10 +3,17 @@
 from __future__ import annotations
 
 from datetime import timedelta
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request, status
 
+from src.layer2_domain.failover.service import FailoverService
+from src.layer2_domain.failover.state_machine import FailoverConfig as DomainFailoverConfig
 from src.layer1_contracts.schemas.health import ProviderHealth
+from src.layer4_providers.llms.registry import build_configured_providers, load_provider_config
+from src.layer5_wiring.registry.provider_registry import ProviderRegistry
+from src.layer8_runtime.config.loader import ConfigLoader
+from src.layer8_runtime.config.schemas import FailoverFileConfig
 
 router = APIRouter()
 
@@ -42,12 +49,60 @@ async def _get_provider_runtime(request: Request):
         return provider_registry, failover_service
 
     try:
-        from apps.api.routes.answer import _get_or_build_answer_runtime
-
-        runtime = await _get_or_build_answer_runtime(request)
-        return runtime.provider_registry, runtime.failover_service
+        diagnostics_runtime = await _get_or_build_provider_diagnostics_runtime(request)
+        return diagnostics_runtime
     except HTTPException:
         return None, None
+    except Exception:  # noqa: BLE001
+        return None, None
+
+
+async def _get_or_build_provider_diagnostics_runtime(request: Request):
+    """Build a lightweight provider-only runtime for health routes."""
+    provider_registry = getattr(request.app.state, "provider_diagnostics_registry", None)
+    failover_service = getattr(request.app.state, "provider_diagnostics_failover_service", None)
+    if provider_registry is not None and failover_service is not None:
+        return provider_registry, failover_service
+
+    config_dir = Path(__file__).resolve().parents[3] / "configs"
+    loader = ConfigLoader(config_dir=config_dir)
+    provider_raw = load_provider_config(config_dir)
+    failover_file_config = loader.load_validated(
+        "models/llm-failover.yaml",
+        FailoverFileConfig,
+        apply_env_overrides=False,
+    )
+
+    provider_registry = ProviderRegistry()
+    providers = build_configured_providers(provider_raw)
+    if not providers:
+        request.app.state.provider_diagnostics_registry = provider_registry
+        request.app.state.provider_diagnostics_failover_service = FailoverService(
+            [],
+            DomainFailoverConfig(),
+        )
+        return provider_registry, request.app.state.provider_diagnostics_failover_service
+
+    for provider in providers:
+        await provider_registry.register(provider, check_health=False)
+
+    failover_service = FailoverService(
+        providers=provider_registry.get_all(),
+        config=DomainFailoverConfig(
+            max_retries=failover_file_config.failover.retry.max_retries,
+            base_delay_seconds=failover_file_config.failover.retry.base_delay_seconds,
+            max_delay_seconds=failover_file_config.failover.retry.max_delay_seconds,
+            backoff_multiplier=failover_file_config.failover.retry.backoff_multiplier,
+            jitter=failover_file_config.failover.retry.jitter,
+            cooldown_duration_seconds=failover_file_config.failover.cooldown.default_duration_seconds,
+            max_cooldown_duration_seconds=failover_file_config.failover.cooldown.max_duration_seconds,
+            consecutive_failures_threshold=failover_file_config.failover.cooldown.consecutive_failures_threshold,
+        ),
+    )
+
+    request.app.state.provider_diagnostics_registry = provider_registry
+    request.app.state.provider_diagnostics_failover_service = failover_service
+    return provider_registry, failover_service
 
 
 def _apply_cooldowns(
