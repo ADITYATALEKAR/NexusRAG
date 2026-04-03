@@ -32,6 +32,37 @@ button { cursor: pointer; }
   .surface-muted { @apply rounded-xl border border-border-subtle bg-bg-secondary; }
   .section-title { @apply text-2xl font-semibold tracking-tight text-text-primary; }
   .section-copy { @apply mt-2 text-sm text-text-secondary; }
+  .app-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    scrollbar-gutter: stable;
+  }
+  .app-scroll[data-scrolling='true'] {
+    scrollbar-color: hsl(var(--color-border-default) / 0.85) transparent;
+  }
+  .app-scroll:hover,
+  .app-scroll:focus-within {
+    scrollbar-color: hsl(var(--color-border-default) / 0.85) transparent;
+  }
+  .app-scroll::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .app-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .app-scroll::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: transparent;
+    background-clip: padding-box;
+  }
+  .app-scroll:hover::-webkit-scrollbar-thumb,
+  .app-scroll:focus-within::-webkit-scrollbar-thumb,
+  .app-scroll[data-scrolling='true']::-webkit-scrollbar-thumb {
+    background: hsl(var(--color-border-default) / 0.85);
+    background-clip: padding-box;
+  }
   .skeleton {
     background-image: linear-gradient(90deg, hsl(var(--color-bg-tertiary)) 0px, hsl(var(--color-bg-secondary)) 80px, hsl(var(--color-bg-tertiary)) 160px);
     background-size: 400px 100%;

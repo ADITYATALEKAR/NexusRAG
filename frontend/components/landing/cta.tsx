@@ -22,7 +22,7 @@ const launchModes = [
 export function CTA() {
   return (
     <section className="py-24">
-      <div className="mx-auto max-w-[1440px] px-6">
+      <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-10 xl:px-14">
         <div className="surface overflow-hidden bg-gradient-to-br from-bg-elevated via-bg-elevated to-accent-50/80 p-10 dark:to-accent-500/10 md:p-14">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_360px]">
             <div>

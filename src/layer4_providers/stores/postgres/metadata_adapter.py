@@ -59,6 +59,13 @@ class PostgresMetadataStore(MetadataStoreInterface):
             )
             connection.execute(
                 """
+                DELETE FROM chunks
+                WHERE id = %(id)s
+                """,
+                {"id": chunk.id},
+            )
+            connection.execute(
+                """
                 INSERT INTO chunks (
                     id, document_id, content, document_title, document_type,
                     tags, trust_score, section_title, section_hierarchy, page_numbers,
@@ -72,26 +79,6 @@ class PostgresMetadataStore(MetadataStoreInterface):
                     %(child_chunk_ids)s::jsonb, %(sequence_number)s, %(parent_chunk_id)s,
                     %(start_char)s, %(end_char)s, %(start_page)s, %(end_page)s
                 )
-                ON CONFLICT (id) DO UPDATE SET
-                    document_id = EXCLUDED.document_id,
-                    content = EXCLUDED.content,
-                    document_title = EXCLUDED.document_title,
-                    document_type = EXCLUDED.document_type,
-                    tags = EXCLUDED.tags,
-                    trust_score = EXCLUDED.trust_score,
-                    section_title = EXCLUDED.section_title,
-                    section_hierarchy = EXCLUDED.section_hierarchy,
-                    page_numbers = EXCLUDED.page_numbers,
-                    token_count = EXCLUDED.token_count,
-                    created_at = EXCLUDED.created_at,
-                    embedding_model = EXCLUDED.embedding_model,
-                    child_chunk_ids = EXCLUDED.child_chunk_ids,
-                    sequence_number = EXCLUDED.sequence_number,
-                    parent_chunk_id = EXCLUDED.parent_chunk_id,
-                    start_char = EXCLUDED.start_char,
-                    end_char = EXCLUDED.end_char,
-                    start_page = EXCLUDED.start_page,
-                    end_page = EXCLUDED.end_page
                 """,
                 {
                     "id": chunk.id,

@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { CitationCard } from '@/components/query/citation-card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { useScrollActivity } from '@/lib/hooks/use-scroll-activity'
 import type { AnswerPayload, CitationItem } from '@/lib/types'
 
 export function EvidencePanel({
@@ -15,16 +16,20 @@ export function EvidencePanel({
   answerStatus: AnswerPayload['status'] | null
 }) {
   const [expanded, setExpanded] = useState(0)
+  const scrollRef = useScrollActivity<HTMLDivElement>()
 
   return (
-    <div className="h-full border-l border-border-subtle bg-bg-secondary p-4 md:p-5">
+    <div
+      ref={scrollRef}
+      className="app-scroll h-full overflow-y-auto border-l border-border-subtle bg-bg-secondary p-4 md:p-5"
+    >
       <div className="mb-4">
         <div className="flex items-center gap-2">
           <h3 className="text-sm font-semibold text-text-primary">Sources and evidence</h3>
           <Badge>{citations.length} items</Badge>
         </div>
         <p className="mt-2 text-xs leading-6 text-text-tertiary">
-          Review the passages and source files that grounded the current answer.
+          Matching passages and cited file names appear here.
         </p>
       </div>
 
@@ -47,22 +52,15 @@ export function EvidencePanel({
           ))}
         </div>
       ) : (
-        <div className="space-y-4">
-          <div className="rounded-2xl border border-border-subtle bg-bg-primary px-4 py-4">
-            <p className="text-sm font-semibold text-text-primary">No evidence attached yet</p>
-            <p className="mt-2 text-sm leading-6 text-text-secondary">
-              Upload a document, ask a focused question, and this panel will show the source
-              passages that grounded the answer.
-            </p>
-          </div>
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary px-4 py-4">
+          <p className="text-sm font-semibold text-text-primary">No evidence attached yet</p>
+          <p className="mt-2 text-sm leading-6 text-text-secondary">
+            Upload a document and ask a focused question. Evidence will appear here once retrieval finds a grounded match.
+          </p>
           {answerStatus ? (
-            <div className="rounded-2xl border border-border-subtle bg-bg-primary px-4 py-4">
-              <p className="text-sm font-semibold text-text-primary">Current answer status</p>
-              <p className="mt-2 text-sm leading-6 text-text-secondary">
-                The latest answer finished with status <span className="font-medium text-text-primary">{answerStatus}</span>.
-                Evidence-backed answers are the target operating mode.
-              </p>
-            </div>
+            <p className="mt-3 text-xs uppercase tracking-[0.18em] text-text-tertiary">
+              Latest answer status: {answerStatus}
+            </p>
           ) : null}
         </div>
       )}

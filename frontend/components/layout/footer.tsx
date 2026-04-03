@@ -6,7 +6,7 @@ import { GITHUB_REPO_URL } from '@/lib/site-content'
 export function Footer() {
   return (
     <footer className="border-t border-border-subtle bg-bg-primary">
-      <div className="mx-auto grid max-w-[1440px] gap-8 px-6 py-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(260px,320px)]">
+      <div className="mx-auto grid w-full max-w-[1920px] gap-8 px-6 py-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(260px,320px)] lg:px-10 xl:px-14">
         <div className="space-y-4">
           <Logo />
           <p className="max-w-sm text-sm leading-6 text-text-secondary">
@@ -37,12 +37,12 @@ export function Footer() {
           <div className="space-y-3">
             <p className="text-sm font-semibold text-text-primary">Stack</p>
             <div className="space-y-2 text-sm leading-6 text-text-secondary">
-              <p>Frontend - Cloudflare Pages</p>
-              <p>API - Render (FastAPI)</p>
-              <p>Data - Neon Postgres + pgvector</p>
-              <p>LLM - GPT-4o + multi-provider failover</p>
-            </div>
+            <p>Frontend - Cloudflare Pages</p>
+            <p>API - Render (FastAPI)</p>
+            <p>Data - Neon Postgres + pgvector</p>
+            <p>LLM - GPT-4o with multi-provider failover</p>
           </div>
+        </div>
         </div>
 
         <div className="space-y-3">

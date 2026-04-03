@@ -10,7 +10,7 @@ import { GITHUB_REPO_URL } from '@/lib/site-content'
 export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 border-b border-border-subtle bg-bg-primary/80 backdrop-blur-lg">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-3">
+      <div className="mx-auto flex w-full max-w-[1920px] items-center justify-between px-6 py-3 lg:px-10 xl:px-14">
         <Logo />
 
         <div className="hidden items-center gap-1 md:flex">

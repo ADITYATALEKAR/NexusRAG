@@ -63,8 +63,8 @@ const features = [
 export function Features() {
   return (
     <section id="features" className="bg-bg-secondary py-24">
-      <div className="mx-auto max-w-[1440px] px-6">
-        <div className="mx-auto max-w-3xl text-center">
+      <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-10 xl:px-14">
+        <div className="max-w-4xl">
           <h2 className="text-3xl font-semibold tracking-tight text-text-primary">
             What ships out of the box
           </h2>

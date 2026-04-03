@@ -7,6 +7,7 @@ import type { DocumentItem, QueryHistoryItem } from '@/lib/types'
 
 interface AppState {
   mobileSidebarOpen: boolean
+  desktopSidebarCollapsed: boolean
   queryHistory: QueryHistoryItem[]
   documents: DocumentItem[]
   publicSessionId: string | null
@@ -14,6 +15,7 @@ interface AppState {
   operatorApiUrl: string | null
   operatorApiKey: string | null
   setMobileSidebarOpen: (value: boolean) => void
+  toggleDesktopSidebar: () => void
   upsertHistory: (item: QueryHistoryItem) => void
   addDocuments: (items: DocumentItem[]) => void
   updateDocument: (id: string, patch: Partial<DocumentItem>) => void
@@ -29,6 +31,7 @@ export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
       mobileSidebarOpen: false,
+      desktopSidebarCollapsed: false,
       queryHistory: [],
       documents: [],
       publicSessionId: null,
@@ -36,6 +39,8 @@ export const useAppStore = create<AppState>()(
       operatorApiUrl: null,
       operatorApiKey: null,
       setMobileSidebarOpen: (value) => set({ mobileSidebarOpen: value }),
+      toggleDesktopSidebar: () =>
+        set((state) => ({ desktopSidebarCollapsed: !state.desktopSidebarCollapsed })),
       upsertHistory: (item) =>
         set((state) => ({
           queryHistory: [item, ...state.queryHistory.filter((entry) => entry.id !== item.id)].slice(0, 12)
@@ -75,6 +80,7 @@ export const useAppStore = create<AppState>()(
         publicTrialUsage: state.publicTrialUsage,
         operatorApiUrl: state.operatorApiUrl,
         operatorApiKey: state.operatorApiKey,
+        desktopSidebarCollapsed: state.desktopSidebarCollapsed,
         queryHistory: state.queryHistory,
         documents: state.documents
       })
