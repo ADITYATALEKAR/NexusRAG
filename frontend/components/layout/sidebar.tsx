@@ -1,6 +1,6 @@
 'use client'
 
-import { Database, FileText, FlaskConical, Home, LogOut, Search, Settings, X } from 'lucide-react'
+import { FileText, Home, LogOut, Search, Settings, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -16,12 +16,6 @@ const navItems = [
   { href: '/dashboard/documents', icon: FileText, label: 'Documents' },
   { href: '/dashboard/analytics', icon: Home, label: 'Analytics' },
   { href: '/dashboard/settings', icon: Settings, label: 'Settings' }
-]
-
-const adminItems = [
-  { href: '/dashboard/admin', icon: Database, label: 'Admin' },
-  { href: '/dashboard/admin/datasets', icon: FileText, label: 'Datasets' },
-  { href: '/dashboard/admin/evaluation', icon: FlaskConical, label: 'Evaluation' }
 ]
 
 export function Sidebar() {
@@ -67,12 +61,6 @@ export function Sidebar() {
         <nav className="flex-1 space-y-6 overflow-y-auto p-4">
           <div className="space-y-1">
             {navItems.map((item) => (
-              <NavLink key={item.href} href={item.href} icon={item.icon} label={item.label} active={pathname === item.href} onClick={() => setMobileSidebarOpen(false)} />
-            ))}
-          </div>
-          <div className="space-y-1 border-t border-border-subtle pt-5">
-            <div className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-text-tertiary">Admin</div>
-            {adminItems.map((item) => (
               <NavLink key={item.href} href={item.href} icon={item.icon} label={item.label} active={pathname === item.href} onClick={() => setMobileSidebarOpen(false)} />
             ))}
           </div>

@@ -112,6 +112,24 @@ class IndexingService:
             if job.status != IndexStatus.FAILED:
                 self.job_manager.fail_job(job.id, str(error))
 
+        try:
+            for chunk in chunks:
+                await self.metadata_store.save_chunk(chunk)
+
+            await self.metadata_store.save_index_state(
+                IndexState(
+                    document_id=chunks[0].document_id,
+                    document_checksum=document_checksum,
+                    indexed_at=datetime.now(timezone.utc),
+                    chunk_count=len(chunks),
+                    embedding_model=self.embedder.model,
+                )
+            )
+        except Exception as error:  # noqa: BLE001
+            errors.append(f"Metadata persistence failed: {error}")
+            if job.status != IndexStatus.FAILED:
+                self.job_manager.fail_job(job.id, str(error))
+
         if job.status != IndexStatus.FAILED:
             try:
                 self.job_manager.transition(job.id, IndexStatus.VECTOR_INDEXING)
@@ -138,24 +156,6 @@ class IndexingService:
                 vector_time_ms = int((datetime.now(timezone.utc) - vector_start).total_seconds() * 1000)
             except Exception as error:  # noqa: BLE001
                 errors.append(f"Vector indexing failed: {error}")
-
-        try:
-            for chunk in chunks:
-                await self.metadata_store.save_chunk(chunk)
-
-            await self.metadata_store.save_index_state(
-                IndexState(
-                    document_id=chunks[0].document_id,
-                    document_checksum=document_checksum,
-                    indexed_at=datetime.now(timezone.utc),
-                    chunk_count=len(chunks),
-                    embedding_model=self.embedder.model,
-                )
-            )
-        except Exception as error:  # noqa: BLE001
-            errors.append(f"Metadata persistence failed: {error}")
-            if job.status != IndexStatus.FAILED:
-                self.job_manager.fail_job(job.id, str(error))
 
         if job.status != IndexStatus.FAILED:
             try:

@@ -9,7 +9,7 @@ const launchModes = [
   {
     icon: Cloud,
     title: 'Hosted evaluation',
-    description: `${PUBLIC_TRIAL_QUERY_LIMIT} free queries on the managed API. Upload a document, ask a question, verify citations end to end — no setup, no account.`,
+    description: `${PUBLIC_TRIAL_QUERY_LIMIT} free queries on the managed API. Upload a document, ask a question, verify citations end to end, no setup, no account.`,
   },
   {
     icon: Server,
@@ -33,8 +33,8 @@ export function CTA() {
                 Evaluate on our infrastructure, then deploy on yours
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
-                Start with the hosted API to see the full retrieval pipeline — ingestion,
-                hybrid search, citation-backed generation — working end to end. When your
+                Start with the hosted API to see the full retrieval pipeline, ingestion,
+                hybrid search, and citation-backed generation working end to end. When your
                 team is ready, deploy your own instance and keep the same interface, API
                 contracts, and evidence model.
               </p>

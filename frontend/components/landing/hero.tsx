@@ -36,7 +36,7 @@ const howToUseSteps = [
 const accessModes = [
   {
     title: 'Hosted evaluation',
-    description: `Try the full pipeline — upload, retrieve, and verify — with ${PUBLIC_TRIAL_QUERY_LIMIT} free queries on our managed API. No account required.`,
+    description: `Try the full pipeline - upload, retrieve, and verify - with ${PUBLIC_TRIAL_QUERY_LIMIT} free queries on our managed API. No account required.`,
     ctaLabel: 'Start free',
     href: '/dashboard',
   },
@@ -83,7 +83,7 @@ export function Hero() {
         >
           NexusRAG is an API-first retrieval platform for teams that need grounded answers
           from private documents. Hybrid search, inline citations, abstention when evidence
-          is thin, and a self-hostable stack — not another chat wrapper.
+          is thin, and a self-hostable stack, not another chat wrapper.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }}

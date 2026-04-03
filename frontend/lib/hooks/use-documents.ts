@@ -96,6 +96,7 @@ export function useDocuments() {
     () => ({
       documents,
       isLoading: query.isLoading || uploadMutation.isPending,
+      isUploading: uploadMutation.isPending,
       upload: (files: File[]) => uploadMutation.mutateAsync(files),
       remove: (id: string) => removeMutation.mutate(id),
       error: (query.error || uploadMutation.error || removeMutation.error) as Error | null

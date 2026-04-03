@@ -50,6 +50,45 @@ class RecordingEmbedder(MockEmbedder):
         return embeddings
 
 
+class RecordingMetadataStore:
+    """Metadata stub that records chunk writes before vector persistence."""
+
+    def __init__(self) -> None:
+        self.saved_chunk_ids: list[str] = []
+        self.saved_index_state_document_id: str | None = None
+
+    async def save_chunk(self, chunk: Chunk) -> None:
+        self.saved_chunk_ids.append(chunk.id)
+
+    async def save_index_state(self, state) -> None:  # noqa: ANN001
+        self.saved_index_state_document_id = state.document_id
+
+
+class AssertingVectorStore:
+    """Vector store stub that fails if metadata has not been saved first."""
+
+    def __init__(self, metadata_store: RecordingMetadataStore) -> None:
+        self.metadata_store = metadata_store
+        self.inserted_ids: list[str] = []
+
+    async def insert(self, ids: list[str], vectors: list[list[float]], metadata=None) -> int:  # noqa: ANN001
+        assert self.metadata_store.saved_chunk_ids == ids
+        assert len(vectors) == len(ids)
+        self.inserted_ids = list(ids)
+        return len(ids)
+
+
+class RecordingLexicalStore:
+    """Lexical stub that records indexed chunk ids."""
+
+    def __init__(self) -> None:
+        self.indexed_ids: list[str] = []
+
+    async def index(self, chunk_id: str, content: str, metadata: dict) -> None:
+        del content, metadata
+        self.indexed_ids.append(chunk_id)
+
+
 def build_chunks() -> list[Chunk]:
     """Build a small chunk set for storage tests."""
     return [
@@ -160,3 +199,27 @@ async def test_indexing_service_uses_contextual_and_compressed_runtime_paths(tmp
     assert (tmp_path / "vector_compression.npz").exists()
     assert stored_point[2]["contextual"] is True
     assert stored_point[2]["vector_compressed"] is True
+
+
+@pytest.mark.asyncio
+async def test_indexing_service_persists_metadata_before_vectors() -> None:
+    """Chunk metadata should be saved before vector rows to satisfy FK-backed stores."""
+    metadata_store = RecordingMetadataStore()
+    vector_store = AssertingVectorStore(metadata_store)
+    lexical_store = RecordingLexicalStore()
+    service = IndexingService(
+        embedder=MockEmbedder(dimensions=8),
+        vector_store=vector_store,
+        lexical_store=lexical_store,
+        metadata_store=metadata_store,
+        batch_size=2,
+    )
+
+    chunks = build_chunks()
+    result = await service.index_chunks(chunks, document_checksum="checksum-order")
+
+    assert result.status.value == "completed"
+    assert metadata_store.saved_chunk_ids == ["chunk-001", "chunk-002"]
+    assert metadata_store.saved_index_state_document_id == "doc-1"
+    assert vector_store.inserted_ids == ["chunk-001", "chunk-002"]
+    assert lexical_store.indexed_ids == ["chunk-001", "chunk-002"]

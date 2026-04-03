@@ -1,17 +1,20 @@
 const architectureLayers = [
   {
+    short: '1',
     title: 'Cloudflare Pages',
     role: 'Frontend',
     description:
       'Static Next.js build served at the edge. Sub-second loads globally, zero backend secrets in the browser.',
   },
   {
+    short: '2',
     title: 'Render',
     role: 'API server (FastAPI)',
     description:
       'Handles document ingestion, hybrid retrieval, answer generation with multi-provider failover, and usage tracking.',
   },
   {
+    short: '3',
     title: 'Neon Postgres + pgvector',
     role: 'Data layer',
     description:
@@ -81,6 +84,32 @@ export function TrustSignals() {
                 edge-hosted frontend, dedicated API server, and managed vector-capable
                 Postgres. What you evaluate is what you ship.
               </p>
+              <div className="rounded-2xl border border-border-subtle bg-bg-secondary p-5">
+                <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_24px_minmax(0,1fr)_24px_minmax(0,1fr)] md:items-center">
+                  {architectureLayers.map((layer, index) => (
+                    <div key={layer.title} className="contents">
+                      <div className="rounded-2xl border border-border-subtle bg-bg-primary px-4 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-100 text-sm font-semibold text-accent-700 dark:bg-accent-500/15 dark:text-accent-100">
+                            {layer.short}
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-text-primary">{layer.title}</p>
+                            <p className="text-xs text-text-tertiary">{layer.role}</p>
+                          </div>
+                        </div>
+                      </div>
+                      {index < architectureLayers.length - 1 ? (
+                        <div className="hidden text-center text-lg text-text-tertiary md:block">-&gt;</div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-4 text-sm leading-6 text-text-secondary">
+                  Browser sessions stay on Cloudflare, ingestion and answer generation run on Render,
+                  and every document, chunk, and vector lands in Neon for durable retrieval.
+                </p>
+              </div>
               <div className="grid gap-4">
                 {architectureLayers.map((layer) => (
                   <div

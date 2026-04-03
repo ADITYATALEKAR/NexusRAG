@@ -14,7 +14,7 @@ const features = [
     icon: FileText,
     title: 'Eight input formats',
     description:
-      'Ingest PDF, DOCX, DOC, TXT, Markdown, HTML, CSV, and JSON. Each file is semantically chunked (512 tokens, 64-token overlap) and indexed for hybrid retrieval — up to 50 MB per file.',
+      'Ingest PDF, DOCX, DOC, TXT, Markdown, HTML, CSV, and JSON. Each file is semantically chunked (512 tokens, 64-token overlap) and indexed for hybrid retrieval, up to 50 MB per file.',
   },
   {
     icon: SearchCheck,
@@ -38,7 +38,7 @@ const features = [
     icon: Zap,
     title: 'Operational workspace',
     description:
-      'Upload, query, inspect source passages, refine, and re-query in a single interface. Built for repeated daily use by operations, legal, and support teams — not one-off demos.',
+      'Upload, query, inspect source passages, refine, and re-query in a single interface. Built for repeated daily use by operations, legal, and support teams, not one-off demos.',
   },
   {
     icon: BarChart3,
@@ -50,7 +50,7 @@ const features = [
     icon: Code2,
     title: 'Full REST API',
     description:
-      'Every capability — ingestion, retrieval, generation, document management — is exposed through a documented API. Build retrieval into your own applications or use the workspace directly.',
+      'Every capability - ingestion, retrieval, generation, document management - is exposed through a documented API. Build retrieval into your own applications or use the workspace directly.',
   },
   {
     icon: Globe2,
@@ -69,8 +69,8 @@ export function Features() {
             What ships out of the box
           </h2>
           <p className="mt-4 text-base leading-7 text-text-secondary">
-            End-to-end retrieval pipeline — from document ingestion and hybrid search to
-            cited answer generation — in one deployable stack. API-first for developers,
+            End-to-end retrieval pipeline, from document ingestion and hybrid search to
+            cited answer generation, in one deployable stack. API-first for developers,
             workspace-ready for end users.
           </p>
         </div>

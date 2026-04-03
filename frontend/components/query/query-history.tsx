@@ -1,20 +1,11 @@
 'use client'
 
-import { Clock3 } from 'lucide-react'
-
-import { EmptyState } from '@/components/shared/empty-state'
 import type { QueryHistoryItem } from '@/lib/types'
 import { formatRelativeTime } from '@/lib/utils'
 
 export function QueryHistory({ items, onSelect }: { items: QueryHistoryItem[]; onSelect: (item: QueryHistoryItem) => void }) {
   if (items.length === 0) {
-    return (
-      <EmptyState
-        title="No recent queries yet"
-        description="Your most recent answers stay in this browser so you can compare prompts, revisit wording, and reopen the evidence attached to earlier runs."
-        icon={<Clock3 className="h-6 w-6 text-text-tertiary" />}
-      />
-    )
+    return null
   }
 
   return (

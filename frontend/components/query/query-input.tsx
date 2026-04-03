@@ -6,9 +6,22 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
-export function QueryInput({ onSubmit, isLoading, disabled = false }: { onSubmit: (query: string) => void; isLoading?: boolean; disabled?: boolean }) {
+export function QueryInput({
+  onSubmit,
+  onAttach,
+  isLoading,
+  isUploading = false,
+  disabled = false
+}: {
+  onSubmit: (query: string) => void
+  onAttach?: (files: File[]) => Promise<unknown> | unknown
+  isLoading?: boolean
+  isUploading?: boolean
+  disabled?: boolean
+}) {
   const [value, setValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const submit = () => {
     const normalized = value.trim()
@@ -22,9 +35,36 @@ export function QueryInput({ onSubmit, isLoading, disabled = false }: { onSubmit
     }
   }
 
+  const handleAttach = async (files: File[]) => {
+    if (!onAttach || files.length === 0 || disabled || isUploading) {
+      return
+    }
+    await onAttach(files)
+  }
+
   return (
     <div className={cn('surface flex items-end gap-3 p-3 transition-all duration-[var(--duration-normal)] focus-within:border-accent-500 focus-within:ring-2 focus-within:ring-accent-500/10', disabled && 'opacity-70')}>
-      <Button variant="ghost" size="icon" className="hidden shrink-0 sm:inline-flex" aria-label="Attach context" disabled={disabled}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        className="hidden"
+        multiple
+        accept=".pdf,.docx,.md,.txt,text/plain,text/markdown,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        onChange={(event) => {
+          const files = Array.from(event.target.files || [])
+          void handleAttach(files)
+          event.currentTarget.value = ''
+        }}
+      />
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        className="shrink-0"
+        aria-label="Attach documents"
+        disabled={disabled || !onAttach || isUploading}
+        onClick={() => fileInputRef.current?.click()}
+      >
         <Paperclip className="h-4 w-4" />
       </Button>
       <textarea

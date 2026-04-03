@@ -10,15 +10,9 @@ import type { AnswerPayload, CitationItem } from '@/lib/types'
 export function EvidencePanel({
   citations,
   answerStatus,
-  usingHostedTrial,
-  trialLimit,
-  trialRemaining,
 }: {
   citations: CitationItem[]
   answerStatus: AnswerPayload['status'] | null
-  usingHostedTrial: boolean
-  trialLimit: number
-  trialRemaining: number
 }) {
   const [expanded, setExpanded] = useState(0)
 
@@ -30,8 +24,7 @@ export function EvidencePanel({
           <Badge>{citations.length} items</Badge>
         </div>
         <p className="mt-2 text-xs leading-6 text-text-tertiary">
-          This panel explains what grounded the answer: source documents, excerpts, and the
-          retrieval evidence selected for review.
+          Review the passages and source files that grounded the current answer.
         </p>
       </div>
 
@@ -56,30 +49,10 @@ export function EvidencePanel({
       ) : (
         <div className="space-y-4">
           <div className="rounded-2xl border border-border-subtle bg-bg-primary px-4 py-4">
-            <p className="text-sm font-semibold text-text-primary">What will appear here</p>
+            <p className="text-sm font-semibold text-text-primary">No evidence attached yet</p>
             <p className="mt-2 text-sm leading-6 text-text-secondary">
-              When retrieval finds grounded evidence, this panel will show the exact passages,
-              source file names, and relevance context that supported the answer.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-border-subtle bg-bg-primary px-4 py-4">
-            <p className="text-sm font-semibold text-text-primary">How to get stronger evidence</p>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-text-secondary">
-              <li>Use specific nouns, product names, policy names, or clause language.</li>
-              <li>Upload documents that contain the exact material you want cited back.</li>
-              <li>Ask narrower questions if the first response is broad or abstract.</li>
-            </ul>
-          </div>
-          <div className="rounded-2xl border border-border-subtle bg-bg-primary px-4 py-4">
-            <p className="text-sm font-semibold text-text-primary">
-              {usingHostedTrial
-                ? `Hosted evaluation: ${trialRemaining} of ${trialLimit} questions remaining`
-                : 'Bring Your Own API mode is active'}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-text-secondary">
-              {usingHostedTrial
-                ? 'The hosted public experience is designed for short evaluation runs. Switch to your own API for unlimited usage and your own controls.'
-                : 'This browser is currently pointed at your own NexusRAG API endpoint, so usage limits are controlled by your deployment.'}
+              Upload a document, ask a focused question, and this panel will show the source
+              passages that grounded the answer.
             </p>
           </div>
           {answerStatus ? (
@@ -87,8 +60,7 @@ export function EvidencePanel({
               <p className="text-sm font-semibold text-text-primary">Current answer status</p>
               <p className="mt-2 text-sm leading-6 text-text-secondary">
                 The latest answer finished with status <span className="font-medium text-text-primary">{answerStatus}</span>.
-                A response can still be useful even when no source excerpts are attached, but
-                evidence-backed answers are the target operating mode.
+                Evidence-backed answers are the target operating mode.
               </p>
             </div>
           ) : null}

@@ -64,13 +64,12 @@ export function AnswerDisplay({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="surface space-y-5 p-6"
+      className="surface space-y-4 p-6"
     >
       <div className="flex flex-wrap items-center gap-2">
         <Badge variant={hasCitations ? 'accent' : 'warning'}>
-          {hasCitations ? 'Evidence-backed answer' : 'Answer returned without source excerpts'}
+          {hasCitations ? `${answer.citations.length} cited source${answer.citations.length === 1 ? '' : 's'}` : 'No citations attached'}
         </Badge>
-        <Badge>{hasCitations ? `${answer.citations.length} sources` : 'No sources attached'}</Badge>
         {answer.trace?.provider_used ? <Badge>{answer.trace.provider_used}</Badge> : null}
       </div>
 
@@ -93,9 +92,8 @@ export function AnswerDisplay({
 
       {!hasCitations ? (
         <div className="rounded-2xl border border-border-subtle bg-bg-secondary px-4 py-4 text-sm leading-6 text-text-secondary">
-          This response did not include source excerpts. Narrow the question, upload more relevant
-          documents, or use the evidence panel to review how cited passages will appear when
-          retrieval finds matching chunks.
+          This response completed, but retrieval did not attach supporting excerpts. Upload more
+          relevant documents or narrow the question for stronger evidence.
         </div>
       ) : null}
 

@@ -27,6 +27,38 @@ class PostgresMetadataStore(MetadataStoreInterface):
         with connect_postgres(self.database_url) as connection:
             connection.execute(
                 """
+                INSERT INTO documents (
+                    id, title, document_type, tags, trust_score, checksum, parser_used,
+                    parser_confidence, original_size_bytes, ingested_at
+                )
+                VALUES (
+                    %(id)s, %(title)s, %(document_type)s, %(tags)s::jsonb, %(trust_score)s,
+                    COALESCE((SELECT checksum FROM documents WHERE id = %(id)s), NULL),
+                    COALESCE((SELECT parser_used FROM documents WHERE id = %(id)s), NULL),
+                    COALESCE((SELECT parser_confidence FROM documents WHERE id = %(id)s), NULL),
+                    COALESCE((SELECT original_size_bytes FROM documents WHERE id = %(id)s), NULL),
+                    COALESCE((SELECT ingested_at FROM documents WHERE id = %(id)s), %(ingested_at)s)
+                )
+                ON CONFLICT (id) DO UPDATE SET
+                    title = COALESCE(EXCLUDED.title, documents.title),
+                    document_type = COALESCE(EXCLUDED.document_type, documents.document_type),
+                    tags = CASE
+                        WHEN EXCLUDED.tags IS NULL OR EXCLUDED.tags = '[]'::jsonb THEN documents.tags
+                        ELSE EXCLUDED.tags
+                    END,
+                    trust_score = COALESCE(EXCLUDED.trust_score, documents.trust_score)
+                """,
+                {
+                    "id": chunk.document_id,
+                    "title": document_title,
+                    "document_type": document_type,
+                    "tags": json.dumps(tags),
+                    "trust_score": trust_score,
+                    "ingested_at": chunk.created_at,
+                },
+            )
+            connection.execute(
+                """
                 INSERT INTO chunks (
                     id, document_id, content, document_title, document_type,
                     tags, trust_score, section_title, section_hierarchy, page_numbers,
@@ -59,8 +91,7 @@ class PostgresMetadataStore(MetadataStoreInterface):
                     start_char = EXCLUDED.start_char,
                     end_char = EXCLUDED.end_char,
                     start_page = EXCLUDED.start_page,
-                    end_page = EXCLUDED.end_page,
-                    search_vector = to_tsvector('english', EXCLUDED.content)
+                    end_page = EXCLUDED.end_page
                 """,
                 {
                     "id": chunk.id,
@@ -83,38 +114,6 @@ class PostgresMetadataStore(MetadataStoreInterface):
                     "end_char": chunk.location.end_char,
                     "start_page": chunk.location.start_page,
                     "end_page": chunk.location.end_page,
-                },
-            )
-            connection.execute(
-                """
-                INSERT INTO documents (
-                    id, title, document_type, tags, trust_score, checksum, parser_used,
-                    parser_confidence, original_size_bytes, ingested_at
-                )
-                VALUES (
-                    %(id)s, %(title)s, %(document_type)s, %(tags)s::jsonb, %(trust_score)s,
-                    COALESCE((SELECT checksum FROM documents WHERE id = %(id)s), NULL),
-                    COALESCE((SELECT parser_used FROM documents WHERE id = %(id)s), NULL),
-                    COALESCE((SELECT parser_confidence FROM documents WHERE id = %(id)s), NULL),
-                    COALESCE((SELECT original_size_bytes FROM documents WHERE id = %(id)s), NULL),
-                    COALESCE((SELECT ingested_at FROM documents WHERE id = %(id)s), %(ingested_at)s)
-                )
-                ON CONFLICT (id) DO UPDATE SET
-                    title = COALESCE(EXCLUDED.title, documents.title),
-                    document_type = COALESCE(EXCLUDED.document_type, documents.document_type),
-                    tags = CASE
-                        WHEN EXCLUDED.tags IS NULL OR EXCLUDED.tags = '[]'::jsonb THEN documents.tags
-                        ELSE EXCLUDED.tags
-                    END,
-                    trust_score = COALESCE(EXCLUDED.trust_score, documents.trust_score)
-                """,
-                {
-                    "id": chunk.document_id,
-                    "title": document_title,
-                    "document_type": document_type,
-                    "tags": json.dumps(tags),
-                    "trust_score": trust_score,
-                    "ingested_at": chunk.created_at,
                 },
             )
 
