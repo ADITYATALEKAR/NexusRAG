@@ -69,34 +69,38 @@ export function Sidebar() {
         className={cn(
           'fixed inset-y-0 left-0 z-40 flex h-dvh flex-col overflow-hidden border-r border-border-subtle/80 bg-bg-elevated/96 backdrop-blur-xl transition-all duration-200',
           mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full',
-          desktopSidebarCollapsed ? 'md:w-[96px]' : 'md:w-[304px]',
+          desktopSidebarCollapsed ? 'md:w-[92px]' : 'md:w-[304px]',
           'w-[304px] md:translate-x-0',
         )}
       >
         <div
           className={cn(
             'flex h-[88px] items-center border-b border-border-subtle/80 bg-bg-primary/88',
-            desktopSidebarCollapsed ? 'justify-center px-3' : 'justify-between px-5',
+            desktopSidebarCollapsed ? 'justify-between px-4' : 'justify-between px-5',
           )}
         >
           <Logo
             showText={!desktopSidebarCollapsed}
             showSubtitle={!desktopSidebarCollapsed}
-            iconSize={44}
+            iconSize={desktopSidebarCollapsed ? 32 : 44}
             className={desktopSidebarCollapsed ? 'justify-center' : 'min-w-0'}
           />
-          {!desktopSidebarCollapsed ? (
-            <div className="flex items-center gap-1">
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="hidden rounded-sm border border-border-subtle bg-bg-secondary md:inline-flex"
-                aria-label="Collapse sidebar"
-                onClick={toggleDesktopSidebar}
-              >
+          <div className="flex items-center gap-1">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="hidden rounded-sm border border-border-subtle bg-bg-secondary md:inline-flex"
+              aria-label={desktopSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              onClick={toggleDesktopSidebar}
+            >
+              {desktopSidebarCollapsed ? (
+                <PanelLeftOpen className="h-4 w-4" />
+              ) : (
                 <PanelLeftClose className="h-4 w-4" />
-              </Button>
+              )}
+            </Button>
+            {!desktopSidebarCollapsed ? (
               <Button
                 type="button"
                 variant="ghost"
@@ -107,19 +111,8 @@ export function Sidebar() {
               >
                 <X className="h-4 w-4" />
               </Button>
-            </div>
-          ) : (
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="absolute right-3 top-5 hidden rounded-sm border border-border-subtle bg-bg-secondary md:inline-flex"
-              aria-label="Expand sidebar"
-              onClick={toggleDesktopSidebar}
-            >
-              <PanelLeftOpen className="h-4 w-4" />
-            </Button>
-          )}
+            ) : null}
+          </div>
         </div>
 
         <nav ref={navScrollRef} className="app-scroll flex-1 space-y-5 overflow-y-auto px-3 py-5 md:px-3">

@@ -1,8 +1,8 @@
-﻿import { ArrowRight, Github, Mail, Phone } from 'lucide-react'
+﻿import { ArrowRight, Mail, Phone } from 'lucide-react'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
-import { FOUNDER_CONTACT, GITHUB_REPO_URL } from '@/lib/site-content'
+import { FOUNDER_CONTACT } from '@/lib/site-content'
 
 export function CTA() {
   return (
@@ -17,11 +17,6 @@ export function CTA() {
               <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.05em] text-text-primary md:text-4xl">
                 Start with the live workspace. Move to your own deployment when your team is ready.
               </h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
-                NexusRAG is designed so the first evaluation feels like the real product. Try the
-                hosted workspace, inspect the answer quality, then point the same interface at your
-                own NexusRAG API for private rollout and unlimited use.
-              </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button size="lg" asChild>
                   <Link href="/dashboard">
@@ -31,12 +26,6 @@ export function CTA() {
                 </Button>
                 <Button size="lg" variant="outline" asChild>
                   <Link href="/login">Connect your API</Link>
-                </Button>
-                <Button size="lg" variant="outline" asChild>
-                  <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer">
-                    <Github className="h-4 w-4" />
-                    View source
-                  </a>
                 </Button>
               </div>
             </div>
@@ -75,5 +64,4 @@ export function CTA() {
     </section>
   )
 }
-
 

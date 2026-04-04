@@ -1,92 +1,68 @@
-﻿const differentiators = [
-  {
-    title: 'Evidence over impression',
-    nexusrag:
-      'Inline citations, source file names, and passage-level grounding stay attached to the answer so the reviewer can inspect why it was returned.',
-    typical:
-      'Many tools give you fluent prose first and treat evidence as a secondary tab, a weak footnote, or a document-level link with no passage context.',
-  },
-  {
-    title: 'Retrieval that handles meaning and exact language',
-    nexusrag:
-      'Hybrid retrieval keeps dense semantic search and BM25 exact matching in the same pipeline, so clauses, policy names, and numeric references survive retrieval.',
-    typical:
-      'Vector-only flows often feel good on broad semantic prompts, then miss the exact terms and narrow phrasing that enterprise teams actually care about.',
-  },
-  {
-    title: 'One product for trials, operators, and developers',
-    nexusrag:
-      'The same stack supports a hosted two-query evaluation, an operator workspace, and a full REST API when teams want to integrate retrieval into their own products.',
-    typical:
-      'You usually have to choose between a polished demo app for end users or an API-only platform that still needs an internal interface built around it.',
-  },
-]
+﻿import { ArrowRightLeft, Sparkles, ShieldCheck } from 'lucide-react'
 
-const trustPillars = [
-  'Public GitHub repository and live cloud deployment',
-  'Hosted trial with no account required',
-  'Bring Your Own API path for unlimited usage',
-  'Open-source, self-hostable deployment model',
+import { PUBLIC_TRIAL_QUERY_LIMIT } from '@/lib/public-config'
+
+const evaluationModes = [
+  {
+    eyebrow: 'Start public',
+    title: 'Hosted evaluation',
+    description:
+      'Use the shared NexusRAG API to test upload, retrieval, evidence, and answer quality without any setup.',
+    footnote: `${PUBLIC_TRIAL_QUERY_LIMIT} free hosted queries`,
+    icon: Sparkles,
+  },
+  {
+    eyebrow: 'Move private',
+    title: 'Bring your own API',
+    description:
+      'Point the same workspace at your own NexusRAG runtime for private data, unlimited usage, and your own controls.',
+    footnote: 'Same workflow, different backend',
+    icon: ShieldCheck,
+  },
 ]
 
 export function TrustSignals() {
   return (
-    <section id="why-nexusrag" className="py-24">
-      <div className="mx-auto w-full max-w-[1920px] px-8 lg:px-12 xl:px-16">
-        <div className="grid gap-8 xl:grid-cols-[minmax(340px,0.82fr)_minmax(0,1.18fr)]">
-          <div className="surface space-y-8 p-8 md:p-10">
-            <div>
-              <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-                Why NexusRAG
+    <section className="border-b border-border-subtle/70 bg-bg-primary py-14">
+      <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-10 xl:px-12 2xl:px-16">
+        <div className="surface overflow-hidden p-8 md:p-10">
+          <div className="grid gap-8 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:items-center">
+            <div className="max-w-[760px]">
+              <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
+                Evaluate the product the way teams actually buy it
               </p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary md:text-4xl">
-                Built for teams that need trust, not just speed
+              <h2 className="mt-4 max-w-[760px] text-balance text-[2.85rem] font-semibold leading-[1.02] tracking-[-0.07em] text-text-primary md:text-[3.75rem]">
+                Start public. Move private. Keep the same workspace.
               </h2>
-              <p className="mt-5 text-base leading-8 text-text-secondary">
-                The strongest retrieval products do not just answer quickly. They make it easy to
-                understand what grounded the answer, move from a trial to a real deployment, and
-                keep the retrieval workflow understandable for both operators and engineers.
+              <p className="mt-5 max-w-[700px] text-base leading-8 text-text-secondary">
+                The first pass should feel like the real product, not a stripped-down demo.
+                Evaluate answer quality in the hosted mode, then switch the exact same interface to
+                your own API when your team is ready.
               </p>
             </div>
 
-            <div className="space-y-3">
-              {trustPillars.map((pillar) => (
-                <div
-                  key={pillar}
-                  className="rounded-2xl border border-border-subtle bg-bg-secondary px-4 py-3 text-sm font-medium text-text-primary"
-                >
-                  {pillar}
+            <div className="grid gap-4 lg:grid-cols-2">
+              {evaluationModes.map((mode) => (
+                <div key={mode.title} className="rounded-sm border border-border-subtle bg-bg-secondary/72 p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[0.76rem] font-medium uppercase tracking-[0.24em] text-text-tertiary">
+                        {mode.eyebrow}
+                      </p>
+                      <h3 className="mt-3 text-[1.6rem] font-semibold tracking-[-0.05em] text-text-primary">
+                        {mode.title}
+                      </h3>
+                    </div>
+                    <mode.icon className="mt-1 h-5 w-5 shrink-0 text-accent-600" />
+                  </div>
+                  <p className="mt-4 text-sm leading-7 text-text-secondary">{mode.description}</p>
+                  <div className="mt-5 inline-flex items-center gap-2 text-[0.78rem] font-medium uppercase tracking-[0.22em] text-accent-700">
+                    {mode.footnote}
+                    <ArrowRightLeft className="h-3.5 w-3.5" />
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="space-y-5">
-            {differentiators.map((item, index) => (
-              <div
-                key={item.title}
-                className="surface grid gap-5 p-7 md:grid-cols-[88px_minmax(0,1fr)_minmax(0,1fr)] md:items-start"
-              >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-100 text-lg font-semibold text-accent-700 dark:bg-accent-500/15 dark:text-accent-100">
-                  0{index + 1}
-                </div>
-                <div>
-                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-                    NexusRAG
-                  </p>
-                  <h3 className="mt-2 text-xl font-semibold tracking-tight text-text-primary">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-text-secondary">{item.nexusrag}</p>
-                </div>
-                <div className="rounded-[24px] border border-border-subtle bg-bg-secondary px-5 py-4">
-                  <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-text-tertiary">
-                    Typical alternative
-                  </p>
-                  <p className="mt-3 text-sm leading-7 text-text-secondary">{item.typical}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

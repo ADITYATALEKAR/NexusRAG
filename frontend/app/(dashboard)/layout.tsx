@@ -10,7 +10,7 @@ export default function DashboardGroupLayout({ children }: { children: React.Rea
   const mobileSidebarOpen = useAppStore((state) => state.mobileSidebarOpen)
   const desktopSidebarCollapsed = useAppStore((state) => state.desktopSidebarCollapsed)
   const setMobileSidebarOpen = useAppStore((state) => state.setMobileSidebarOpen)
-  const sidebarWidth = desktopSidebarCollapsed ? '96px' : '304px'
+  const sidebarWidth = desktopSidebarCollapsed ? '92px' : '304px'
 
   return (
     <div
@@ -30,7 +30,7 @@ export default function DashboardGroupLayout({ children }: { children: React.Rea
           <Menu className="h-4 w-4" />
         </Button>
       ) : null}
-      <div className="h-full min-w-0 transition-[padding] duration-200 md:pl-[var(--workspace-sidebar-width)]">
+      <div className="h-full min-w-0 transition-[margin] duration-200 md:ml-[var(--workspace-sidebar-width)]">
         <main className="h-full min-w-0 overflow-hidden">{children}</main>
       </div>
     </div>
