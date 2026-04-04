@@ -106,6 +106,10 @@ class PostgresMetadataStore(MetadataStoreInterface):
 
     async def get_chunk(self, chunk_id: str) -> dict | None:
         """Return stored metadata for one chunk."""
+        return self.get_chunk_sync(chunk_id)
+
+    def get_chunk_sync(self, chunk_id: str) -> dict | None:
+        """Return stored metadata for one chunk (synchronous)."""
         with connect_postgres(self.database_url) as connection:
             row = connection.execute(
                 "SELECT * FROM chunks WHERE id = %s",
