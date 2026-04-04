@@ -61,18 +61,18 @@ export function LogoMark({
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M50 35L39 60L50 85"
+          d="M49 34L37 60L49 86"
           stroke="currentColor"
-          strokeWidth="5.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          strokeWidth="7.2"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
         />
         <path
-          d="M70 35L81 60L70 85"
+          d="M71 34L83 60L71 86"
           stroke="currentColor"
-          strokeWidth="5.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          strokeWidth="7.2"
+          strokeLinecap="square"
+          strokeLinejoin="miter"
         />
       </svg>
     </span>

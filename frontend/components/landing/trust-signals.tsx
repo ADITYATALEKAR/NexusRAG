@@ -23,10 +23,10 @@ const evaluationModes = [
 
 export function TrustSignals() {
   return (
-    <section className="border-b border-border-subtle/70 bg-bg-primary py-14">
+    <section className="bg-bg-primary py-14">
       <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-10 xl:px-12 2xl:px-16">
         <div className="surface overflow-hidden p-8 md:p-10">
-          <div className="grid gap-8 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] xl:items-center">
+          <div className="flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
             <div className="max-w-[760px]">
               <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
                 Evaluate the product the way teams actually buy it
@@ -41,7 +41,7 @@ export function TrustSignals() {
               </p>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-2">
+            <div className="grid gap-4 lg:min-w-[560px] lg:grid-cols-2">
               {evaluationModes.map((mode) => (
                 <div key={mode.title} className="rounded-sm border border-border-subtle bg-bg-secondary/72 p-5">
                   <div className="flex items-start justify-between gap-4">

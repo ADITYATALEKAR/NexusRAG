@@ -21,7 +21,7 @@
 
 export function Features() {
   return (
-    <section id="how-it-works" className="border-b border-border-subtle/70 bg-bg-secondary/26 py-24">
+    <section id="how-it-works" className="bg-bg-secondary/26 py-24">
       <div className="mx-auto grid w-full max-w-[1920px] gap-10 px-6 lg:px-10 xl:px-12 2xl:px-16 xl:grid-cols-[minmax(320px,0.72fr)_minmax(0,1.28fr)] xl:items-start">
         <div className="space-y-6">
           <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">How it works</p>
