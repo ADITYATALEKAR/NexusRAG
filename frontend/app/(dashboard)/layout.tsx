@@ -3,6 +3,7 @@
 import { Menu } from 'lucide-react'
 
 import { Sidebar } from '@/components/layout/sidebar'
+import { ToastContainer } from '@/components/shared/toast-container'
 import { Button } from '@/components/ui/button'
 import { useAppStore } from '@/lib/stores/app-store'
 
@@ -33,6 +34,7 @@ export default function DashboardGroupLayout({ children }: { children: React.Rea
       <div className="h-full min-w-0 transition-[margin] duration-200 md:ml-[var(--workspace-sidebar-width)]">
         <main className="h-full min-w-0 overflow-hidden">{children}</main>
       </div>
+      <ToastContainer />
     </div>
   )
 }

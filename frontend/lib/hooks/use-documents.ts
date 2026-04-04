@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react'
 
 import { api } from '@/lib/api'
 import { useAppStore } from '@/lib/stores/app-store'
+import { useToast } from '@/lib/hooks/use-toast'
 import type { DocumentItem } from '@/lib/types'
 
 function toSizeLabel(bytes: number) {
@@ -31,6 +32,7 @@ function normalizeDocumentStatus(status?: string, hasErrors?: boolean): Document
 }
 
 export function useDocuments() {
+  const toast = useToast()
   const documents = useAppStore((state) => state.documents)
   const addDocuments = useAppStore((state) => state.addDocuments)
   const replaceDocuments = useAppStore((state) => state.replaceDocuments)
@@ -81,6 +83,36 @@ export function useDocuments() {
         results.push(next)
       }
       return results
+    },
+    onSuccess: (results) => {
+      const successCount = results.filter((r) => r.status === 'completed' || r.status === 'processing').length
+      const failureCount = results.filter((r) => r.status === 'failed').length
+
+      if (successCount > 0) {
+        toast({
+          type: 'success',
+          title: `${successCount} document${successCount === 1 ? '' : 's'} uploaded`,
+          description: `${successCount === 1 ? 'Your document is' : 'Your documents are'} being indexed and will be ready for queries shortly.`,
+          duration: 4000
+        })
+      }
+
+      if (failureCount > 0) {
+        toast({
+          type: 'error',
+          title: `${failureCount} document${failureCount === 1 ? '' : 's'} failed to upload`,
+          description: 'Check the Documents tab for more details.',
+          duration: 5000
+        })
+      }
+    },
+    onError: (error) => {
+      toast({
+        type: 'error',
+        title: 'Upload failed',
+        description: error instanceof Error ? error.message : 'Unable to upload documents. Please try again.',
+        duration: 5000
+      })
     }
   })
 

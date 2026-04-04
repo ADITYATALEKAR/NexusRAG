@@ -66,69 +66,90 @@ class APIClient {
       headers.set('Content-Type', 'application/json')
     }
 
-    const response = await fetch(buildBackendUrl(path), {
-      ...options,
-      headers,
-      cache: 'no-store'
-    })
+    try {
+      const response = await fetch(buildBackendUrl(path), {
+        ...options,
+        headers,
+        cache: 'no-store'
+      })
 
-    if (!response.ok) {
-      const payload = (await response.json().catch(() => ({ message: 'Request failed' }))) as Record<string, unknown>
-      const detail = payload.detail
-      const message =
-        typeof detail === 'string'
-          ? detail
-          : typeof payload.message === 'string'
-            ? payload.message
-            : detail && typeof detail === 'object' && typeof (detail as Record<string, unknown>).message === 'string'
-              ? String((detail as Record<string, unknown>).message)
-              : 'Request failed'
-      throw new APIError(response.status, message, payload)
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => ({ message: 'Request failed' }))) as Record<string, unknown>
+        const detail = payload.detail
+        const message =
+          typeof detail === 'string'
+            ? detail
+            : typeof payload.message === 'string'
+              ? payload.message
+              : detail && typeof detail === 'object' && typeof (detail as Record<string, unknown>).message === 'string'
+                ? String((detail as Record<string, unknown>).message)
+                : 'Request failed'
+        throw new APIError(response.status, message, payload)
+      }
+
+      if (response.status === 204) {
+        return undefined as T
+      }
+
+      return response.json() as Promise<T>
+    } catch (error) {
+      if (error instanceof APIError) {
+        throw error
+      }
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new APIError(0, 'Unable to connect to the API. Please check your API endpoint and try again.')
+      }
+      throw error
     }
-
-    if (response.status === 204) {
-      return undefined as T
-    }
-
-    return response.json() as Promise<T>
   }
 
   async query(text: string, topK = 5) {
     const headers = buildHeaders()
     headers.set('Content-Type', 'application/json')
-    const response = await fetch(buildBackendUrl('/answer'), {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ query: text, top_k: topK, include_trace: true }),
-      cache: 'no-store'
-    })
 
-    if (!response.ok) {
-      const payload = (await response.json().catch(() => ({ message: 'Request failed' }))) as Record<string, unknown>
-      const detail = payload.detail
-      const message =
-        typeof detail === 'string'
-          ? detail
-          : typeof payload.message === 'string'
-            ? payload.message
-            : 'Request failed'
-      throw new APIError(response.status, message, payload)
-    }
+    try {
+      const response = await fetch(buildBackendUrl('/answer'), {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ query: text, top_k: topK, include_trace: true }),
+        cache: 'no-store'
+      })
 
-    const answer = (await response.json()) as AnswerPayload
-    const limitHeader = response.headers.get('X-NexusRAG-Trial-Limit')
-    const usedHeader = response.headers.get('X-NexusRAG-Trial-Used')
-    const remainingHeader = response.headers.get('X-NexusRAG-Trial-Remaining')
-
-    if (limitHeader || usedHeader || remainingHeader) {
-      answer.usage = {
-        hosted_trial_limit: limitHeader ? Number(limitHeader) : undefined,
-        hosted_trial_used: usedHeader ? Number(usedHeader) : undefined,
-        hosted_trial_remaining: remainingHeader ? Number(remainingHeader) : undefined,
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => ({ message: 'Request failed' }))) as Record<string, unknown>
+        const detail = payload.detail
+        const message =
+          typeof detail === 'string'
+            ? detail
+            : typeof payload.message === 'string'
+              ? payload.message
+              : 'Request failed'
+        throw new APIError(response.status, message, payload)
       }
-    }
 
-    return answer
+      const answer = (await response.json()) as AnswerPayload
+      const limitHeader = response.headers.get('X-NexusRAG-Trial-Limit')
+      const usedHeader = response.headers.get('X-NexusRAG-Trial-Used')
+      const remainingHeader = response.headers.get('X-NexusRAG-Trial-Remaining')
+
+      if (limitHeader || usedHeader || remainingHeader) {
+        answer.usage = {
+          hosted_trial_limit: limitHeader ? Number(limitHeader) : undefined,
+          hosted_trial_used: usedHeader ? Number(usedHeader) : undefined,
+          hosted_trial_remaining: remainingHeader ? Number(remainingHeader) : undefined,
+        }
+      }
+
+      return answer
+    } catch (error) {
+      if (error instanceof APIError) {
+        throw error
+      }
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new APIError(0, 'Unable to connect to the API. Please verify your API endpoint and connection.')
+      }
+      throw error
+    }
   }
 
   async getDocuments() {
@@ -190,7 +211,8 @@ class APIClient {
         reject(new APIError(request.status, String(payload.detail || payload.message || 'Upload failed')))
       }
 
-      request.onerror = () => reject(new APIError(0, 'Upload failed'))
+      request.onerror = () => reject(new APIError(0, 'Upload failed. Please check your API connection.'))
+      request.onabort = () => reject(new APIError(0, 'Upload was cancelled.'))
       request.send(formData)
     })
   }

@@ -75,15 +75,22 @@ export const useAppStore = create<AppState>()(
     {
       name: 'nexusrag-frontend-store',
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        publicSessionId: state.publicSessionId,
-        publicTrialUsage: state.publicTrialUsage,
-        operatorApiUrl: state.operatorApiUrl,
-        operatorApiKey: state.operatorApiKey,
-        desktopSidebarCollapsed: state.desktopSidebarCollapsed,
-        queryHistory: state.queryHistory,
-        documents: state.documents
-      })
+      partialize: (state) => {
+        // Only persist queryHistory and documents if using custom API (operatorApiKey exists)
+        // For free trial: only persist session ID and trial usage
+        const isUsingCustomApi = Boolean(state.operatorApiKey)
+        return {
+          publicSessionId: state.publicSessionId,
+          publicTrialUsage: state.publicTrialUsage,
+          operatorApiUrl: state.operatorApiUrl,
+          operatorApiKey: state.operatorApiKey,
+          desktopSidebarCollapsed: state.desktopSidebarCollapsed,
+          ...(isUsingCustomApi && {
+            queryHistory: state.queryHistory,
+            documents: state.documents
+          })
+        }
+      }
     }
   )
 )

@@ -5,10 +5,12 @@ import { useMemo, useState } from 'react'
 
 import { APIError, api } from '@/lib/api'
 import { PUBLIC_DEMO_MODE, PUBLIC_TRIAL_QUERY_LIMIT } from '@/lib/public-config'
+import { useToast } from '@/lib/hooks/use-toast'
 import { useAppStore } from '@/lib/stores/app-store'
 import type { AnswerPayload, QueryHistoryItem } from '@/lib/types'
 
 export function useQuery() {
+  const toast = useToast()
   const [currentPrompt, setCurrentPrompt] = useState('')
   const [answer, setAnswer] = useState<AnswerPayload | null>(null)
   const [localError, setLocalError] = useState<Error | null>(null)
@@ -60,13 +62,20 @@ export function useQuery() {
           syncPublicTrialUsage(used)
         }
       }
+      const errorMessage = error instanceof Error ? error.message : 'Unable to complete the query.'
       upsertHistory({
         id: context?.id || `query-${Date.now()}`,
         prompt,
         createdAt: new Date().toISOString(),
-        answer: error instanceof Error ? error.message : 'Unable to complete the query.',
+        answer: errorMessage,
         status: 'error',
         citations: []
+      })
+      toast({
+        type: 'error',
+        title: 'Query failed',
+        description: errorMessage,
+        duration: 5000
       })
     }
   })
