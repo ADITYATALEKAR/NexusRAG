@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useMemo } from 'react'
 
 import { api } from '@/lib/api'
@@ -33,6 +33,7 @@ function normalizeDocumentStatus(status?: string, hasErrors?: boolean): Document
 
 export function useDocuments() {
   const toast = useToast()
+  const queryClient = useQueryClient()
   const documents = useAppStore((state) => state.documents)
   const addDocuments = useAppStore((state) => state.addDocuments)
   const replaceDocuments = useAppStore((state) => state.replaceDocuments)
@@ -121,7 +122,10 @@ export function useDocuments() {
       await api.deleteDocument(id)
       return id
     },
-    onSuccess: (id) => removeDocumentFromStore(id)
+    onSuccess: (id) => {
+      removeDocumentFromStore(id)
+      queryClient.invalidateQueries({ queryKey: ['documents'] })
+    }
   })
 
   return useMemo(
