@@ -40,7 +40,7 @@ const flowLayers = [
 
 function HeroArchitectureDiagram() {
   return (
-    <div className="relative max-w-[420px] rounded-[24px] border border-border-subtle/80 bg-white/86 p-5 shadow-[0_18px_52px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
+    <div className="w-full max-w-[560px] rounded-[24px] border border-border-subtle/80 bg-white/86 p-5 shadow-[0_18px_52px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
       <div className="flex items-center justify-between border-b border-border-subtle/70 pb-4">
         <div>
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.26em] text-accent-700">
@@ -55,32 +55,23 @@ function HeroArchitectureDiagram() {
         </div>
       </div>
 
-      <div className="relative mt-5 space-y-3">
-        <div className="absolute left-[13px] top-8 bottom-8 w-px bg-gradient-to-b from-accent-200 via-border-subtle to-accent-200" />
+      <div className="mt-5 grid grid-cols-2 gap-3">
         {flowLayers.map((layer) => (
-          <div key={layer.title} className="relative pl-9">
-            <span
-              className={`absolute left-0 top-4.5 h-[10px] w-[10px] rounded-full border ${
-                layer.accent
-                  ? 'border-accent-500 bg-accent-500 shadow-[0_0_0_4px_rgba(15,98,254,0.12)]'
-                  : 'border-border-default bg-white'
-              }`}
-            />
-            <div
-              className={`rounded-[22px] border px-5 py-4 shadow-sm ${
-                layer.accent
-                  ? 'border-accent-200 bg-[linear-gradient(180deg,rgba(15,98,254,0.08),rgba(255,255,255,0.92))]'
-                  : 'border-border-subtle bg-bg-primary/88'
-              }`}
-            >
-              <p className="text-[0.68rem] font-medium uppercase tracking-[0.24em] text-text-tertiary">
-                {layer.label}
-              </p>
-              <h4 className="mt-2 text-[1rem] font-semibold tracking-[-0.03em] text-text-primary">
-                {layer.title}
-              </h4>
-              <p className="mt-2 text-[0.92rem] leading-6 text-text-secondary">{layer.detail}</p>
-            </div>
+          <div
+            key={layer.title}
+            className={`rounded-[18px] border px-4 py-3.5 shadow-sm ${
+              layer.accent
+                ? 'border-accent-200 bg-[linear-gradient(180deg,rgba(15,98,254,0.08),rgba(255,255,255,0.92))]'
+                : 'border-border-subtle bg-bg-primary/88'
+            }`}
+          >
+            <p className="text-[0.68rem] font-medium uppercase tracking-[0.24em] text-text-tertiary">
+              {layer.label}
+            </p>
+            <h4 className="mt-1.5 text-[0.95rem] font-semibold tracking-[-0.03em] text-text-primary">
+              {layer.title}
+            </h4>
+            <p className="mt-1.5 text-[0.85rem] leading-5 text-text-secondary">{layer.detail}</p>
           </div>
         ))}
       </div>
@@ -94,7 +85,7 @@ export function Hero() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(15,98,254,0.08),transparent_28%),linear-gradient(180deg,rgba(240,246,255,0.84)_0%,rgba(255,255,255,0)_32%)]" />
 
       <div className="relative mx-auto flex w-full max-w-[1920px] flex-col gap-12 px-6 pb-16 pt-12 lg:px-8 xl:px-10 2xl:px-12">
-        <div className="grid gap-12 xl:grid-cols-[minmax(0,1.12fr)_minmax(420px,0.88fr)] xl:items-start">
+        <div className="grid gap-12 xl:grid-cols-[minmax(0,1fr)_minmax(560px,1fr)] xl:items-start">
           <div className="max-w-[980px]">
             <div className="inline-flex items-center gap-2 rounded-full border border-accent-100 bg-accent-50/88 px-4 py-2 text-sm font-medium text-accent-700">
               <CheckCircle2 className="h-4 w-4" />

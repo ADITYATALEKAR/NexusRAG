@@ -63,63 +63,71 @@ const comparison = [
 export function Positioning() {
   return (
     <section id="why-nexusrag" className="bg-bg-primary py-24">
-      <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-8 xl:px-10 2xl:px-12">
-        <div className="grid gap-10 xl:grid-cols-[minmax(300px,0.78fr)_minmax(0,1.22fr)]">
-          <div className="space-y-6">
-            <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
-              Why teams choose NexusRAG
-            </p>
-            <h2 className="max-w-[720px] text-balance text-[2.85rem] font-semibold leading-[1.08] tracking-[-0.06em] text-text-primary md:text-[3.65rem]">
-              Control, transparency, and retrieval quality in one stack
-            </h2>
-            <p className="max-w-[680px] text-base leading-8 text-text-secondary">
-              NexusRAG is for teams that have outgrown generic document chat. It keeps the
-              retrieval path visible, lets you plug the system into real products, and gives teams
-              a grounded interface they can trust.
-            </p>
-          </div>
+      <div className="mx-auto w-full max-w-[1920px] space-y-10 px-6 lg:px-8 xl:px-10 2xl:px-12">
+        {/* Why teams choose NexusRAG — own surface box */}
+        <div className="surface p-8 md:p-10">
+          <div className="grid gap-10 xl:grid-cols-[minmax(300px,0.78fr)_minmax(0,1.22fr)] xl:items-start">
+            <div className="space-y-6">
+              <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
+                Why teams choose NexusRAG
+              </p>
+              <h2 className="max-w-[720px] text-balance text-[2.85rem] font-semibold leading-[1.08] tracking-[-0.06em] text-text-primary md:text-[3.65rem]">
+                Control, transparency, and retrieval quality in one stack
+              </h2>
+              <p className="max-w-[680px] text-base leading-8 text-text-secondary">
+                NexusRAG is for teams that have outgrown generic document chat. It keeps the
+                retrieval path visible, lets you plug the system into real products, and gives teams
+                a grounded interface they can trust.
+              </p>
+            </div>
 
-          <div className="grid gap-5 md:grid-cols-3">
-            {reasons.map((item) => (
-              <div key={item.title} className="surface p-7">
-                <item.icon className="h-5 w-5 text-accent-600" />
-                <h3 className="mt-5 text-[1.42rem] font-semibold leading-[1.08] tracking-[-0.05em] text-text-primary">
-                  {item.title}
-                </h3>
-                <p className="mt-4 text-sm leading-7 text-text-secondary">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-12 grid gap-10 xl:grid-cols-[minmax(300px,0.78fr)_minmax(0,1.22fr)]">
-          <div className="space-y-6">
-            <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
-              Who should use it
-            </p>
-            <h3 className="max-w-[640px] text-balance text-[2.5rem] font-semibold leading-[1.08] tracking-[-0.055em] text-text-primary md:text-[3.1rem]">
-              For teams that need more than “chat with docs”
-            </h3>
-            <p className="max-w-[660px] text-base leading-8 text-text-secondary">
-              The strongest fit is teams saying: “ChatGPT is not enough for what we are building.”
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            {audiences.map((item) => (
-              <div key={item.title} className="surface p-7">
-                <Building2 className="h-5 w-5 text-accent-600" />
-                <h4 className="mt-5 text-[1.34rem] font-semibold leading-[1.08] tracking-[-0.045em] text-text-primary">
-                  {item.title}
-                </h4>
-                <p className="mt-4 text-sm leading-7 text-text-secondary">{item.description}</p>
-              </div>
-            ))}
+            <div className="grid gap-6 md:grid-cols-3">
+              {reasons.map((item) => (
+                <div key={item.title} className="rounded-2xl border border-border-subtle bg-bg-secondary p-7">
+                  <item.icon className="h-5 w-5 text-accent-600" />
+                  <h3 className="mt-5 text-[1.42rem] font-semibold leading-[1.08] tracking-[-0.05em] text-text-primary">
+                    {item.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-7 text-text-secondary">{item.description}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 rounded-[26px] bg-[linear-gradient(180deg,rgba(248,251,255,0.92),rgba(255,255,255,0.88))] p-8 md:p-10">
-          <div className="grid gap-8 xl:grid-cols-[minmax(280px,0.62fr)_minmax(0,1.38fr)]">
+        {/* Who should use it — own surface box */}
+        <div className="surface p-8 md:p-10">
+          <div className="grid gap-10 xl:grid-cols-[minmax(300px,0.78fr)_minmax(0,1.22fr)] xl:items-start">
+            <div className="space-y-6">
+              <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
+                Who should use it
+              </p>
+              <h3 className="max-w-[640px] text-balance text-[2.5rem] font-semibold leading-[1.08] tracking-[-0.055em] text-text-primary md:text-[3.1rem]">
+                For teams that need more than &ldquo;chat with docs&rdquo;
+              </h3>
+              <p className="max-w-[660px] text-base leading-8 text-text-secondary">
+                The strongest fit is teams saying: &ldquo;ChatGPT is not enough for what we are
+                building.&rdquo;
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {audiences.map((item) => (
+                <div key={item.title} className="rounded-2xl border border-border-subtle bg-bg-secondary p-7">
+                  <Building2 className="h-5 w-5 text-accent-600" />
+                  <h4 className="mt-5 text-[1.34rem] font-semibold leading-[1.08] tracking-[-0.045em] text-text-primary">
+                    {item.title}
+                  </h4>
+                  <p className="mt-4 text-sm leading-7 text-text-secondary">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Comparison — own surface box, left-aligned */}
+        <div className="surface p-8 md:p-10">
+          <div className="grid gap-10 xl:grid-cols-[minmax(300px,0.78fr)_minmax(0,1.22fr)] xl:items-start">
             <div className="space-y-5">
               <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
                 Why not just use ChatGPT or Claude?
@@ -133,9 +141,9 @@ export function Positioning() {
               </p>
             </div>
 
-            <div className="grid gap-5 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2">
               {comparison.map((column) => (
-                <div key={column.title} className="surface p-7">
+                <div key={column.title} className="rounded-2xl border border-border-subtle bg-bg-secondary p-7">
                   <h4 className="text-[1.45rem] font-semibold tracking-[-0.045em] text-text-primary">
                     {column.title}
                   </h4>
