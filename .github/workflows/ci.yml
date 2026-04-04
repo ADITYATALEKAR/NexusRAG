@@ -51,9 +51,9 @@ jobs:
       run:
         working-directory: frontend
     env:
-      BACKEND_API_URL: http://localhost:8000
-      NEXTAUTH_URL: http://localhost:3000
-      NEXTAUTH_SECRET: github-actions-placeholder-secret
+      NEXT_PUBLIC_API_BASE_URL: ${{ secrets.CLOUDFLARE_API_BASE_URL || 'http://localhost:8000' }}
+      NEXT_PUBLIC_NEXUSRAG_PUBLIC_APP: 'true'
+      NEXT_PUBLIC_NEXUSRAG_EXTERNAL_BACKEND: 'true'
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -76,4 +76,13 @@ jobs:
 
       - name: Run frontend build
         run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: frontend
+          command: pages deploy out --project-name=nexusrag
 
