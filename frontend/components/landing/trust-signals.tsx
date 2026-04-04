@@ -24,9 +24,9 @@ const evaluationModes = [
 export function TrustSignals() {
   return (
     <section className="bg-bg-primary py-14">
-      <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-10">
+      <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="overflow-hidden rounded-[28px] bg-[linear-gradient(180deg,rgba(248,251,255,0.92),rgba(255,255,255,0.88))] py-8 md:py-10">
-          <div className="flex flex-col gap-8 px-5 md:px-8 xl:flex-row xl:items-center xl:justify-between xl:px-10">
+          <div className="flex flex-col gap-8 px-6 lg:px-8 xl:flex-row xl:items-center xl:justify-between xl:px-10 2xl:px-12">
             <div className="max-w-[760px]">
               <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
                 Evaluate the product the way teams actually buy it

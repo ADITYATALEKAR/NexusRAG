@@ -16,7 +16,7 @@ export function Hero() {
     <section className="relative overflow-hidden bg-bg-primary">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_18%,rgba(15,98,254,0.08),transparent_28%),linear-gradient(180deg,rgba(240,246,255,0.84)_0%,rgba(255,255,255,0)_32%)]" />
 
-      <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-12 px-5 pb-16 pt-12 md:px-8 xl:px-10">
+      <div className="relative mx-auto flex w-full max-w-[1920px] flex-col gap-12 px-6 pb-16 pt-12 lg:px-8 xl:px-10 2xl:px-12">
         <div className="max-w-[1280px]">
           <div className="inline-flex items-center gap-2 rounded-full border border-accent-100 bg-accent-50/88 px-4 py-2 text-sm font-medium text-accent-700">
             <CheckCircle2 className="h-4 w-4" />
