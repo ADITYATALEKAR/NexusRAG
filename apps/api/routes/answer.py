@@ -210,7 +210,7 @@ async def _build_answer_runtime(request: Request) -> AnswerRuntime:
     prompts_raw = loader.load_yaml("generation/prompts.yaml").get("prompts", {})
     abstention_raw = loader.load_yaml("generation/abstention.yaml").get("abstention", {})
     provider_raw = load_provider_config(config_dir)
-    failover_file_config = loader.load_validated("models/llm-failover.yaml", FailoverFileConfig)
+    failover_file_config = loader.load_validated("models/llm-failover.yaml", FailoverFileConfig, apply_env_overrides=False)
 
     provider_registry = ProviderRegistry()
     providers = build_configured_providers(provider_raw)
