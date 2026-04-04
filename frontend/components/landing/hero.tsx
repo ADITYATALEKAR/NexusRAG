@@ -26,33 +26,21 @@ const flowLayers = [
   },
   {
     label: 'Evidence',
-    title: 'Cited context',
-    detail: 'Relevant passages, filenames, and review context are preserved.',
-    accent: false,
-  },
-  {
-    label: 'Prompt',
-    title: 'Answer assembly',
-    detail: 'Evidence is organized into a grounded prompt with clear constraints.',
+    title: 'Grounded context',
+    detail: 'Evidence, filenames, and scored passages are preserved.',
     accent: false,
   },
   {
     label: 'LLM',
-    title: 'Generation',
+    title: 'Answer generation',
     detail: 'The model answers with citations or abstains when evidence is thin.',
     accent: true,
-  },
-  {
-    label: 'Output',
-    title: 'Grounded response',
-    detail: 'Teams receive a readable answer, sources, and audit-ready evidence.',
-    accent: false,
   },
 ]
 
 function HeroArchitectureDiagram() {
   return (
-    <div className="relative rounded-[28px] border border-border-subtle/80 bg-white/84 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-6 xl:p-7">
+    <div className="relative max-w-[420px] rounded-[24px] border border-border-subtle/80 bg-white/86 p-5 shadow-[0_18px_52px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
       <div className="flex items-center justify-between border-b border-border-subtle/70 pb-4">
         <div>
           <p className="text-[0.72rem] font-medium uppercase tracking-[0.26em] text-accent-700">
@@ -68,11 +56,11 @@ function HeroArchitectureDiagram() {
       </div>
 
       <div className="relative mt-5 space-y-3">
-        <div className="absolute left-[15px] top-8 bottom-8 w-px bg-gradient-to-b from-accent-200 via-border-subtle to-accent-200" />
+        <div className="absolute left-[13px] top-8 bottom-8 w-px bg-gradient-to-b from-accent-200 via-border-subtle to-accent-200" />
         {flowLayers.map((layer) => (
-          <div key={layer.title} className="relative pl-10">
+          <div key={layer.title} className="relative pl-9">
             <span
-              className={`absolute left-0 top-5 h-[10px] w-[10px] rounded-full border ${
+              className={`absolute left-0 top-4.5 h-[10px] w-[10px] rounded-full border ${
                 layer.accent
                   ? 'border-accent-500 bg-accent-500 shadow-[0_0_0_4px_rgba(15,98,254,0.12)]'
                   : 'border-border-default bg-white'
@@ -88,10 +76,10 @@ function HeroArchitectureDiagram() {
               <p className="text-[0.68rem] font-medium uppercase tracking-[0.24em] text-text-tertiary">
                 {layer.label}
               </p>
-              <h4 className="mt-2 text-[1.08rem] font-semibold tracking-[-0.03em] text-text-primary">
+              <h4 className="mt-2 text-[1rem] font-semibold tracking-[-0.03em] text-text-primary">
                 {layer.title}
               </h4>
-              <p className="mt-2 text-sm leading-6 text-text-secondary">{layer.detail}</p>
+              <p className="mt-2 text-[0.92rem] leading-6 text-text-secondary">{layer.detail}</p>
             </div>
           </div>
         ))}
@@ -114,15 +102,15 @@ export function Hero() {
             </div>
 
             <div className="mt-7">
-              <h1 className="max-w-[980px] text-balance text-[4.15rem] font-semibold leading-[0.98] tracking-[-0.068em] text-text-primary md:text-[5.15rem] xl:text-[5.55rem] 2xl:text-[6.15rem]">
+              <h1 className="max-w-[980px] text-balance text-[4.05rem] font-semibold leading-[1.04] tracking-[-0.062em] text-text-primary md:text-[5rem] xl:text-[5.35rem] 2xl:text-[5.9rem]">
                 Enterprise RAG with
                 <span className="block text-accent-600">evidence built in.</span>
               </h1>
 
-              <p className="mt-8 max-w-[840px] text-[1.18rem] leading-[1.8] text-text-secondary">
-                NexusRAG gives teams a premium retrieval workspace that feels credible on first
-                contact: grounded answers, inline citations, calm review surfaces, and a clear path
-                from hosted evaluation to a private deployment with the same interface.
+              <p className="mt-8 max-w-[980px] text-[1.16rem] leading-[1.84] text-text-secondary">
+                NexusRAG is a retrieval engine for grounded AI systems. Teams use it when ChatGPT
+                and Claude stop being enough: they need visible evidence, controllable retrieval,
+                plug-in APIs, and a clean path from shared evaluation to private rollout.
               </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -150,7 +138,7 @@ export function Hero() {
         </div>
 
         <div>
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-3 xl:grid-cols-4">
             {heroSignals.map((signal) => (
               <div
                 key={signal}
