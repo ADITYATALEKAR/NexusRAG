@@ -62,11 +62,11 @@ const comparison = [
 
 export function Positioning() {
   return (
-    <section id="why-nexusrag" className="bg-bg-primary py-24">
-      <div className="mx-auto w-full max-w-[1920px] space-y-10 px-6 lg:px-8 xl:px-10 2xl:px-12">
-        {/* Why teams choose NexusRAG — own surface box */}
+    <section id="why-nexusrag" className="bg-bg-primary py-20">
+      <div className="mx-auto w-full max-w-[1920px] space-y-16 px-6 lg:px-8 xl:px-10 2xl:px-12">
+        {/* Why teams choose NexusRAG */}
         <div className="surface p-8 md:p-10">
-          <div className="grid gap-10 xl:grid-cols-[minmax(300px,0.78fr)_minmax(0,1.22fr)] xl:items-start">
+          <div className="grid gap-10 xl:grid-cols-2 xl:items-start">
             <div className="space-y-6">
               <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
                 Why teams choose NexusRAG
@@ -83,7 +83,10 @@ export function Positioning() {
 
             <div className="grid gap-6 md:grid-cols-3">
               {reasons.map((item) => (
-                <div key={item.title} className="rounded-2xl border border-border-subtle bg-bg-secondary p-7">
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-border-subtle bg-bg-secondary p-7"
+                >
                   <item.icon className="h-5 w-5 text-accent-600" />
                   <h3 className="mt-5 text-[1.42rem] font-semibold leading-[1.08] tracking-[-0.05em] text-text-primary">
                     {item.title}
@@ -95,9 +98,9 @@ export function Positioning() {
           </div>
         </div>
 
-        {/* Who should use it — own surface box */}
+        {/* Who should use it */}
         <div className="surface p-8 md:p-10">
-          <div className="grid gap-10 xl:grid-cols-[minmax(300px,0.78fr)_minmax(0,1.22fr)] xl:items-start">
+          <div className="grid gap-10 xl:grid-cols-2 xl:items-start">
             <div className="space-y-6">
               <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
                 Who should use it
@@ -113,7 +116,10 @@ export function Positioning() {
 
             <div className="grid gap-6 md:grid-cols-3">
               {audiences.map((item) => (
-                <div key={item.title} className="rounded-2xl border border-border-subtle bg-bg-secondary p-7">
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-border-subtle bg-bg-secondary p-7"
+                >
                   <Building2 className="h-5 w-5 text-accent-600" />
                   <h4 className="mt-5 text-[1.34rem] font-semibold leading-[1.08] tracking-[-0.045em] text-text-primary">
                     {item.title}
@@ -125,9 +131,9 @@ export function Positioning() {
           </div>
         </div>
 
-        {/* Comparison — own surface box, left-aligned */}
+        {/* Why not just use ChatGPT or Claude? */}
         <div className="surface p-8 md:p-10">
-          <div className="grid gap-10 xl:grid-cols-[minmax(300px,0.78fr)_minmax(0,1.22fr)] xl:items-start">
+          <div className="grid gap-10 xl:grid-cols-2 xl:items-start">
             <div className="space-y-5">
               <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
                 Why not just use ChatGPT or Claude?
@@ -143,7 +149,10 @@ export function Positioning() {
 
             <div className="grid gap-6 md:grid-cols-2">
               {comparison.map((column) => (
-                <div key={column.title} className="rounded-2xl border border-border-subtle bg-bg-secondary p-7">
+                <div
+                  key={column.title}
+                  className="rounded-2xl border border-border-subtle bg-bg-secondary p-7"
+                >
                   <h4 className="text-[1.45rem] font-semibold tracking-[-0.045em] text-text-primary">
                     {column.title}
                   </h4>

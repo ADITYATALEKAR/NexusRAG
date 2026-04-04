@@ -23,48 +23,46 @@ const evaluationModes = [
 
 export function TrustSignals() {
   return (
-    <section className="bg-bg-primary py-14">
+    <section className="bg-bg-primary py-20">
       <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-8 xl:px-10 2xl:px-12">
-        <div className="overflow-hidden rounded-[28px] bg-[linear-gradient(180deg,rgba(248,251,255,0.92),rgba(255,255,255,0.88))] py-8 md:py-10">
-          <div className="grid gap-8 xl:grid-cols-[minmax(0,0.95fr)_minmax(620px,1fr)] xl:items-start">
-            <div className="max-w-[760px]">
-              <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
-                Evaluate the product the way teams actually buy it
-              </p>
-              <h2 className="mt-4 max-w-[760px] text-balance text-[2.85rem] font-semibold leading-[1.12] tracking-[-0.055em] text-text-primary md:text-[3.75rem]">
-                Start public. Move private. Keep the same workspace.
-              </h2>
-              <p className="mt-6 max-w-[700px] text-[1.02rem] leading-8 text-text-secondary">
-                Evaluate answer quality in the hosted mode, then switch the exact same interface to
-                your own API when your team is ready.
-              </p>
-            </div>
+        <div className="grid gap-10 xl:grid-cols-2 xl:items-start">
+          <div>
+            <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
+              Evaluate the product the way teams actually buy it
+            </p>
+            <h2 className="mt-4 max-w-[760px] text-balance text-[2.85rem] font-semibold leading-[1.12] tracking-[-0.055em] text-text-primary md:text-[3.75rem]">
+              Start public. Move private. Keep the same workspace.
+            </h2>
+            <p className="mt-6 max-w-[700px] text-[1.02rem] leading-8 text-text-secondary">
+              Evaluate answer quality in the hosted mode, then switch the exact same interface to
+              your own API when your team is ready.
+            </p>
+          </div>
 
-            <div className="grid gap-4 lg:grid-cols-2">
-              {evaluationModes.map((mode) => (
-                <div
-                  key={mode.title}
-                  className="rounded-sm border border-border-subtle bg-bg-primary/82 p-5 shadow-sm"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-[0.76rem] font-medium uppercase tracking-[0.24em] text-text-tertiary">
-                        {mode.eyebrow}
-                      </p>
-                      <h3 className="mt-3 text-[1.6rem] font-semibold tracking-[-0.05em] text-text-primary">
-                        {mode.title}
-                      </h3>
-                    </div>
-                    <mode.icon className="mt-1 h-5 w-5 shrink-0 text-accent-600" />
+          <div className="grid gap-6 lg:grid-cols-2">
+            {evaluationModes.map((mode) => (
+              <div
+                key={mode.title}
+                className="rounded-2xl border border-border-subtle bg-bg-secondary p-6"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[0.76rem] font-medium uppercase tracking-[0.24em] text-text-tertiary">
+                      {mode.eyebrow}
+                    </p>
+                    <h3 className="mt-3 text-[1.6rem] font-semibold tracking-[-0.05em] text-text-primary">
+                      {mode.title}
+                    </h3>
                   </div>
-                  <p className="mt-4 text-sm leading-7 text-text-secondary">{mode.description}</p>
-                  <div className="mt-5 inline-flex items-center gap-2 text-[0.78rem] font-medium uppercase tracking-[0.22em] text-accent-700">
-                    {mode.footnote}
-                    <ArrowRightLeft className="h-3.5 w-3.5" />
-                  </div>
+                  <mode.icon className="mt-1 h-5 w-5 shrink-0 text-accent-600" />
                 </div>
-              ))}
-            </div>
+                <p className="mt-4 text-sm leading-7 text-text-secondary">{mode.description}</p>
+                <div className="mt-5 inline-flex items-center gap-2 text-[0.78rem] font-medium uppercase tracking-[0.22em] text-accent-700">
+                  {mode.footnote}
+                  <ArrowRightLeft className="h-3.5 w-3.5" />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

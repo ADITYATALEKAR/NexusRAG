@@ -10,9 +10,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-bg-primary">
       <Navbar />
       <Hero />
+      <Features />
       <TrustSignals />
       <Positioning />
-      <Features />
       <Footer />
     </div>
   )
