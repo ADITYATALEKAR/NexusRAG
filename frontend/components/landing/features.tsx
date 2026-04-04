@@ -1,4 +1,4 @@
-﻿const howItWorks = [
+const howItWorks = [
   {
     step: '01',
     title: 'Upload the source material',
@@ -29,9 +29,8 @@ export function Features() {
             From private files to cited answers in one clean workflow
           </h2>
           <p className="max-w-[700px] text-base leading-8 text-text-secondary">
-            The workflow should feel immediate and credible: upload the source material, ask a
-            precise question, inspect the cited evidence, and decide whether the product fits your
-            team before any rollout effort.
+            Upload the source material, ask a precise question, inspect the cited evidence, and
+            decide whether the product fits your team before any rollout effort.
           </p>
         </div>
 
@@ -52,4 +51,3 @@ export function Features() {
     </section>
   )
 }
-

@@ -1,7 +1,7 @@
-﻿import Link from 'next/link'
+import Link from 'next/link'
 
 import { Logo } from '@/components/shared/logo'
-import { GITHUB_REPO_URL } from '@/lib/site-content'
+import { FOUNDER_CONTACT, GITHUB_REPO_URL } from '@/lib/site-content'
 
 export function Footer() {
   return (
@@ -14,7 +14,24 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-6 sm:grid-cols-3">
+          <div className="space-y-3">
+            <p className="text-sm font-semibold text-text-primary">Contact</p>
+            <div className="space-y-2 text-sm leading-6 text-text-secondary">
+              <p className="font-medium text-text-primary">{FOUNDER_CONTACT.name}</p>
+              <p>{FOUNDER_CONTACT.role}</p>
+              <a href={`mailto:${FOUNDER_CONTACT.email}`} className="block hover:text-text-primary">
+                {FOUNDER_CONTACT.email}
+              </a>
+              <a
+                href={`tel:${FOUNDER_CONTACT.phone.replace(/\s+/g, '')}`}
+                className="block hover:text-text-primary"
+              >
+                {FOUNDER_CONTACT.phone}
+              </a>
+            </div>
+          </div>
+
           <div className="space-y-3">
             <p className="text-sm font-semibold text-text-primary">Product</p>
             <div className="space-y-2 text-sm text-text-secondary">
@@ -52,4 +69,3 @@ export function Footer() {
     </footer>
   )
 }
-

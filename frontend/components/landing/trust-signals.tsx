@@ -1,4 +1,4 @@
-﻿import { ArrowRightLeft, Sparkles, ShieldCheck } from 'lucide-react'
+import { ArrowRightLeft, Sparkles, ShieldCheck } from 'lucide-react'
 
 import { PUBLIC_TRIAL_QUERY_LIMIT } from '@/lib/public-config'
 
@@ -31,11 +31,10 @@ export function TrustSignals() {
               <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
                 Evaluate the product the way teams actually buy it
               </p>
-              <h2 className="mt-4 max-w-[760px] text-balance text-[2.85rem] font-semibold leading-[1.08] tracking-[-0.055em] text-text-primary md:text-[3.75rem]">
+              <h2 className="mt-4 max-w-[760px] text-balance text-[2.85rem] font-semibold leading-[1.12] tracking-[-0.055em] text-text-primary md:text-[3.75rem]">
                 Start public. Move private. Keep the same workspace.
               </h2>
               <p className="mt-6 max-w-[700px] text-[1.02rem] leading-8 text-text-secondary">
-                The first pass should feel like the real product, not a stripped-down demo.
                 Evaluate answer quality in the hosted mode, then switch the exact same interface to
                 your own API when your team is ready.
               </p>
@@ -72,4 +71,3 @@ export function TrustSignals() {
     </section>
   )
 }
-
