@@ -61,16 +61,16 @@ export function LogoMark({
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M49 34L37 60L49 86"
+          d="M47 33L22 60L47 87"
           stroke="currentColor"
-          strokeWidth="7.2"
+          strokeWidth="8.4"
           strokeLinecap="square"
           strokeLinejoin="miter"
         />
         <path
-          d="M71 34L83 60L71 86"
+          d="M73 33L98 60L73 87"
           stroke="currentColor"
-          strokeWidth="7.2"
+          strokeWidth="8.4"
           strokeLinecap="square"
           strokeLinejoin="miter"
         />

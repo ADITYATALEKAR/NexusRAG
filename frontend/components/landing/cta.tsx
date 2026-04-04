@@ -8,23 +8,20 @@ export function CTA() {
   return (
     <section id="contact" className="py-24">
       <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-8 xl:px-10 2xl:px-12">
-        <div className="surface overflow-hidden bg-[linear-gradient(135deg,rgba(255,255,255,1),rgba(244,247,255,0.92))] p-10 md:p-14">
+        <div className="overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,rgba(255,255,255,1),rgba(244,247,255,0.92))] p-10 md:p-14">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_360px]">
             <div>
-              <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-                Contact
-              </p>
-              <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.05em] text-text-primary md:text-4xl">
+              <h2 className="max-w-3xl text-3xl font-semibold tracking-[-0.05em] text-text-primary md:text-4xl">
                 Start with the live workspace. Move to your own deployment when your team is ready.
               </h2>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Button size="lg" asChild>
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+                <Button size="lg" className="h-14 px-8 text-lg" asChild>
                   <Link href="/dashboard">
                     Try it free
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                <Button size="lg" variant="outline" className="h-14 px-8 text-lg" asChild>
                   <Link href="/login">Connect your API</Link>
                 </Button>
               </div>

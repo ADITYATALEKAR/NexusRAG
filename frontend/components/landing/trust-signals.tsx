@@ -25,7 +25,7 @@ export function TrustSignals() {
   return (
     <section className="bg-bg-primary py-14">
       <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-10 xl:px-12 2xl:px-16">
-        <div className="surface overflow-hidden p-8 md:p-10">
+        <div className="overflow-hidden rounded-[28px] bg-[linear-gradient(180deg,rgba(248,251,255,0.92),rgba(255,255,255,0.88))] p-8 md:p-10">
           <div className="flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
             <div className="max-w-[760px]">
               <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
@@ -43,7 +43,7 @@ export function TrustSignals() {
 
             <div className="grid gap-4 lg:min-w-[560px] lg:grid-cols-2">
               {evaluationModes.map((mode) => (
-                <div key={mode.title} className="rounded-sm border border-border-subtle bg-bg-secondary/72 p-5">
+                <div key={mode.title} className="rounded-sm border border-border-subtle bg-bg-primary/82 p-5 shadow-sm">
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-[0.76rem] font-medium uppercase tracking-[0.24em] text-text-tertiary">

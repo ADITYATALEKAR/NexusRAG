@@ -36,13 +36,13 @@ export function Hero() {
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Button size="lg" className="h-13 px-7 text-base" asChild>
+              <Button size="lg" className="h-14 px-8 text-lg" asChild>
                 <Link href="/dashboard">
                   Try it free
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-13 px-7 text-base" asChild>
+              <Button size="lg" variant="outline" className="h-14 px-8 text-lg" asChild>
                 <Link href="/login">Connect your own API</Link>
               </Button>
             </div>
@@ -53,12 +53,12 @@ export function Hero() {
             </p>
           </div>
 
-          <div className="app-scroll mt-12 overflow-x-auto pb-1">
-            <div className="flex min-w-max items-center gap-3">
+          <div className="mt-12">
+            <div className="flex flex-wrap items-center gap-3">
               {heroSignals.map((signal) => (
                 <div
                   key={signal}
-                  className="rounded-full border border-border-subtle/70 bg-bg-primary/88 px-5 py-3 text-sm font-medium text-text-secondary shadow-sm"
+                  className="rounded-full border border-border-subtle/70 bg-bg-primary/88 px-5 py-3 text-sm font-medium leading-6 text-text-secondary shadow-sm"
                 >
                   {signal}
                 </div>
