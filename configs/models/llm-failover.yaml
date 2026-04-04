@@ -3,19 +3,19 @@ failover:
   max_providers: 5
 
   provider_chain:
-    - provider_id: "openai-primary"
+    - provider_id: "google-primary"
+      vendor: "google"
+      model: "gemini-1.5-pro"
+      priority: 1
+      enabled: true
+    - provider_id: "openai-backup"
       vendor: "openai"
       model: "gpt-4o"
-      priority: 1
+      priority: 2
       enabled: true
     - provider_id: "anthropic-backup"
       vendor: "anthropic"
       model: "claude-sonnet-4-20250514"
-      priority: 2
-      enabled: true
-    - provider_id: "google-backup"
-      vendor: "google"
-      model: "gemini-1.5-pro"
       priority: 3
       enabled: true
     - provider_id: "groq-fast"

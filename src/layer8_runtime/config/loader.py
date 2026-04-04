@@ -114,7 +114,13 @@ class ConfigLoader:
             self._set_nested(data, [segment.lower() for segment in path], self._parse_env_value(raw_value))
 
     def _set_nested(self, data: dict[str, Any], path: list[str], value: Any) -> None:
-        """Set a nested value in a mapping, creating intermediate dictionaries."""
+        """Set a nested value only when the top-level key already exists in the config.
+
+        This prevents environment variables like RAG__SECURITY__CORS_ORIGINS
+        from polluting config files that have no ``security`` section.
+        """
+        if path[0] not in data:
+            return
         cursor = data
         for key in path[:-1]:
             next_value = cursor.get(key)
