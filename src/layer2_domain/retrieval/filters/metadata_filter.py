@@ -46,7 +46,7 @@ class MetadataFilter:
             created_at_raw = metadata.get("created_at")
             if created_at_raw is None:
                 return False
-            created_at = datetime.fromisoformat(created_at_raw)
+            created_at = created_at_raw if isinstance(created_at_raw, datetime) else datetime.fromisoformat(created_at_raw)
             if config.date_from and created_at < datetime.fromisoformat(config.date_from):
                 return False
             if config.date_to and created_at > datetime.fromisoformat(config.date_to):

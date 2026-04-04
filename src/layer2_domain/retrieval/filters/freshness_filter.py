@@ -29,7 +29,8 @@ class FreshnessBooster:
             boosted_candidate = candidate.model_copy(deep=True)
             chunk_meta = metadata_store.get_chunk_sync(candidate.chunk_id)
             if chunk_meta and chunk_meta.get("created_at"):
-                created_at = datetime.fromisoformat(chunk_meta["created_at"])
+                raw = chunk_meta["created_at"]
+                created_at = raw if isinstance(raw, datetime) else datetime.fromisoformat(raw)
                 if created_at.tzinfo is None:
                     created_at = created_at.replace(tzinfo=timezone.utc)
                 age_days = max((now - created_at).days, 0)
