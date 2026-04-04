@@ -62,22 +62,22 @@ const comparison = [
 
 export function Positioning() {
   return (
-    <section id="why-nexusrag" className="bg-bg-primary py-20">
-      <div className="mx-auto w-full max-w-[1920px] space-y-16 px-6 lg:px-8 xl:px-10 2xl:px-12">
+    <section id="why-nexusrag" className="bg-bg-primary">
+      <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-8 xl:px-10 2xl:px-12">
         {/* Why teams choose NexusRAG */}
-        <div className="surface p-8 md:p-10">
-          <div className="grid gap-10 xl:grid-cols-2 xl:items-start">
+        <div className="border-b border-border-subtle/40 py-20">
+          <div className="grid gap-12 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] xl:items-start">
             <div className="space-y-6">
-              <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
+              <p className="text-[0.72rem] font-medium uppercase tracking-[0.26em] text-accent-700">
                 Why teams choose NexusRAG
               </p>
-              <h2 className="max-w-[720px] text-balance text-[2.85rem] font-semibold leading-[1.08] tracking-[-0.06em] text-text-primary md:text-[3.65rem]">
+              <h2 className="max-w-[720px] text-balance text-[2.6rem] font-semibold leading-[1.08] tracking-[-0.05em] text-text-primary md:text-[3.4rem]">
                 Control, transparency, and retrieval quality in one stack
               </h2>
-              <p className="max-w-[680px] text-base leading-8 text-text-secondary">
+              <p className="max-w-[580px] text-[1.02rem] leading-[1.8] text-text-secondary">
                 NexusRAG is for teams that have outgrown generic document chat. It keeps the
-                retrieval path visible, lets you plug the system into real products, and gives teams
-                a grounded interface they can trust.
+                retrieval path visible, lets you plug the system into real products, and gives
+                teams a grounded interface they can trust.
               </p>
             </div>
 
@@ -85,13 +85,15 @@ export function Positioning() {
               {reasons.map((item) => (
                 <div
                   key={item.title}
-                  className="rounded-2xl border border-border-subtle bg-bg-secondary p-7"
+                  className="rounded-2xl bg-bg-secondary/60 p-6"
                 >
                   <item.icon className="h-5 w-5 text-accent-600" />
-                  <h3 className="mt-5 text-[1.42rem] font-semibold leading-[1.08] tracking-[-0.05em] text-text-primary">
+                  <h3 className="mt-5 text-[1.24rem] font-semibold leading-[1.12] tracking-[-0.03em] text-text-primary">
                     {item.title}
                   </h3>
-                  <p className="mt-4 text-sm leading-7 text-text-secondary">{item.description}</p>
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">
+                    {item.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -99,18 +101,18 @@ export function Positioning() {
         </div>
 
         {/* Who should use it */}
-        <div className="surface p-8 md:p-10">
-          <div className="grid gap-10 xl:grid-cols-2 xl:items-start">
+        <div className="border-b border-border-subtle/40 py-20">
+          <div className="grid gap-12 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] xl:items-start">
             <div className="space-y-6">
-              <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
+              <p className="text-[0.72rem] font-medium uppercase tracking-[0.26em] text-accent-700">
                 Who should use it
               </p>
-              <h3 className="max-w-[640px] text-balance text-[2.5rem] font-semibold leading-[1.08] tracking-[-0.055em] text-text-primary md:text-[3.1rem]">
+              <h3 className="max-w-[640px] text-balance text-[2.4rem] font-semibold leading-[1.08] tracking-[-0.05em] text-text-primary md:text-[3.1rem]">
                 For teams that need more than &ldquo;chat with docs&rdquo;
               </h3>
-              <p className="max-w-[660px] text-base leading-8 text-text-secondary">
-                The strongest fit is teams saying: &ldquo;ChatGPT is not enough for what we are
-                building.&rdquo;
+              <p className="max-w-[580px] text-[1.02rem] leading-[1.8] text-text-secondary">
+                The strongest fit is teams saying: &ldquo;ChatGPT is not enough for what we
+                are building.&rdquo;
               </p>
             </div>
 
@@ -118,13 +120,15 @@ export function Positioning() {
               {audiences.map((item) => (
                 <div
                   key={item.title}
-                  className="rounded-2xl border border-border-subtle bg-bg-secondary p-7"
+                  className="rounded-2xl bg-bg-secondary/60 p-6"
                 >
                   <Building2 className="h-5 w-5 text-accent-600" />
-                  <h4 className="mt-5 text-[1.34rem] font-semibold leading-[1.08] tracking-[-0.045em] text-text-primary">
+                  <h4 className="mt-5 text-[1.18rem] font-semibold leading-[1.12] tracking-[-0.03em] text-text-primary">
                     {item.title}
                   </h4>
-                  <p className="mt-4 text-sm leading-7 text-text-secondary">{item.description}</p>
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">
+                    {item.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -132,18 +136,18 @@ export function Positioning() {
         </div>
 
         {/* Why not just use ChatGPT or Claude? */}
-        <div className="surface p-8 md:p-10">
-          <div className="grid gap-10 xl:grid-cols-2 xl:items-start">
-            <div className="space-y-5">
-              <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
+        <div className="py-20">
+          <div className="grid gap-12 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] xl:items-start">
+            <div className="space-y-6">
+              <p className="text-[0.72rem] font-medium uppercase tracking-[0.26em] text-accent-700">
                 Why not just use ChatGPT or Claude?
               </p>
               <h3 className="max-w-[560px] text-balance text-[2.4rem] font-semibold leading-[1.1] tracking-[-0.05em] text-text-primary md:text-[2.85rem]">
                 Assistants are helpful. Engines are shippable.
               </h3>
-              <p className="max-w-[560px] text-base leading-8 text-text-secondary">
-                NexusRAG sits between open-source chaos and closed SaaS tools: easier than building
-                from scratch, but far more controllable than a black-box assistant.
+              <p className="max-w-[560px] text-[1.02rem] leading-[1.8] text-text-secondary">
+                NexusRAG sits between open-source chaos and closed SaaS tools: easier than
+                building from scratch, but far more controllable than a black-box assistant.
               </p>
             </div>
 
@@ -151,9 +155,9 @@ export function Positioning() {
               {comparison.map((column) => (
                 <div
                   key={column.title}
-                  className="rounded-2xl border border-border-subtle bg-bg-secondary p-7"
+                  className="rounded-2xl bg-bg-secondary/60 p-6"
                 >
-                  <h4 className="text-[1.45rem] font-semibold tracking-[-0.045em] text-text-primary">
+                  <h4 className="text-[1.24rem] font-semibold tracking-[-0.03em] text-text-primary">
                     {column.title}
                   </h4>
                   <ul className="mt-5 space-y-3 text-sm leading-7 text-text-secondary">
