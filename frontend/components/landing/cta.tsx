@@ -8,8 +8,8 @@ export function CTA() {
   return (
     <section id="contact" className="py-24">
       <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-10">
-        <div className="overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,rgba(255,255,255,1),rgba(244,247,255,0.92))] p-10 md:p-14">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_360px]">
+        <div className="overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,rgba(255,255,255,1),rgba(244,247,255,0.92))] py-10 md:py-14">
+          <div className="grid gap-8 px-5 md:px-8 lg:grid-cols-[minmax(0,1.15fr)_360px] xl:px-10">
             <div>
               <h2 className="max-w-3xl text-3xl font-semibold tracking-[-0.05em] text-text-primary md:text-4xl">
                 Start with the live workspace. Move to your own deployment when your team is ready.
