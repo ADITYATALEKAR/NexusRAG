@@ -72,7 +72,7 @@ export default function DashboardPage() {
                 icon={<UploadCloud className="h-6 w-6 text-text-tertiary" />}
                 action={{ label: 'Open documents', onClick: () => router.push('/dashboard/documents') }}
               />
-            ) : (
+            ) : history.length === 0 ? (
               <EmptyState
                 title="Ask your first grounded question"
                 description="Start with a focused question about the knowledge base you uploaded. NexusRAG answers in plain language and shows the strongest supporting evidence beside the response."
@@ -86,7 +86,7 @@ export default function DashboardPage() {
                     : undefined
                 }
               />
-            )}
+            ) : null}
 
             {history.length > 0 ? <QueryHistory items={history} onSelect={selectHistoryItem} /> : null}
           </div>

@@ -21,6 +21,7 @@ interface AppState {
   updateDocument: (id: string, patch: Partial<DocumentItem>) => void
   removeDocument: (id: string) => void
   replaceDocuments: (items: DocumentItem[]) => void
+  removeHistoryItem: (id: string) => void
   setPublicSessionId: (value: string) => void
   syncPublicTrialUsage: (value: number) => void
   setOperatorConnection: (apiUrl: string | null, apiKey: string | null) => void
@@ -55,6 +56,7 @@ export const useAppStore = create<AppState>()(
         })),
       removeDocument: (id) => set((state) => ({ documents: state.documents.filter((document) => document.id !== id) })),
       replaceDocuments: (items) => set({ documents: items }),
+      removeHistoryItem: (id) => set((state) => ({ queryHistory: state.queryHistory.filter((item) => item.id !== id) })),
       setPublicSessionId: (value) => set({ publicSessionId: value }),
       syncPublicTrialUsage: (value) => set({ publicTrialUsage: Math.max(0, value) }),
       setOperatorConnection: (apiUrl, apiKey) =>
