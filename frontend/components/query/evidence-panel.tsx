@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 
@@ -21,16 +21,16 @@ export function EvidencePanel({
   return (
     <div
       ref={scrollRef}
-      className="app-scroll h-full overflow-y-auto border-l border-border-subtle bg-bg-secondary p-4 md:p-5"
+      className="app-scroll h-full overflow-y-auto border-l border-border-subtle bg-bg-secondary/72 px-5 py-6 backdrop-blur-xl"
     >
-      <div className="mb-4">
-        <div className="flex items-center gap-2">
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <div>
           <h3 className="text-sm font-semibold text-text-primary">Sources and evidence</h3>
-          <Badge>{citations.length} items</Badge>
+          <p className="mt-1 text-xs text-text-tertiary">
+            Passages that grounded the current answer.
+          </p>
         </div>
-        <p className="mt-2 text-xs leading-6 text-text-tertiary">
-          Matching passages and cited file names appear here.
-        </p>
+        <Badge>{citations.length}</Badge>
       </div>
 
       {citations.length > 0 ? (
@@ -39,7 +39,7 @@ export function EvidencePanel({
             <div key={citation.chunk_id}>
               <Button
                 variant={expanded === index ? 'default' : 'outline'}
-                className="mb-2 h-auto w-full justify-start px-3 py-2 text-left"
+                className="mb-2 h-auto w-full justify-start rounded-[12px] px-3 py-3 text-left"
                 onClick={() => setExpanded(expanded === index ? -1 : index)}
               >
                 <span className="mr-2 rounded-full bg-bg-primary px-2 py-1 text-[11px] font-semibold text-text-secondary">
@@ -52,13 +52,14 @@ export function EvidencePanel({
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border border-border-subtle bg-bg-primary px-4 py-4">
-          <p className="text-sm font-semibold text-text-primary">No evidence attached yet</p>
+        <div className="rounded-[8px] border border-border-subtle bg-bg-primary px-5 py-5">
+          <p className="text-sm font-semibold text-text-primary">No evidence yet</p>
           <p className="mt-2 text-sm leading-6 text-text-secondary">
-            Upload a document and ask a focused question. Evidence will appear here once retrieval finds a grounded match.
+            Upload a document and ask a focused question. Once retrieval finds a grounded match,
+            the supporting passages will appear here.
           </p>
           {answerStatus ? (
-            <p className="mt-3 text-xs uppercase tracking-[0.18em] text-text-tertiary">
+            <p className="mt-4 text-[11px] font-medium uppercase tracking-[0.18em] text-text-tertiary">
               Latest answer status: {answerStatus}
             </p>
           ) : null}
@@ -67,3 +68,4 @@ export function EvidencePanel({
     </div>
   )
 }
+

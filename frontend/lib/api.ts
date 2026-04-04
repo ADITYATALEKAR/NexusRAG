@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   AnswerPayload,
   CostResponse,
   DocumentItem,
@@ -167,6 +167,7 @@ class APIClient {
       if (operatorApiKey) {
         request.setRequestHeader('X-API-Key', operatorApiKey)
       }
+      request.setRequestHeader('X-NexusRAG-Session', ensurePublicSessionId())
 
       request.upload.onprogress = (event) => {
         if (!event.lengthComputable) {
@@ -227,3 +228,4 @@ class APIClient {
 }
 
 export const api = new APIClient()
+

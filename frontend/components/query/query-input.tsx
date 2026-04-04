@@ -1,6 +1,6 @@
-'use client'
+﻿'use client'
 
-import { Paperclip, Send } from 'lucide-react'
+import { Loader2, Paperclip, Send } from 'lucide-react'
 import { useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,7 @@ export function QueryInput({
   onAttach,
   isLoading,
   isUploading = false,
-  disabled = false
+  disabled = false,
 }: {
   onSubmit: (query: string) => void
   onAttach?: (files: File[]) => Promise<unknown> | unknown
@@ -43,7 +43,12 @@ export function QueryInput({
   }
 
   return (
-    <div className={cn('surface flex items-end gap-3 p-3 transition-all duration-[var(--duration-normal)] focus-within:border-accent-500 focus-within:ring-2 focus-within:ring-accent-500/10', disabled && 'opacity-70')}>
+    <div
+      className={cn(
+        'surface flex w-full min-w-0 items-end gap-3 rounded-[8px] border-border-default bg-bg-elevated/98 px-4 py-4 transition-all duration-[var(--duration-normal)] focus-within:border-accent-500 focus-within:ring-2 focus-within:ring-accent-500/10',
+        disabled && 'opacity-70',
+      )}
+    >
       <input
         ref={fileInputRef}
         type="file"
@@ -60,40 +65,50 @@ export function QueryInput({
         type="button"
         variant="ghost"
         size="icon"
-        className="shrink-0"
+        className="h-11 w-11 shrink-0 rounded-sm border border-border-subtle bg-bg-secondary"
         aria-label="Attach documents"
         disabled={disabled || !onAttach || isUploading}
         onClick={() => fileInputRef.current?.click()}
       >
-        <Paperclip className="h-4 w-4" />
+        {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
       </Button>
-      <textarea
-        ref={textareaRef}
-        value={value}
-        rows={1}
-        placeholder={
-          disabled
-            ? 'Querying is unavailable until this workspace can reach a NexusRAG API...'
-            : 'Ask a grounded question about your uploaded knowledge...'
-        }
-        className="min-h-[28px] max-h-[180px] flex-1 resize-none border-0 bg-transparent text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none disabled:cursor-not-allowed"
-        disabled={disabled}
-        onChange={(event) => setValue(event.target.value)}
-        onInput={(event) => {
-          const target = event.currentTarget
-          target.style.height = 'auto'
-          target.style.height = `${target.scrollHeight}px`
-        }}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault()
-            submit()
+      <div className="flex-1">
+        <textarea
+          ref={textareaRef}
+          value={value}
+          rows={1}
+          placeholder={
+            disabled
+              ? 'Querying is unavailable until this workspace can reach a NexusRAG API...'
+              : 'Ask a grounded question about your uploaded knowledge...'
           }
-        }}
-      />
-      <Button onClick={submit} size="icon" disabled={disabled || isLoading || !value.trim()} aria-label="Submit query">
-        <Send className="h-4 w-4" />
+          className="min-h-[30px] max-h-[180px] w-full resize-none border-0 bg-transparent text-[15px] leading-7 text-text-primary placeholder:text-text-tertiary focus:outline-none disabled:cursor-not-allowed"
+          disabled={disabled}
+          onChange={(event) => setValue(event.target.value)}
+          onInput={(event) => {
+            const target = event.currentTarget
+            target.style.height = 'auto'
+            target.style.height = `${target.scrollHeight}px`
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+              event.preventDefault()
+              submit()
+            }
+          }}
+        />
+      </div>
+      <Button
+        onClick={submit}
+        size="icon"
+        className="h-12 w-12 rounded-sm"
+        disabled={disabled || isLoading || !value.trim()}
+        aria-label="Submit query"
+      >
+        {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
       </Button>
     </div>
   )
 }
+
+

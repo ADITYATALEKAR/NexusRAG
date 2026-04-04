@@ -1,42 +1,26 @@
-import { ArrowRight, Cloud, Github, Mail, Phone, Server } from 'lucide-react'
+﻿import { ArrowRight, Github, Mail, Phone } from 'lucide-react'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
-import { PUBLIC_TRIAL_QUERY_LIMIT } from '@/lib/public-config'
 import { FOUNDER_CONTACT, GITHUB_REPO_URL } from '@/lib/site-content'
-
-const launchModes = [
-  {
-    icon: Cloud,
-    title: 'Hosted evaluation',
-    description: `${PUBLIC_TRIAL_QUERY_LIMIT} free queries on the managed API. Upload a document, ask a question, verify citations end to end, no setup, no account.`,
-  },
-  {
-    icon: Server,
-    title: 'Self-hosted deployment',
-    description:
-      'Clone the public repo, deploy your own NexusRAG API, and connect the same workspace. Full control over data, models, and infrastructure.',
-  },
-]
 
 export function CTA() {
   return (
-    <section className="py-24">
-      <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-10 xl:px-14">
-        <div className="surface overflow-hidden bg-gradient-to-br from-bg-elevated via-bg-elevated to-accent-50/80 p-10 dark:to-accent-500/10 md:p-14">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_360px]">
+    <section id="contact" className="py-24">
+      <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-8 xl:px-10 2xl:px-12">
+        <div className="surface overflow-hidden bg-[linear-gradient(135deg,rgba(255,255,255,1),rgba(244,247,255,0.92))] p-10 md:p-14">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_360px]">
             <div>
               <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-                Get started
+                Contact
               </p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary md:text-4xl">
-                Evaluate on our infrastructure, then deploy on yours
+              <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.05em] text-text-primary md:text-4xl">
+                Start with the live workspace. Move to your own deployment when your team is ready.
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
-                Start with the hosted API to see the full retrieval pipeline, ingestion,
-                hybrid search, and citation-backed generation working end to end. When your
-                team is ready, deploy your own instance and keep the same interface, API
-                contracts, and evidence model.
+                NexusRAG is designed so the first evaluation feels like the real product. Try the
+                hosted workspace, inspect the answer quality, then point the same interface at your
+                own NexusRAG API for private rollout and unlimited use.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button size="lg" asChild>
@@ -55,27 +39,11 @@ export function CTA() {
                   </a>
                 </Button>
               </div>
-              <div className="mt-8 grid gap-4 md:grid-cols-2">
-                {launchModes.map((mode) => (
-                  <div
-                    key={mode.title}
-                    className="rounded-2xl border border-border-subtle bg-bg-primary/80 p-4"
-                  >
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-accent-100 text-accent-700 dark:bg-accent-500/15 dark:text-accent-100">
-                      <mode.icon className="h-4 w-4" />
-                    </div>
-                    <h3 className="text-base font-semibold text-text-primary">{mode.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-text-secondary">
-                      {mode.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            <div className="rounded-3xl border border-border-subtle bg-bg-primary/85 p-6 shadow-sm">
+            <div className="rounded-[14px] border border-border-subtle bg-bg-primary/88 p-6 shadow-sm">
               <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-                Contact
+                Founder contact
               </p>
               <h3 className="mt-4 text-2xl font-semibold text-text-primary">
                 {FOUNDER_CONTACT.name}
@@ -98,8 +66,7 @@ export function CTA() {
                 </a>
               </div>
               <p className="mt-6 text-sm leading-6 text-text-secondary">
-                Need a walkthrough, deployment assistance, or a private instance for your
-                team? Reach out directly.
+                Reach out for a walkthrough, deployment help, or a private rollout plan for your team.
               </p>
             </div>
           </div>
@@ -108,3 +75,5 @@ export function CTA() {
     </section>
   )
 }
+
+
