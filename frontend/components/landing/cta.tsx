@@ -9,9 +9,9 @@ export function CTA() {
     <section id="contact" className="py-24">
       <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,rgba(255,255,255,1),rgba(244,247,255,0.92))] py-10 md:py-14">
-          <div className="grid gap-8 px-6 lg:px-8 lg:grid-cols-[minmax(0,1.15fr)_360px] xl:px-10 2xl:px-12">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_360px] lg:items-start">
             <div>
-              <h2 className="max-w-3xl text-3xl font-semibold tracking-[-0.05em] text-text-primary md:text-4xl">
+              <h2 className="max-w-3xl text-3xl font-semibold leading-[1.12] tracking-[-0.04em] text-text-primary md:text-4xl">
                 Start with the live workspace. Move to your own deployment when your team is ready.
               </h2>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -27,9 +27,9 @@ export function CTA() {
               </div>
             </div>
 
-            <div className="rounded-[14px] border border-border-subtle bg-bg-primary/88 p-6 shadow-sm">
+            <div className="rounded-[14px] border border-border-subtle bg-bg-primary/88 p-6 shadow-sm lg:justify-self-end">
               <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-                Founder
+                Contact
               </p>
               <h3 className="mt-4 text-2xl font-semibold text-text-primary">
                 {FOUNDER_CONTACT.name}

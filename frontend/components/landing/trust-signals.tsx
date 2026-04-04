@@ -26,24 +26,27 @@ export function TrustSignals() {
     <section className="bg-bg-primary py-14">
       <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-8 xl:px-10 2xl:px-12">
         <div className="overflow-hidden rounded-[28px] bg-[linear-gradient(180deg,rgba(248,251,255,0.92),rgba(255,255,255,0.88))] py-8 md:py-10">
-          <div className="flex flex-col gap-8 px-6 lg:px-8 xl:flex-row xl:items-center xl:justify-between xl:px-10 2xl:px-12">
+          <div className="grid gap-8 xl:grid-cols-[minmax(0,0.95fr)_minmax(620px,1fr)] xl:items-start">
             <div className="max-w-[760px]">
               <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">
                 Evaluate the product the way teams actually buy it
               </p>
-              <h2 className="mt-4 max-w-[760px] text-balance text-[2.85rem] font-semibold leading-[1.02] tracking-[-0.07em] text-text-primary md:text-[3.75rem]">
+              <h2 className="mt-4 max-w-[760px] text-balance text-[2.85rem] font-semibold leading-[1.08] tracking-[-0.055em] text-text-primary md:text-[3.75rem]">
                 Start public. Move private. Keep the same workspace.
               </h2>
-              <p className="mt-5 max-w-[700px] text-base leading-8 text-text-secondary">
+              <p className="mt-6 max-w-[700px] text-[1.02rem] leading-8 text-text-secondary">
                 The first pass should feel like the real product, not a stripped-down demo.
                 Evaluate answer quality in the hosted mode, then switch the exact same interface to
                 your own API when your team is ready.
               </p>
             </div>
 
-            <div className="grid gap-4 lg:min-w-[560px] lg:grid-cols-2">
+            <div className="grid gap-4 lg:grid-cols-2">
               {evaluationModes.map((mode) => (
-                <div key={mode.title} className="rounded-sm border border-border-subtle bg-bg-primary/82 p-5 shadow-sm">
+                <div
+                  key={mode.title}
+                  className="rounded-sm border border-border-subtle bg-bg-primary/82 p-5 shadow-sm"
+                >
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="text-[0.76rem] font-medium uppercase tracking-[0.24em] text-text-tertiary">
