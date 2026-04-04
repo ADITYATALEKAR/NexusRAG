@@ -107,49 +107,50 @@ class APIClient {
     const headers = buildHeaders()
     headers.set('Content-Type', 'application/json')
 
+    let response: Response
     try {
-      const response = await fetch(buildBackendUrl('/answer'), {
+      response = await fetch(buildBackendUrl('/answer'), {
         method: 'POST',
         headers,
         body: JSON.stringify({ query: text, top_k: topK, include_trace: true }),
         cache: 'no-store'
       })
+    } catch (error) {
+      throw new APIError(0, 'Unable to connect to the API. Please verify your API endpoint and connection.')
+    }
 
-      if (!response.ok) {
-        const payload = (await response.json().catch(() => ({ message: 'Request failed' }))) as Record<string, unknown>
+    if (!response.ok) {
+      const text = await response.text().catch(() => '')
+      let message = `Server error (${response.status})`
+      try {
+        const payload = JSON.parse(text) as Record<string, unknown>
         const detail = payload.detail
-        const message =
+        message =
           typeof detail === 'string'
             ? detail
             : typeof payload.message === 'string'
               ? payload.message
-              : 'Request failed'
-        throw new APIError(response.status, message, payload)
+              : message
+      } catch {
+        if (text) message = text
       }
-
-      const answer = (await response.json()) as AnswerPayload
-      const limitHeader = response.headers.get('X-NexusRAG-Trial-Limit')
-      const usedHeader = response.headers.get('X-NexusRAG-Trial-Used')
-      const remainingHeader = response.headers.get('X-NexusRAG-Trial-Remaining')
-
-      if (limitHeader || usedHeader || remainingHeader) {
-        answer.usage = {
-          hosted_trial_limit: limitHeader ? Number(limitHeader) : undefined,
-          hosted_trial_used: usedHeader ? Number(usedHeader) : undefined,
-          hosted_trial_remaining: remainingHeader ? Number(remainingHeader) : undefined,
-        }
-      }
-
-      return answer
-    } catch (error) {
-      if (error instanceof APIError) {
-        throw error
-      }
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new APIError(0, 'Unable to connect to the API. Please verify your API endpoint and connection.')
-      }
-      throw error
+      throw new APIError(response.status, message)
     }
+
+    const answer = (await response.json()) as AnswerPayload
+    const limitHeader = response.headers.get('X-NexusRAG-Trial-Limit')
+    const usedHeader = response.headers.get('X-NexusRAG-Trial-Used')
+    const remainingHeader = response.headers.get('X-NexusRAG-Trial-Remaining')
+
+    if (limitHeader || usedHeader || remainingHeader) {
+      answer.usage = {
+        hosted_trial_limit: limitHeader ? Number(limitHeader) : undefined,
+        hosted_trial_used: usedHeader ? Number(usedHeader) : undefined,
+        hosted_trial_remaining: remainingHeader ? Number(remainingHeader) : undefined,
+      }
+    }
+
+    return answer
   }
 
   async getDocuments() {

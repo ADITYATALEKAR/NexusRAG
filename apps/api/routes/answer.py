@@ -104,31 +104,49 @@ async def generate_answer(payload: AnswerRequest, request: Request, response: Re
             headers=quota_headers,
         )
 
-    runtime = await _get_or_build_answer_runtime(request)
+    try:
+        runtime = await _get_or_build_answer_runtime(request)
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error("Failed to build answer runtime", error=str(exc))
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Answer service initialization failed: {exc}",
+        ) from exc
+
     query = Query(
         id=QueryId.generate().value,
         text=payload.query,
         request_id=getattr(request.state, "request_id", None),
         config=QueryConfig(top_k=payload.top_k, rerank_top_k=max(payload.top_k, 25)),
     )
-    answer, trace = await runtime.answer_flow.execute(
-        query=query,
-        retrieval_config=runtime.default_retrieval_config.model_copy(
-            update={
-                "final_top_k": payload.top_k,
-                "rerank_top_k": max(payload.top_k, runtime.default_retrieval_config.rerank_top_k),
-            }
-        ),
-        evidence_config=runtime.default_evidence_config.model_copy(
-            update={"max_evidence_items": payload.max_evidence}
-        ),
-        generation_config=runtime.default_generation_config.model_copy(
-            update={
-                "model": payload.model or runtime.default_generation_config.model,
-                "require_citations": payload.require_citations,
-            }
-        ),
-    )
+    try:
+        answer, trace = await runtime.answer_flow.execute(
+            query=query,
+            retrieval_config=runtime.default_retrieval_config.model_copy(
+                update={
+                    "final_top_k": payload.top_k,
+                    "rerank_top_k": max(payload.top_k, runtime.default_retrieval_config.rerank_top_k),
+                }
+            ),
+            evidence_config=runtime.default_evidence_config.model_copy(
+                update={"max_evidence_items": payload.max_evidence}
+            ),
+            generation_config=runtime.default_generation_config.model_copy(
+                update={
+                    "model": payload.model or runtime.default_generation_config.model,
+                    "require_citations": payload.require_citations,
+                }
+            ),
+        )
+    except Exception as exc:
+        logger.error("Answer flow execution failed", error=str(exc))
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"Answer generation failed: {exc}",
+        ) from exc
+
     runtime.trace_store[trace.request_id] = trace
     request.app.state.answer_trace_store = runtime.trace_store
     tracked_request_id = getattr(request.state, "request_id", None) or trace.request_id
