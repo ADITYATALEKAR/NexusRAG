@@ -21,14 +21,14 @@
 
 export function Features() {
   return (
-    <section id="how-it-works" className="bg-bg-secondary/26 py-24">
-      <div className="mx-auto grid w-full max-w-[1920px] gap-10 px-6 lg:px-10 xl:px-12 2xl:px-16 xl:grid-cols-[minmax(320px,0.72fr)_minmax(0,1.28fr)] xl:items-start">
+    <section id="how-it-works" className="bg-bg-primary py-24">
+      <div className="mx-auto grid w-full max-w-[1440px] gap-10 px-5 md:px-8 xl:grid-cols-[minmax(320px,0.72fr)_minmax(0,1.28fr)] xl:px-10 xl:items-start">
         <div className="space-y-6">
           <p className="text-sm font-medium uppercase tracking-[0.24em] text-accent-700">How it works</p>
-          <h2 className="max-w-[680px] text-balance text-[2.95rem] font-semibold leading-[1.02] tracking-[-0.07em] text-text-primary md:text-[3.85rem]">
+          <h2 className="max-w-[760px] text-balance text-[2.95rem] font-semibold leading-[1.08] tracking-[-0.06em] text-text-primary md:text-[3.7rem]">
             From private files to cited answers in one clean workflow
           </h2>
-          <p className="max-w-[620px] text-base leading-8 text-text-secondary">
+          <p className="max-w-[700px] text-base leading-8 text-text-secondary">
             The workflow should feel immediate and credible: upload the source material, ask a
             precise question, inspect the cited evidence, and decide whether the product fits your
             team before any rollout effort.

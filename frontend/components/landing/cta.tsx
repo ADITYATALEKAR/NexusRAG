@@ -7,7 +7,7 @@ import { FOUNDER_CONTACT } from '@/lib/site-content'
 export function CTA() {
   return (
     <section id="contact" className="py-24">
-      <div className="mx-auto w-full max-w-[1920px] px-6 lg:px-8 xl:px-10 2xl:px-12">
+      <div className="mx-auto w-full max-w-[1440px] px-5 md:px-8 xl:px-10">
         <div className="overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,rgba(255,255,255,1),rgba(244,247,255,0.92))] p-10 md:p-14">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_360px]">
             <div>
@@ -29,7 +29,7 @@ export function CTA() {
 
             <div className="rounded-[14px] border border-border-subtle bg-bg-primary/88 p-6 shadow-sm">
               <p className="text-sm font-medium uppercase tracking-[0.22em] text-accent-700 dark:text-accent-100">
-                Founder contact
+                Founder
               </p>
               <h3 className="mt-4 text-2xl font-semibold text-text-primary">
                 {FOUNDER_CONTACT.name}
