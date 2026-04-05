@@ -141,7 +141,7 @@ export function AnswerDisplay({
         </Badge>
         {answer.trace?.provider_used ? <Badge>{answer.trace.provider_used}</Badge> : null}
         {answer.trace?.model_used ? (
-          <Badge variant="outline">{answer.trace.model_used}</Badge>
+          <Badge variant="default">{answer.trace.model_used}</Badge>
         ) : null}
       </div>
 
