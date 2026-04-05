@@ -94,8 +94,7 @@ export const useAppStore = create<AppState>()(
           llmApiKey: state.llmApiKey,
           desktopSidebarCollapsed: state.desktopSidebarCollapsed,
           ...(isUsingCustomApi && {
-            queryHistory: state.queryHistory,
-            documents: state.documents
+            queryHistory: state.queryHistory
           })
         }
       }

@@ -124,12 +124,21 @@ export function useDocuments() {
     },
     onMutate: async (id) => {
       await queryClient.cancelQueries({ queryKey: ['documents'] })
+      const previous = queryClient.getQueryData<DocumentItem[]>(['documents'])
+      queryClient.setQueryData<DocumentItem[]>(['documents'], (old) =>
+        old ? old.filter((d) => d.id !== id) : []
+      )
       removeDocumentFromStore(id)
+      return { previous }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['documents'] })
     },
-    onError: (_error, id) => {
+    onError: (_error, _id, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(['documents'], context.previous)
+        replaceDocuments(context.previous)
+      }
       queryClient.invalidateQueries({ queryKey: ['documents'] })
       toast({
         type: 'error',
