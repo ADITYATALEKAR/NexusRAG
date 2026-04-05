@@ -50,7 +50,7 @@ export function Hero() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-accent-100 bg-accent-50/80 px-4 py-2 text-[0.82rem] font-medium text-accent-700">
               <CheckCircle2 className="h-3.5 w-3.5" />
-              Open-source &middot; GPT-4o with multi-provider failover &middot; Self-hostable
+              Open-source &middot; Multi-provider LLM failover &middot; Self-hostable
             </div>
 
             <h1 className="mt-8 text-[3.4rem] font-semibold leading-[1.06] tracking-[-0.04em] text-text-primary md:text-[4.2rem] xl:text-[5rem] 2xl:text-[5.6rem]">
