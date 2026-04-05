@@ -38,11 +38,12 @@ export function Sidebar() {
   const mobileSidebarOpen = useAppStore((state) => state.mobileSidebarOpen)
   const desktopSidebarCollapsed = useAppStore((state) => state.desktopSidebarCollapsed)
   const operatorApiKey = useAppStore((state) => state.operatorApiKey)
+  const llmApiKey = useAppStore((state) => state.llmApiKey)
   const publicTrialUsage = useAppStore((state) => state.publicTrialUsage)
   const clearWorkspace = useAppStore((state) => state.clearWorkspace)
   const setMobileSidebarOpen = useAppStore((state) => state.setMobileSidebarOpen)
   const toggleDesktopSidebar = useAppStore((state) => state.toggleDesktopSidebar)
-  const usingOwnApi = Boolean(operatorApiKey)
+  const usingOwnApi = Boolean(operatorApiKey) || Boolean(llmApiKey)
   const trialRemaining = Math.max(PUBLIC_TRIAL_QUERY_LIMIT - publicTrialUsage, 0)
   const navScrollRef = useScrollActivity<HTMLElement>()
 
@@ -166,9 +167,9 @@ export function Sidebar() {
               <div className="rounded-[10px] border border-border-subtle/70 bg-bg-secondary px-4 py-4 text-sm text-text-secondary">
                 {usingOwnApi ? (
                   <>
-                    <p className="font-medium text-text-primary">Bring Your Own API</p>
+                    <p className="font-medium text-text-primary">Your API key</p>
                     <p className="mt-1.5 leading-6">
-                      This browser is connected to your own NexusRAG API with no hosted usage cap.
+                      Unlimited queries using your own LLM API key.
                     </p>
                   </>
                 ) : (

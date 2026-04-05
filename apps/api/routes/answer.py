@@ -327,7 +327,7 @@ async def _build_answer_runtime(
         default_retrieval_config=retrieval_service.default_config.model_copy(deep=True),
         default_evidence_config=EvidenceConfig(),
         default_generation_config=GenerationConfig(
-            model=str(generation_raw.get("default_model", "gpt-4o")),
+            model=str(generation_raw.get("default_model", "gemini-2.5-flash")),
             temperature=float(generation_raw.get("temperature", 0.1)),
             max_output_tokens=int(generation_raw.get("max_output_tokens", 1024)),
             require_citations=bool(generation_raw.get("require_citations", True)),

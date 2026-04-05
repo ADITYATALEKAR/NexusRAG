@@ -55,7 +55,11 @@ def build_configured_providers(
     config: dict[str, Any],
     include_uncredentialed: bool = False,
 ) -> list[LLMProviderInterface]:
-    """Build configured real providers in priority order."""
+    """Build configured real providers in priority order.
+
+    If no providers have credentials, falls back to ``NEXUSRAG_FALLBACK_LLM_KEY``
+    env var which is auto-detected to the correct provider.
+    """
     definitions = _normalize_provider_definitions(config)
     providers: list[LLMProviderInterface] = []
     for definition in definitions:
@@ -71,6 +75,12 @@ def build_configured_providers(
         )
         if provider is not None:
             providers.append(provider)
+
+    if not providers:
+        fallback_key = os.getenv("NEXUSRAG_FALLBACK_LLM_KEY")
+        if fallback_key:
+            providers = detect_provider_from_key(fallback_key)
+
     return providers
 
 

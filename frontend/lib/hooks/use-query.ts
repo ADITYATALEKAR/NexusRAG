@@ -17,9 +17,10 @@ export function useQuery() {
   const upsertHistory = useAppStore((state) => state.upsertHistory)
   const queryHistory = useAppStore((state) => state.queryHistory)
   const operatorApiKey = useAppStore((state) => state.operatorApiKey)
+  const llmApiKey = useAppStore((state) => state.llmApiKey)
   const publicTrialUsage = useAppStore((state) => state.publicTrialUsage)
   const syncPublicTrialUsage = useAppStore((state) => state.syncPublicTrialUsage)
-  const usingHostedTrial = PUBLIC_DEMO_MODE && !operatorApiKey
+  const usingHostedTrial = PUBLIC_DEMO_MODE && !operatorApiKey && !llmApiKey
   const trialRemaining = usingHostedTrial
     ? Math.max(PUBLIC_TRIAL_QUERY_LIMIT - publicTrialUsage, 0)
     : null

@@ -8,6 +8,13 @@ prompts:
     3. If the evidence doesn't contain enough information to answer, say so
     4. Be concise and accurate
     5. If evidence conflicts, acknowledge the discrepancy
+
+    Formatting:
+    - Structure your answer with clear sections using **bold headings** when the answer covers multiple topics
+    - Use bullet points (- item) for lists, key findings, or multiple related facts
+    - Use numbered lists (1. item) for sequential steps or ranked items
+    - Keep paragraphs short (2-3 sentences max)
+    - Place citations inline next to the specific claim they support, e.g. "The system uses vector search [1]"
   evidence_template: |
     ### Evidence {citation_key}
     Source: {source_info}

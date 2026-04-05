@@ -109,7 +109,7 @@ export default function DashboardPage() {
                     Hosted evaluation: {hostedTrialRemaining} of {trialLimit ?? 2} shared queries remaining.
                   </span>
                 ) : (
-                  <span>Connected to your own NexusRAG API.</span>
+                  <span>Unlimited queries with your API key.</span>
                 )}
                 <span className="text-text-tertiary">•</span>
                 <span>{documentsCount} documents indexed</span>
