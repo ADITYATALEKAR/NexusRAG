@@ -21,7 +21,7 @@ class GoogleProvider(BaseLLMProvider):
         self,
         provider_id: str = "google",
         api_key: str | None = None,
-        model: str = "gemini-1.5-pro",
+        model: str = "gemini-2.5-flash",
         timeout: float = 60.0,
     ) -> None:
         super().__init__(

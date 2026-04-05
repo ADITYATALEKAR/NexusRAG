@@ -29,9 +29,12 @@ function normalizeBaseUrl(url?: string | null) {
 
 function buildHeaders(options?: HeadersInit) {
   const headers = new Headers(options)
-  const { operatorApiKey } = useAppStore.getState()
+  const { operatorApiKey, llmApiKey } = useAppStore.getState()
   if (operatorApiKey && !headers.has('X-API-Key')) {
     headers.set('X-API-Key', operatorApiKey)
+  }
+  if (llmApiKey && !headers.has('X-LLM-API-Key')) {
+    headers.set('X-LLM-API-Key', llmApiKey)
   }
   if (!headers.has('X-NexusRAG-Session')) {
     headers.set('X-NexusRAG-Session', ensurePublicSessionId())

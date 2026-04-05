@@ -112,10 +112,15 @@ def public_query_limit() -> int:
 
 
 def should_enforce_public_demo_limit(request: Request) -> bool:
-    """Hosted trial applies only to unauthenticated public traffic."""
+    """Hosted trial applies only to unauthenticated public traffic.
+
+    Users who provide their own LLM key or operator API key bypass the limit.
+    """
     if not public_demo_enabled():
         return False
-    return not bool(request.headers.get("X-API-Key"))
+    if request.headers.get("X-API-Key") or request.headers.get("X-LLM-API-Key"):
+        return False
+    return True
 
 
 def resolve_session_id(request: Request) -> str:

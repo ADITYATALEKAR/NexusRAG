@@ -38,7 +38,7 @@ from src.layer2_domain.generation.grounding import GroundingValidator
 from src.layer2_domain.generation.prompt_builder import PromptBuilder
 from src.layer2_domain.generation.service import GenerationService
 from src.layer3_flows.answer_flow.flow import AnswerFlow
-from src.layer4_providers.llms.registry import build_configured_providers, load_provider_config
+from src.layer4_providers.llms.registry import build_configured_providers, detect_provider_from_key, load_provider_config
 from src.layer5_wiring.observability.cost_tracker import cost_tracker
 from src.layer5_wiring.observability.logging import logger
 from src.layer5_wiring.registry.provider_registry import ProviderRegistry
@@ -104,8 +104,9 @@ async def generate_answer(payload: AnswerRequest, request: Request, response: Re
             headers=quota_headers,
         )
 
+    user_llm_key = request.headers.get("X-LLM-API-Key")
     try:
-        runtime = await _get_or_build_answer_runtime(request)
+        runtime = await _get_or_build_answer_runtime(request, user_llm_key=user_llm_key)
     except HTTPException:
         raise
     except Exception as exc:
@@ -187,8 +188,19 @@ async def get_trace(request_id: str, request: Request) -> GenerationTrace:
     return trace
 
 
-async def _get_or_build_answer_runtime(request: Request) -> AnswerRuntime:
-    """Return the cached answer runtime or lazily construct it."""
+async def _get_or_build_answer_runtime(
+    request: Request,
+    user_llm_key: str | None = None,
+) -> AnswerRuntime:
+    """Return the cached answer runtime or lazily construct it.
+
+    When *user_llm_key* is provided the runtime is built fresh (not cached)
+    with providers auto-detected from the key so each user gets their own
+    provider chain.
+    """
+    if user_llm_key:
+        return await _build_answer_runtime(request, user_llm_key=user_llm_key)
+
     runtime = getattr(request.app.state, "answer_runtime", None)
     if runtime is not None:
         return runtime
@@ -220,7 +232,10 @@ async def _get_or_build_answer_runtime(request: Request) -> AnswerRuntime:
     return runtime
 
 
-async def _build_answer_runtime(request: Request) -> AnswerRuntime:
+async def _build_answer_runtime(
+    request: Request,
+    user_llm_key: str | None = None,
+) -> AnswerRuntime:
     """Construct the Phase 4 answer runtime from config and existing services."""
     config_dir = Path(__file__).resolve().parents[3] / "configs"
     loader = ConfigLoader(config_dir=config_dir)
@@ -231,11 +246,33 @@ async def _build_answer_runtime(request: Request) -> AnswerRuntime:
     failover_file_config = loader.load_validated("models/llm-failover.yaml", FailoverFileConfig, apply_env_overrides=False)
 
     provider_registry = ProviderRegistry()
-    providers = build_configured_providers(provider_raw)
+
+    if user_llm_key:
+        providers = detect_provider_from_key(user_llm_key)
+    else:
+        providers = build_configured_providers(provider_raw)
+
     if not providers:
+        env_status = {
+            vendor: bool(os.getenv(env_var))
+            for vendor, env_var in [
+                ("google", "GOOGLE_API_KEY"),
+                ("openai", "OPENAI_API_KEY"),
+                ("anthropic", "ANTHROPIC_API_KEY"),
+                ("groq", "GROQ_API_KEY"),
+                ("deepseek", "DEEPSEEK_API_KEY"),
+                ("qwen", "DASHSCOPE_API_KEY"),
+            ]
+        }
+        logger.error(
+            "No LLM providers available",
+            configured_vendors=list(provider_raw.keys()),
+            credential_status=env_status,
+            user_key_provided=bool(user_llm_key),
+        )
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="No configured real LLM providers are available for the answer runtime",
+            detail=f"No configured real LLM providers are available. Credentials found: {env_status}",
         )
     retrieval_service = _get_or_build_retrieval_service(request)
     for provider in providers:
@@ -276,7 +313,7 @@ async def _build_answer_runtime(request: Request) -> AnswerRuntime:
             min_avg_relevance=float(abstention_raw.get("min_avg_relevance", 0.4)),
         ),
         grounding_validator=GroundingValidator(),
-        default_model=str(generation_raw.get("default_model", "gpt-4o")),
+        default_model=str(generation_raw.get("default_model", "gemini-2.5-flash")),
     )
     answer_flow = AnswerFlow(
         retrieval_service=retrieval_service,

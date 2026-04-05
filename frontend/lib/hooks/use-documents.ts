@@ -122,9 +122,21 @@ export function useDocuments() {
       await api.deleteDocument(id)
       return id
     },
-    onSuccess: (id) => {
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ['documents'] })
       removeDocumentFromStore(id)
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['documents'] })
+    },
+    onError: (_error, id) => {
+      queryClient.invalidateQueries({ queryKey: ['documents'] })
+      toast({
+        type: 'error',
+        title: 'Failed to delete document',
+        description: 'The document could not be removed. Please try again.',
+        duration: 4000
+      })
     }
   })
 

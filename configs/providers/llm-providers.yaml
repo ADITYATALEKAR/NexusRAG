@@ -2,30 +2,42 @@ providers:
   google:
     enabled: true
     priority: 1
-    models: ["gemini-1.5-pro", "gemini-1.5-flash"]
+    models: ["gemini-2.5-flash", "gemini-2.5-pro"]
     timeout: 60
 
   openai:
     enabled: true
     priority: 2
-    models: ["gpt-4o", "gpt-4o-mini"]
+    models: ["gpt-4.1-mini", "gpt-4.1"]
     timeout: 60
 
   anthropic:
     enabled: true
     priority: 3
-    models: ["claude-sonnet-4-20250514", "claude-3-haiku-20240307"]
+    models: ["claude-sonnet-4-20250514", "claude-haiku-4-5-20251001"]
     timeout: 60
 
   groq:
     enabled: true
     priority: 4
-    models: ["llama-3.1-70b-versatile"]
+    models: ["llama-3.3-70b-versatile"]
     timeout: 30
+
+  deepseek:
+    enabled: true
+    priority: 5
+    models: ["deepseek-chat", "deepseek-reasoner"]
+    timeout: 60
+
+  qwen:
+    enabled: true
+    priority: 6
+    models: ["qwen-plus", "qwen-turbo"]
+    timeout: 60
 
   ollama:
     enabled: false
-    priority: 5
+    priority: 7
     base_url: "http://localhost:11434"
     models: ["llama3.1"]
     timeout: 120

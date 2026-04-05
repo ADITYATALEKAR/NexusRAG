@@ -5,12 +5,12 @@ failover:
   provider_chain:
     - provider_id: "google-primary"
       vendor: "google"
-      model: "gemini-1.5-pro"
+      model: "gemini-2.5-flash"
       priority: 1
       enabled: true
     - provider_id: "openai-backup"
       vendor: "openai"
-      model: "gpt-4o"
+      model: "gpt-4.1-mini"
       priority: 2
       enabled: true
     - provider_id: "anthropic-backup"
@@ -20,7 +20,7 @@ failover:
       enabled: true
     - provider_id: "groq-fast"
       vendor: "groq"
-      model: "llama-3.1-70b-versatile"
+      model: "llama-3.3-70b-versatile"
       priority: 4
       enabled: true
     - provider_id: "ollama-local"

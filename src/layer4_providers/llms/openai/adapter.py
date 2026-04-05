@@ -16,7 +16,7 @@ class OpenAIProvider(BaseLLMProvider):
         self,
         provider_id: str = "openai",
         api_key: str | None = None,
-        model: str = "gpt-4o",
+        model: str = "gpt-4.1-mini",
         timeout: float = 60.0,
     ) -> None:
         super().__init__(
@@ -35,7 +35,7 @@ class OpenAIProvider(BaseLLMProvider):
     def supports_model(self, model: str) -> bool:
         """Return whether OpenAI can serve the requested model name."""
         lowered = model.lower()
-        return lowered.startswith("gpt-") or lowered.startswith("o1") or lowered.startswith("o3") or lowered.startswith("o4")
+        return lowered.startswith("gpt-") or lowered.startswith("o1") or lowered.startswith("o3") or lowered.startswith("o4") or lowered.startswith("gpt4")
 
     async def complete(self, request: LLMRequest) -> LLMResponse:
         """Execute a chat completion against OpenAI."""

@@ -14,6 +14,7 @@ interface AppState {
   publicTrialUsage: number
   operatorApiUrl: string | null
   operatorApiKey: string | null
+  llmApiKey: string | null
   setMobileSidebarOpen: (value: boolean) => void
   toggleDesktopSidebar: () => void
   upsertHistory: (item: QueryHistoryItem) => void
@@ -25,6 +26,7 @@ interface AppState {
   setPublicSessionId: (value: string) => void
   syncPublicTrialUsage: (value: number) => void
   setOperatorConnection: (apiUrl: string | null, apiKey: string | null) => void
+  setLlmApiKey: (key: string | null) => void
   clearWorkspace: () => void
 }
 
@@ -39,6 +41,7 @@ export const useAppStore = create<AppState>()(
       publicTrialUsage: 0,
       operatorApiUrl: null,
       operatorApiKey: null,
+      llmApiKey: null,
       setMobileSidebarOpen: (value) => set({ mobileSidebarOpen: value }),
       toggleDesktopSidebar: () =>
         set((state) => ({ desktopSidebarCollapsed: !state.desktopSidebarCollapsed })),
@@ -64,6 +67,7 @@ export const useAppStore = create<AppState>()(
           operatorApiUrl: apiUrl,
           operatorApiKey: apiKey
         }),
+      setLlmApiKey: (key) => set({ llmApiKey: key }),
       clearWorkspace: () =>
         set({
           mobileSidebarOpen: false,
@@ -71,21 +75,23 @@ export const useAppStore = create<AppState>()(
           documents: [],
           publicTrialUsage: 0,
           operatorApiUrl: null,
-          operatorApiKey: null
+          operatorApiKey: null,
+          llmApiKey: null
         })
     }),
     {
       name: 'nexusrag-frontend-store',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => {
-        // Only persist queryHistory and documents if using custom API (operatorApiKey exists)
+        // Only persist queryHistory and documents if using custom API (operatorApiKey or llmApiKey exists)
         // For free trial: only persist session ID and trial usage
-        const isUsingCustomApi = Boolean(state.operatorApiKey)
+        const isUsingCustomApi = Boolean(state.operatorApiKey) || Boolean(state.llmApiKey)
         return {
           publicSessionId: state.publicSessionId,
           publicTrialUsage: state.publicTrialUsage,
           operatorApiUrl: state.operatorApiUrl,
           operatorApiKey: state.operatorApiKey,
+          llmApiKey: state.llmApiKey,
           desktopSidebarCollapsed: state.desktopSidebarCollapsed,
           ...(isUsingCustomApi && {
             queryHistory: state.queryHistory,

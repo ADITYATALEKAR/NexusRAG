@@ -17,29 +17,54 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Shell } from '@/components/layout/shell'
 
-const schema = z.object({
+const operatorSchema = z.object({
   apiUrl: z.string().min(1, 'API URL is required'),
   apiKey: z.string().min(3, 'API key is required')
 })
 
-type FormValues = z.infer<typeof schema>
+const llmSchema = z.object({
+  llmKey: z.string().min(3, 'API key is required')
+})
+
+type OperatorFormValues = z.infer<typeof operatorSchema>
+type LlmFormValues = z.infer<typeof llmSchema>
+
+function maskKey(key: string | null): string {
+  if (!key) return ''
+  if (key.length <= 8) return '••••••••'
+  return key.slice(0, 4) + '••••••••' + key.slice(-4)
+}
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme()
   const operatorApiUrl = useAppStore((state) => state.operatorApiUrl)
+  const llmApiKey = useAppStore((state) => state.llmApiKey)
   const setOperatorConnection = useAppStore((state) => state.setOperatorConnection)
+  const setLlmApiKey = useAppStore((state) => state.setLlmApiKey)
   const [saved, setSaved] = useState(false)
+  const [llmSaved, setLlmSaved] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting }
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  } = useForm<OperatorFormValues>({
+    resolver: zodResolver(operatorSchema),
     defaultValues: {
       apiUrl: operatorApiUrl || DEFAULT_PUBLIC_BACKEND_URL,
       apiKey: ''
+    }
+  })
+  const {
+    register: registerLlm,
+    handleSubmit: handleSubmitLlm,
+    reset: resetLlm,
+    formState: { errors: llmErrors, isSubmitting: llmIsSubmitting }
+  } = useForm<LlmFormValues>({
+    resolver: zodResolver(llmSchema),
+    defaultValues: {
+      llmKey: ''
     }
   })
 
@@ -53,6 +78,13 @@ export default function SettingsPage() {
     } catch {
       setSaveError('Unable to update the operator connection.')
     }
+  })
+
+  const onSubmitLlm = handleSubmitLlm(async (values) => {
+    setLlmSaved(false)
+    setLlmApiKey(values.llmKey.trim())
+    resetLlm({ llmKey: '' })
+    setLlmSaved(true)
   })
 
   return (
@@ -82,6 +114,56 @@ export default function SettingsPage() {
             </Button>
           ))}
         </div>
+      </section>
+
+      <section className="surface space-y-5 p-6">
+        <div>
+          <h2 className="text-lg font-semibold text-text-primary">LLM API Key</h2>
+          <p className="mt-1 text-sm text-text-secondary">
+            Provide your own LLM API key for unlimited queries. Supports OpenAI, Google Gemini,
+            Anthropic Claude, DeepSeek, Qwen, and Groq. The key is auto-detected — just paste any
+            valid key.
+          </p>
+        </div>
+        {llmApiKey ? (
+          <div className="flex items-center gap-3 rounded-xl border border-border-subtle bg-bg-secondary px-4 py-3">
+            <span className="text-sm font-medium text-success">Connected</span>
+            <code className="text-sm text-text-secondary">{maskKey(llmApiKey)}</code>
+            <Button
+              type="button"
+              variant="subtle"
+              className="ml-auto"
+              onClick={() => {
+                setLlmApiKey(null)
+                setLlmSaved(false)
+              }}
+            >
+              Remove
+            </Button>
+          </div>
+        ) : null}
+        <form className="space-y-5" onSubmit={onSubmitLlm}>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-text-primary">API Key</label>
+            <Input
+              {...registerLlm('llmKey')}
+              type="password"
+              placeholder="Paste any LLM API key (sk-..., AIzaSy..., gsk_..., etc.)"
+            />
+            {llmErrors.llmKey ? (
+              <p className="text-sm text-error">{llmErrors.llmKey.message}</p>
+            ) : null}
+          </div>
+          <Button type="submit" disabled={llmIsSubmitting}>
+            Save API key
+          </Button>
+        </form>
+        {llmSaved ? (
+          <p className="text-sm text-success">
+            API key saved for this browser session. Your key is auto-detected and will be used for
+            all queries.
+          </p>
+        ) : null}
       </section>
 
       <section className="surface space-y-5 p-6">
